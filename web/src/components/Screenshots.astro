@@ -1,0 +1,502 @@
+---
+/**
+ * 应用截图占位
+ * - 桌面应用主界面骨架
+ * - 等待真实截图替换
+ */
+---
+
+<section class="section shots" id="shots">
+  <div class="container">
+    <header class="section-head">
+      <span class="eyebrow">INTERFACE PREVIEW</span>
+      <h2>看一眼 <span class="highlight">Rokit</span> 在做什么</h2>
+      <p>所有操作都在一个工作台里完成——不用切来切去，专注做你最擅长的事。</p>
+    </header>
+
+    <div class="shots-stage">
+      <!-- 设备框 -->
+      <div class="shot-frame">
+        <div class="shot-bar">
+          <span class="shot-dot" style="background: #ff5f57;"></span>
+          <span class="shot-dot" style="background: #febc2e;"></span>
+          <span class="shot-dot" style="background: #28c840;"></span>
+          <span class="shot-title">Rokit · 作品首秀发射台</span>
+        </div>
+        <div class="shot-body">
+          <!-- 左侧导航 -->
+          <aside class="shot-sidebar">
+            <div class="shot-side-item on">
+              <span class="side-icon">🚀</span>
+              <span class="side-label">作品首秀</span>
+            </div>
+            <div class="shot-side-item">
+              <span class="side-icon">📦</span>
+              <span class="side-label">作品库</span>
+            </div>
+            <div class="shot-side-item">
+              <span class="side-icon">📊</span>
+              <span class="side-label">数据看板</span>
+            </div>
+            <div class="shot-side-item">
+              <span class="side-icon">⚙️</span>
+              <span class="side-label">设置</span>
+            </div>
+          </aside>
+
+          <!-- 主内容区 -->
+          <div class="shot-main">
+            <!-- 标题区 -->
+            <div class="shot-page-head">
+              <div>
+                <div class="shot-page-title">作品首秀 · 智能生成</div>
+                <div class="shot-page-sub">AI 已为你的作品生成 13 平台推广物料</div>
+              </div>
+              <div class="shot-primary-btn">一键发布 →</div>
+            </div>
+
+            <!-- 状态进度 -->
+            <div class="shot-progress">
+              <div class="shot-step done">
+                <div class="step-dot">✓</div>
+                <div class="step-text">作品诊断</div>
+              </div>
+              <div class="step-line done"></div>
+              <div class="shot-step done">
+                <div class="step-dot">✓</div>
+                <div class="step-text">物料生成</div>
+              </div>
+              <div class="step-line active"></div>
+              <div class="shot-step active">
+                <div class="step-dot">3</div>
+                <div class="step-text">发布计划</div>
+              </div>
+              <div class="step-line"></div>
+              <div class="shot-step">
+                <div class="step-dot">4</div>
+                <div class="step-text">数据追踪</div>
+              </div>
+            </div>
+
+            <!-- 平台卡片网格 -->
+            <div class="shot-platform-grid">
+              <div class="shot-platform-card">
+                <div class="plat-head">
+                  <span class="plat-emoji">🐙</span>
+                  <span class="plat-name">GitHub</span>
+                  <span class="plat-tag l1">L1 直发</span>
+                </div>
+                <div class="plat-preview">
+                  <div class="plat-preview-title">Release: v1.0.0 首发</div>
+                  <div class="plat-preview-text">AI 已生成 Release Notes...</div>
+                </div>
+              </div>
+              <div class="shot-platform-card">
+                <div class="plat-head">
+                  <span class="plat-emoji">💬</span>
+                  <span class="plat-name">V2EX</span>
+                  <span class="plat-tag">L2</span>
+                </div>
+                <div class="plat-preview">
+                  <div class="plat-preview-title">创意工坊贴文</div>
+                  <div class="plat-preview-text">一个给独立开发者的作品首秀工具...</div>
+                </div>
+              </div>
+              <div class="shot-platform-card">
+                <div class="plat-head">
+                  <span class="plat-emoji">📕</span>
+                  <span class="plat-name">小红书</span>
+                  <span class="plat-tag">L2</span>
+                </div>
+                <div class="plat-preview">
+                  <div class="plat-preview-title">程序员种草笔记</div>
+                  <div class="plat-preview-text">做了三个月的项目终于上线啦✨</div>
+                </div>
+              </div>
+              <div class="shot-platform-card">
+                <div class="plat-head">
+                  <span class="plat-emoji">⛏️</span>
+                  <span class="plat-name">掘金</span>
+                  <span class="plat-tag">L2</span>
+                </div>
+                <div class="plat-preview">
+                  <div class="plat-preview-title">沸点 · 开发工具</div>
+                  <div class="plat-preview-text">推荐一个 AI 推广神器，帮你的作品...</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 底部发布队列 -->
+            <div class="shot-queue">
+              <div class="queue-title">📅 72h 发布计划</div>
+              <div class="queue-items">
+                <div class="queue-item"><span class="queue-time">今天 10:00</span><span class="queue-plat">GitHub Release</span><span class="queue-status ready">就绪</span></div>
+                <div class="queue-item"><span class="queue-time">今天 14:00</span><span class="queue-plat">V2EX · 创意</span><span class="queue-status ready">就绪</span></div>
+                <div class="queue-item"><span class="queue-time">明天 09:00</span><span class="queue-plat">掘金沸点</span><span class="queue-status">待发布</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="shot-note">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        真实截图将在首个正式 Release 同步更新
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .shots-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .shot-frame {
+    width: 100%;
+    max-width: 960px;
+    background: #0a0e14;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow:
+      0 24px 60px -20px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(14, 124, 123, 0.15);
+    transform: perspective(1200px) rotateX(2deg);
+    transition: transform 0.4s var(--ease);
+  }
+
+  .shot-frame:hover {
+    transform: perspective(1200px) rotateX(0deg);
+  }
+
+  .shot-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: linear-gradient(180deg, #131c25 0%, #0e141b 100%);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .shot-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+  }
+
+  .shot-title {
+    flex: 1;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-mute);
+    margin-right: 33px;
+  }
+
+  .shot-body {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    min-height: 360px;
+  }
+
+  .shot-sidebar {
+    background: rgba(14, 124, 123, 0.04);
+    border-right: 1px solid var(--border);
+    padding: 18px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .shot-side-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+
+  .shot-side-item.on {
+    background: linear-gradient(90deg, rgba(14, 124, 123, 0.35) 0%, rgba(31, 156, 154, 0.15) 100%);
+    box-shadow: inset 0 0 0 1px rgba(31, 156, 154, 0.4);
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .side-icon {
+    font-size: 0.85rem;
+  }
+
+  .side-label {
+    font-size: 0.78rem;
+  }
+
+  .shot-main {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* 页面标题 */
+  .shot-page-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .shot-page-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .shot-page-sub {
+    font-size: 0.72rem;
+    color: var(--text-mute);
+  }
+
+  .shot-primary-btn {
+    padding: 6px 14px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #0e7c7b 0%, #1f9c9a 100%);
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  /* 进度步骤 */
+  .shot-progress {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 12px 16px;
+    background: rgba(148, 212, 208, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .shot-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .step-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: rgba(148, 212, 208, 0.1);
+    color: var(--text-mute);
+    border: 1px solid var(--border);
+  }
+
+  .shot-step.done .step-dot {
+    background: linear-gradient(135deg, #0e7c7b, #1f9c9a);
+    color: #fff;
+    border-color: transparent;
+  }
+
+  .shot-step.active .step-dot {
+    background: linear-gradient(135deg, rgba(233, 75, 140, 0.2), rgba(139, 92, 246, 0.2));
+    color: #e94b8c;
+    border-color: rgba(233, 75, 140, 0.4);
+    box-shadow: 0 0 8px rgba(233, 75, 140, 0.3);
+  }
+
+  .step-text {
+    font-size: 0.7rem;
+    color: var(--text-mute);
+    font-weight: 500;
+  }
+
+  .shot-step.done .step-text,
+  .shot-step.active .step-text {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .step-line {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    margin: 0 8px;
+  }
+
+  .step-line.done {
+    background: linear-gradient(90deg, #1f9c9a, #0e7c7b);
+  }
+
+  .step-line.active {
+    background: linear-gradient(90deg, #1f9c9a, rgba(233, 75, 140, 0.3));
+  }
+
+  /* 平台卡片网格 */
+  .shot-platform-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .shot-platform-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    transition: all 0.2s ease;
+  }
+
+  .plat-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .plat-emoji {
+    font-size: 0.85rem;
+  }
+
+  .plat-name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .plat-tag {
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: rgba(31, 156, 154, 0.15);
+    color: var(--primary-glow);
+    letter-spacing: 0.03em;
+  }
+
+  .plat-tag.l1 {
+    background: linear-gradient(135deg, rgba(233, 75, 140, 0.18), rgba(139, 92, 246, 0.12));
+    color: #e94b8c;
+  }
+
+  .plat-preview {
+    font-size: 0.68rem;
+    line-height: 1.5;
+  }
+
+  .plat-preview-title {
+    color: var(--text-dim);
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .plat-preview-text {
+    color: var(--text-mute);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* 发布队列 */
+  .shot-queue {
+    background: rgba(148, 212, 208, 0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+
+  .queue-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .queue-items {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .queue-item {
+    display: grid;
+    grid-template-columns: 70px 1fr auto;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.68rem;
+    padding: 4px 0;
+  }
+
+  .queue-time {
+    color: var(--text-mute);
+    font-family: 'SF Mono', Monaco, monospace;
+  }
+
+  .queue-plat {
+    color: var(--text-dim);
+  }
+
+  .queue-status {
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.6rem;
+    font-weight: 600;
+    background: rgba(148, 212, 208, 0.08);
+    color: var(--text-mute);
+  }
+
+  .queue-status.ready {
+    background: rgba(31, 156, 154, 0.15);
+    color: var(--primary-glow);
+  }
+
+  .shot-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--text-mute);
+    padding: 6px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+
+  @media (max-width: 768px) {
+    .shot-body {
+      grid-template-columns: 80px 1fr;
+    }
+    .shot-platform-grid {
+      grid-template-columns: 1fr;
+    }
+    .side-label {
+      display: none;
+    }
+    .shot-side-item {
+      justify-content: center;
+    }
+    .shot-page-sub {
+      display: none;
+    }
+    .queue-item {
+      grid-template-columns: 60px 1fr auto;
+    }
+  }
+</style>

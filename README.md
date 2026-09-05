@@ -39,8 +39,13 @@ Rokit/
 │   ├── README.md              ← 文档目录索引
 │   └── Rokit-产品方案.html    ← 产品 PRD（v1.5 定稿）
 │
+├── web/                       ← ★ 首发推广静态站（Astro，部署至 Vercel）
+│   └── README.md              ← 本地预览 / 部署 / 编辑说明
+│
 └── CONTRIBUTING.md            ← 如何参与贡献
 ```
+
+> 在线介绍页：部署后在仓库首页加占位链接（详见 [web/README.md](web/README.md)）。
 
 ## 快速开始
 
