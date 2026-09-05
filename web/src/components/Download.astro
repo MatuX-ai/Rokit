@@ -74,8 +74,9 @@ const otherPlatforms = [
           </ul>
           <form class="dl-subscribe" onsubmit="event.preventDefault(); this.querySelector('.sub-done').style.display='block'; this.querySelector('button').disabled=true;">
             <div class="sub-done" style="display:none; color: var(--primary-glow); font-size: 0.8rem; margin-bottom: 8px;">✓ 已订阅，上线会第一时间通知你</div>
-            <input type="email" placeholder="留下邮箱，上线通知你" required />
-            <button type="submit">订阅</button>
+            <div class="sub-hint">🚧 订阅功能即将上线，敬请期待</div>
+            <input type="email" placeholder="留下邮箱，上线通知你" required disabled />
+            <button type="submit" disabled>订阅</button>
           </form>
         </div>
       </aside>
@@ -333,6 +334,12 @@ const otherPlatforms = [
     cursor: default;
     transform: none;
     box-shadow: none;
+  }
+
+  .sub-hint {
+    font-size: 0.75rem;
+    color: var(--text-mute);
+    margin-bottom: 2px;
   }
 
   @media (max-width: 768px) {
