@@ -1,0 +1,75 @@
+{
+  "name": "rokit",
+  "productName": "Rokit",
+  "version": "0.1.0",
+  "description": "Rokit · 开源桌面端 AI 推广自动化（BYOK · 本地 SQLite · 作品首秀发射台）",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"electron/**/*.js\" \"tests/**/*.js\" \"*.{js,json,md}\" \"*.html\"",
+    "format:check": "prettier --check \"electron/**/*.js\" \"tests/**/*.js\" \"*.{js,json,md}\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:portable": "electron-builder --win portable"
+  },
+  "author": "ProClips+",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^36.9.5",
+    "electron-builder": "^25.1.8",
+    "eslint": "^9.13.0",
+    "@eslint/js": "^9.13.0",
+    "globals": "^15.11.0",
+    "prettier": "^3.3.3",
+    "vitest": "^2.1.4"
+  },
+  "build": {
+    "appId": "com.proclips.rokit",
+    "productName": "Rokit",
+    "copyright": "Copyright © 2026 ProClips+",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "electron/**/*",
+      "index.html",
+      "assets/**/*",
+      "package.json",
+      "!**/_backup/**",
+      "!**/.preview/**",
+      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!**/*.{md,markdown}",
+      "!**/*.{map,ts}"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Rokit"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-portable.${ext}"
+    }
+  }
+}
