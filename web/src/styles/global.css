@@ -107,6 +107,7 @@ img,
 svg {
   display: block;
   max-width: 100%;
+  content-visibility: auto;
 }
 
 a {
@@ -147,14 +148,8 @@ p {
 }
 
 /* ===== 性能优化 ===== */
-img,
-svg {
-  content-visibility: auto;
-}
-
 .section {
   content-visibility: auto;
-  contain-intrinsic-size: 600px;
 }
 
 @media (prefers-reduced-motion: reduce) {
