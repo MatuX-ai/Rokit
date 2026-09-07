@@ -13,6 +13,27 @@
 - 录屏成片本地剪辑（Remotion 服务端渲染）
 - 数据看板接入各平台官方统计 API
 
+## [0.1.3] - 2026-09-07
+
+测试覆盖补强。
+
+### Added
+- `tests/logger.test.js`（17 用例）：logger 模块单元测试 —— init 幂等 / 4 级别输出分流（debug + info 走 stdout，warn + error 走 stderr）/ 时间戳格式 / extra 序列化（对象 / 字符串 / falsy）/ 单文件 1MB rotate 滚动（保留 3 个备份，.3 被淘汰）/ 全局异常兜底（uncaughtException + unhandledRejection）
+- `tests/store-json.test.js`（28 用例）：Store 层 JSON 兜底模式单元测试（通过 `Module._load` 钩子拦截 `node:sqlite` 加载）—— settings / works / pubs / channels CRUD + 级联删除 + 损坏 JSON 文件静默回退 + 进程重启后持久化往返 + pretty-print 格式校验
+
+### Changed
+- `tests/publishers.test.js`：新增 101 行测试用例 —— 重点覆盖 GitHub 适配器 `launch()` 在 URL 带 query / fragment / http / www 子域 / 非 GitHub 域名等边界情况下的行为一致性；并补充 payload 序列化对控制字符 / 反斜杠 / HTML 标签 / 空对象 / 空数组的鲁棒性
+
+### Tests
+- 单测用例数：50 → **135**（6 个测试文件全部通过，`npm run lint` 0 error）
+
+## [0.1.2] - 2026-09-07
+
+设置弹窗 z-index 冲突修复 + 安装包重打。
+
+### Fixed
+- 模型选择弹窗与设置弹窗同时唤起时偶发层叠错乱（z-index 冲突修复，`fix(electron): 模型选择弹窗 z-index 与设置弹窗冲突`）
+
 ## [0.1.1] - 2026-09-07
 
 交付前 UX 审计 + 假功能 / 假数据 / 误导文案专项修复。

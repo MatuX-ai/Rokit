@@ -52,6 +52,39 @@ describe('publishers · launch URL', () => {
     expect(adapters.juejin.launch()).toMatch(/^https:\/\/juejin\.cn\/editor\/drafts\/new$/);
     expect(adapters.x.launch()).toMatch(/^https:\/\/x\.com\/compose\/post$/);
   });
+
+  it('github：link 含 query / fragment 也应能抽出 owner/repo', () => {
+    expect(adapters.github.launch({ link: 'https://github.com/foo/bar?tab=readme' }))
+      .toBe('https://github.com/foo/bar/releases/new');
+    expect(adapters.github.launch({ link: 'https://github.com/foo/bar#readme' }))
+      .toBe('https://github.com/foo/bar/releases/new');
+  });
+
+  it('github：link 为 http 协议也应能抽取（适配老仓库页面）', () => {
+    expect(adapters.github.launch({ link: 'http://github.com/foo/bar' }))
+      .toBe('https://github.com/foo/bar/releases/new');
+  });
+
+  it('github：带 www 子域也兼容', () => {
+    expect(adapters.github.launch({ link: 'https://www.github.com/foo/bar' }))
+      .toBe('https://github.com/foo/bar/releases/new');
+  });
+
+  it('github：不是 github 域名时应返回 null', () => {
+    expect(adapters.github.launch({ link: 'https://gitlab.com/foo/bar' })).toBeNull();
+    expect(adapters.github.launch({ link: 'https://example.com/foo/bar' })).toBeNull();
+  });
+
+  it('其余静态平台也应返回稳定 URL（smoke test）', () => {
+    expect(adapters.facebook.launch()).toBe('https://www.facebook.com/');
+    expect(adapters.youtube.launch()).toBe('https://studio.youtube.com/');
+    expect(adapters.douyin.launch()).toMatch(/^https:\/\/creator\.douyin\.com\//);
+    expect(adapters.xhs.launch()).toMatch(/^https:\/\/creator\.xiaohongshu\.com\//);
+    expect(adapters.bili.launch()).toMatch(/^https:\/\/member\.bilibili\.com\//);
+    expect(adapters.jike.launch()).toMatch(/^https:\/\/web\.okjike\.com\//);
+    expect(adapters.zhihu.launch()).toMatch(/^https:\/\/zhuanlan\.zhihu\.com\//);
+    expect(adapters.wechat.launch()).toMatch(/^https:\/\/mp\.weixin\.qq\.com\//);
+  });
 });
 
 describe('publishers · 注入脚本语法', () => {
@@ -110,5 +143,73 @@ describe('publishers · YouTube（特殊）', () => {
     // fill 直接返回对象而不是注入脚本
     const code = adapters.youtube.fill({ title: 't', body: 'b' });
     expect(code).toMatch(/need_file/);
+  });
+});
+
+describe('publishers · inject 工具 · 边界 payload', () => {
+  it('payload 为 undefined / null 应序列化为空对象 {}', () => {
+    const code1 = inject('function(p){return p;}', undefined);
+    const code2 = inject('function(p){return p;}', null);
+    // 立即调用后的返回值应为空对象
+    expect(new Function('return (' + code1 + ')')()).toEqual({});
+    expect(new Function('return (' + code2 + ')')()).toEqual({});
+  });
+
+  it('payload 为基本类型时应正确序列化', () => {
+    const code = inject('function(p){return p;}', { s: 'hi', n: 42, b: true, x: null });
+    expect(new Function('return (' + code + ')')()).toEqual({ s: 'hi', n: 42, b: true, x: null });
+  });
+
+  it('payload 含嵌套对象与数组应完整往返', () => {
+    const payload = {
+      title: 'outer',
+      meta: { tags: ['a', 'b', 'c'], settings: { auto: true, n: 0 } },
+      list: [1, 'two', null, false]
+    };
+    const code = inject('function(p){return p;}', payload);
+    expect(new Function('return (' + code + ')')()).toEqual(payload);
+  });
+
+  it('payload 含 unicode 与 emoji 应完整往返', () => {
+    const payload = { title: '你好 Rokit 🚀', body: '🎉 测试' };
+    const code = inject('function(p){return p;}', payload);
+    const out = new Function('return (' + code + ')')();
+    expect(out.title).toBe('你好 Rokit 🚀');
+    expect(out.body).toBe('🎉 测试');
+  });
+
+  it('payload 含控制字符与反斜杠应安全序列化（不破坏 JS 语法）', () => {
+    const payload = { body: 'line1\nline2\ttab\\back', s: '"quoted""' };
+    const code = inject('function(p){return p;}', payload);
+    // 能在页面里 new Function 也能跑
+    const out = new Function('return (' + code + ')')();
+    expect(out.body).toBe('line1\nline2\ttab\\back');
+    expect(out.s).toBe('"quoted""');
+  });
+
+  it('payload 含 HTML 标签 / </script> 应原样序列化（浏览器 XSS 防护由 CSP 负责）', () => {
+    const payload = { body: '<script>alert(1)</script><img onerror=x>' };
+    const code = inject('function(p){return p;}', payload);
+    const out = new Function('return (' + code + ')')();
+    expect(out.body).toBe('<script>alert(1)</script><img onerror=x>');
+    // 额外验证：序列化产物应能被 new Function 执行，不报语法错
+    expect(() => new Function(code)).not.toThrow();
+  });
+
+  it('payload 为空对象 / 空数组应正常', () => {
+    expect(new Function('return (' + inject('function(p){return p;}', {}) + ')')()).toEqual({});
+    expect(new Function('return (' + inject('function(p){return p;}', []) + ')')()).toEqual([]);
+  });
+
+  it('payload 含 NaN / Infinity 应被 JSON.stringify 转为 null（标准行为，文档化）', () => {
+    const code = inject('function(p){return p;}', { a: NaN, b: Infinity });
+    const out = new Function('return (' + code + ')')();
+    expect(out.a).toBeNull();
+    expect(out.b).toBeNull();
+  });
+
+  it('函数体不含 payload 引用也应能合法执行', () => {
+    const code = inject('function(){return 42;}', { ignored: true });
+    expect(new Function('return (' + code + ')')()).toBe(42);
   });
 });

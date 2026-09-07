@@ -5,7 +5,7 @@
 **技术形态**：开源软件 · 桌面端应用 · 本地 SQLite · BYOK（用户自带 API Key）
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](ai-launch-master/LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.1-success.svg)](ai-launch-master/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.1.3-success.svg)](ai-launch-master/CHANGELOG.md)
 [![Platform: Windows](https://img.shields.io/badge/platform-Windows%2010%2F11-blueviolet.svg)](#)
 [![Electron](https://img.shields.io/badge/electron-36-47848F?logo=electron&logoColor=white)](#)
 [![Node](https://img.shields.io/badge/node-22%2B-339933?logo=node.js&logoColor=white)](#)
@@ -85,7 +85,7 @@ Rokit/
 
 | 版本 | 状态 | 核心能力 |
 |---|---|---|
-| **MVP 1.0**（当前 v0.1.1） | ✅ | 桌面壳 + BYOK + 对话向导 + 本地 SQLite + 多平台文案 + L2 自动填表 + 发布队列 + 自动发布浏览器 + 真实数据看板 |
+| **MVP 1.0**（当前 v0.1.3） | ✅ | 桌面壳 + BYOK + 对话向导 + 本地 SQLite + 多平台文案 + L2 自动填表 + 发布队列 + 自动发布浏览器 + 真实数据看板 |
 | **MVP 1.5** | 🚧 规划 | 落地页生成 · L1 直发（本地 OAuth）· 数据看板 · 里程碑报喜 · 录屏成片 · 多作品库 · 数据导出/导入 |
 | **MVP 2.0** | 📋 后续 | 反馈采集 + AI 分析 · 多画幅多版本渲染 · 开源发布与社区案例库 |
 
