@@ -48,6 +48,11 @@
 
   .navtab button.on{background:var(--primary-soft);color:var(--primary-dark);font-weight:600}
 
+  /* v1 暂未上线的导航 tab：data-coming 标记 + 角标 */
+  .navtab button[data-coming]{position:relative;opacity:.6;padding-right:30px}
+  .navtab button[data-coming].on{opacity:.85}
+  .navtab button .coming-badge{position:absolute;top:3px;right:4px;font-size:9px;font-weight:700;background:#FCD34D;color:#7C5A0B;border-radius:8px;padding:1px 5px;line-height:1.2;letter-spacing:.3px}
+
   .rail{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:16px}
 
   .rail .rail-title{font-size:11px;color:var(--muted);letter-spacing:1.2px;margin-bottom:10px}
@@ -83,6 +88,13 @@
   .chat-head .who small{display:block;font-size:11px;font-weight:400;color:var(--muted)}
 
   .chat-body{padding:20px 18px;min-height:340px;display:flex;flex-direction:column;gap:14px}
+
+  /* 首启动 onboarding CTA：固定在聊天框底部 */
+  .onboard-cta{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 18px;border-top:1px dashed var(--line);background:linear-gradient(180deg,rgba(252,211,77,.08),rgba(252,211,77,.18))}
+  .onboard-cta .onb-title{font-size:14px;font-weight:700;color:#7C5A0B;margin-bottom:2px}
+  .onboard-cta .onb-sub{font-size:12px;color:var(--ink);opacity:.85}
+  .onboard-cta .btn.lg{padding:10px 22px;font-size:14px}
+  @media (max-width:640px){.onboard-cta{flex-direction:column;align-items:stretch;text-align:center}}
 
   .msg{display:flex;gap:10px;align-items:flex-start}
 
@@ -390,6 +402,42 @@
 
   .dash{display:flex;flex-direction:column;gap:16px}
 
+  /* 看板 1.5 占位提示卡：与导航 data-coming 同一色系，避免重复设计 */
+  .dash-coming{display:flex;gap:12px;align-items:flex-start;background:rgba(252,211,77,.10);border:1px dashed rgba(252,211,77,.55);border-radius:12px;padding:12px 14px}
+  .dash-coming .dc-icon{font-size:18px;line-height:1.2;flex:none;color:#7C5A0B}
+  .dash-coming .dc-body{flex:1;min-width:0}
+  .dash-coming .dc-title{font-size:13.5px;font-weight:700;color:#7C5A0B;margin-bottom:2px}
+  .dash-coming .dc-sub{font-size:12.5px;color:var(--ink);line-height:1.6}
+  .dash-coming .dc-sub b{color:#7C5A0B}
+  /* 一旦发生真实发布（pubLog 非空），弱化此提示，避免占位文字喧宾夺主 */
+  .dash-coming.is-live{background:rgba(14,124,123,.06);border-color:rgba(14,124,123,.25)}
+  .dash-coming.is-live .dc-icon,.dash-coming.is-live .dc-title,.dash-coming.is-live .dc-sub b{color:var(--primary-dark)}
+
+  /* ===== 推广渠道卡片 ===== */
+  .ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:12px;margin-top:10px}
+  .ch-card{border:1px solid var(--line);border-radius:14px;padding:13px 14px;background:var(--card);position:relative;transition:all .15s}
+  .ch-card:hover{border-color:var(--primary)}
+  .ch-card.off{opacity:.55;background:var(--bg)}
+  .ch-card .ch-head{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+  .ch-card .ch-dot{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex:none}
+  .ch-card .ch-name{font-size:14px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ch-card .ch-name small{display:block;font-size:11px;font-weight:400;color:var(--muted);margin-top:1px}
+  .ch-card .ch-actions{display:flex;gap:4px;flex:none}
+  .ch-card .ch-actions button{width:26px;height:26px;border:1px solid var(--line);background:var(--card);border-radius:7px;font-size:13px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;font-family:inherit;padding:0}
+  .ch-card .ch-actions button:hover{background:var(--primary-soft);color:var(--primary-dark);border-color:var(--primary)}
+  .ch-card .ch-actions .ch-del:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
+  .ch-card .ch-meta{font-size:11.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .ch-card .ch-meta .chip{display:inline-flex;align-items:center;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-size:11px;color:var(--ink)}
+  .ch-card .ch-meta .chip.kind{background:var(--primary-soft);color:var(--primary-dark);border-color:#BFE0DC}
+  .ch-card .ch-meta .chip.off{background:#FDF0DA;color:#B45309;border-color:#FDE8B8}
+  .ch-card .ch-meta .chip.api{background:#EFF9F7;color:#0E7C7B;border-color:#BFE0DC}
+  .ch-card .ch-note{font-size:12px;color:var(--muted);margin-top:8px;border-top:1px dashed var(--line);padding-top:7px;line-height:1.5}
+  .ch-card .ch-empty{padding:30px 14px;text-align:center;color:var(--muted);font-size:13px;border:1px dashed var(--line);border-radius:14px;background:var(--bg)}
+  .ch-select{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink);appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='%235A6B72'><path d='M6 8L0 0h12z'/></svg>");background-repeat:no-repeat;background-position:right 11px center;background-size:10px;padding-right:30px;cursor:pointer}
+  .ch-select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+  .ch-kind-hint{font-size:11.5px;color:var(--muted);margin-top:5px;min-height:16px;line-height:1.5}
+
+
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
 
   .kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
@@ -465,6 +513,10 @@
   .wcard .wnx{font-size:12px;color:var(--primary-dark);margin-top:9px;background:var(--primary-soft);border-radius:6px;padding:5px 8px}
 
   .wcard .cur-tag{position:absolute;top:11px;right:11px;font-size:10.5px;color:var(--primary-dark);background:var(--primary-soft);border-radius:20px;padding:1px 8px}
+
+  /* 示例作品：靠左上角灰色角标区分，整体不透明度稍低 */
+  .wcard.wsample{background:repeating-linear-gradient(135deg,var(--card) 0 10px,rgba(156,163,175,.04) 10px 12px);opacity:.92}
+  .wcard .wsample-tag{position:absolute;top:11px;left:11px;font-size:10px;color:#5A6B72;background:rgba(156,163,175,.18);border:1px dashed rgba(156,163,175,.45);border-radius:10px;padding:1px 7px;font-weight:600;letter-spacing:.4px}
 
   .wcard .wdel{position:absolute;top:8px;right:8px;width:22px;height:22px;border:1px solid var(--line);border-radius:50%;background:var(--card);color:var(--muted);font-size:14px;line-height:1;cursor:pointer;opacity:0;transition:all .12s;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit}
 
@@ -557,13 +609,101 @@
   .plan-ed .body .del{text-align:right;margin-top:6px}
 
   .topbar .gear{width:34px;height:34px;border:1px solid var(--line);background:var(--card);border-radius:10px;font-size:15px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center}
-
+  
   .topbar .gear:hover{background:var(--primary-soft);color:var(--primary-dark)}
-
+  
   .byok-chip{font-size:11.5px;padding:4px 11px;border-radius:20px;background:#FDF0DA;color:#B45309;border:1px solid #FDE8B8;cursor:pointer;white-space:nowrap}
-
+  
   .byok-chip.ok{background:var(--success-soft);color:var(--success);border-color:#CDE8CD}
-
+  
+  /* ===== 模型选择器（添加模型弹窗） ===== */
+  
+  .modal-overlay.dark{background:rgba(8,12,18,.6)}
+  
+  .modal .modal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;padding-right:36px;position:relative;min-height:28px}
+  
+  .modal .modal-head h3{margin-bottom:0;flex:1;min-width:0;line-height:1.4}
+  
+  .modal .modal-close{position:absolute;top:0;right:0;width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;padding:0;font-family:inherit;flex:none}
+  
+  .modal .modal-close:hover{background:var(--bg);color:var(--ink)}
+  
+  .modal.dark .modal-close{background:transparent;border-color:#2A3A4D;color:#7E8C9A}
+  
+  .modal.dark .modal-close:hover{background:#16212E;color:#fff;border-color:#3A4D66}
+  
+  .modal.dark{background:#0F1722;color:#E6EDF5}
+  
+  .modal.dark h3{color:#fff}
+  
+  .modal.dark .mp-sub{color:#7E8C9A}
+  
+  .modal.dark .mp-add{border:1px solid #2A3A4D;color:#E6EDF5;background:transparent}
+  
+  .modal.dark .mp-add:hover{background:#16212E;border-color:#3A4D66}
+  
+  .modal.dark .mp-thead{color:#7E8C9A;border-bottom:1px solid #1E2A38}
+  
+  .modal.dark .mp-row{background:transparent;border:1px solid transparent;color:#E6EDF5}
+  
+  .modal.dark .mp-row:hover{background:#16212E;border-color:#1E2A38}
+  
+  .modal.dark .mp-row .mp-brand{color:#7E8C9A}
+  
+  .modal.dark .mp-row .mp-arrow{color:#7E8C9A}
+  
+  .modal.dark .mp-row:hover .mp-arrow{color:#fff}
+  
+  .mp-sub{font-size:12px;color:var(--muted);margin-bottom:14px}
+  
+  .mp-add{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:12px}
+  
+  .mp-add:hover{background:var(--primary-soft);border-color:var(--primary);color:var(--primary-dark)}
+  
+  .mp-thead{display:grid;grid-template-columns:1.6fr 1fr 28px;gap:12px;padding:8px 14px;font-size:11px;color:var(--muted);letter-spacing:.4px;font-weight:600;border-bottom:1px solid var(--line);margin-bottom:4px;align-items:center}
+  
+  .mp-list{display:flex;flex-direction:column;gap:4px;max-height:340px;overflow:auto;padding-right:4px}
+  
+  .mp-row{display:grid;grid-template-columns:1.6fr 1fr 28px;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;cursor:pointer;border:1px solid transparent;background:transparent;font-size:13.5px}
+  
+  .mp-row .mp-model{display:flex;align-items:center;min-width:0}
+  
+  .mp-row .mp-model .mp-logo{margin-right:10px}
+  
+  .mp-row .mp-model .mp-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  
+  .mp-row:hover{background:var(--primary-soft);border-color:var(--primary)}
+  
+  .mp-row.cur{background:var(--primary-soft);border-color:var(--primary);font-weight:600;color:var(--primary-dark)}
+  
+  .modal.dark .mp-row.cur{color:#E6EDF5;background:#16212E;border-color:#2A3A4D}
+  
+  .mp-logo{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex:none;letter-spacing:.3px}
+  
+  .mp-name{font-weight:600}
+  
+  .mp-brand{font-size:11.5px;color:var(--muted);margin-top:1px;font-weight:400}
+  
+  .mp-arrow{color:var(--muted);font-size:16px;text-align:right}
+  
+  /* 模型选择触发器（设置弹窗内） */
+  
+  .field-model-trigger{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:9px;padding:7px 10px;background:#fff;cursor:pointer;min-height:42px}
+  
+  .field-model-trigger:hover{border-color:var(--primary)}
+  
+  .field-model-trigger .fmt-logo{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex:none}
+  
+  .field-model-trigger .fmt-info{flex:1;min-width:0}
+  
+  .field-model-trigger .fmt-name{font-size:13.5px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  
+  .field-model-trigger .fmt-brand{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  
+  .field-model-trigger .fmt-arrow{color:var(--muted);font-size:14px}
+  
+  .field-model-trigger.cur{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-soft)}
+  
   .modal-overlay{position:fixed;inset:0;background:rgba(20,30,34,.45);display:none;align-items:flex-start;justify-content:center;z-index:99;padding:8vh 16px;overflow:auto}
 
   .modal-overlay.show{display:flex}
@@ -608,7 +748,7 @@
 
     </div>
 
-    <div class="navtab"><button id="tabFlow" class="on" onclick="go('flow')">首秀向导</button><button id="tabDash" onclick="go('dashboard')">数据看板</button><button id="tabWorks" onclick="go('works')">我的作品</button></div>
+    <div class="navtab"><button id="tabFlow" class="on" onclick="go('flow')">首秀向导</button><button id="tabDash" data-coming="1.5" data-coming-label="MVP 1.5" onclick="go('dashboard')">数据看板<span class="coming-badge">1.5</span></button><button id="tabChannels" onclick="go('channels')">推广渠道</button><button id="tabWorks" onclick="go('works')">我的作品</button></div>
 
     <div style="display:flex;align-items:center;gap:8px">
 
@@ -642,6 +782,15 @@
 
         <div class="chat-body" id="chatBody"></div>
 
+        <!-- 首启动 onboarding CTA：仅 step===0 时显示，引导用户开始首秀 -->
+        <div class="onboard-cta" id="onboardCta" style="display:none">
+          <div class="onb-text">
+            <div class="onb-title">🎯 开始首秀</div>
+            <div class="onb-sub">填入你的作品名 → AI 自动诊断、推荐平台、一键发射</div>
+          </div>
+          <button class="btn accent lg" onclick="goNext(0)">开始首秀</button>
+        </div>
+
       </div>
 
     </section>
@@ -651,37 +800,70 @@
     <section data-route="dashboard" style="display:none">
 
       <div class="dash">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><div style="font-size:11px;color:var(--muted);letter-spacing:.4px">看板 · 演示示意</div><span class="demo-tag" style="background:var(--accent-soft);color:#B36B00;padding:2px 8px;border-radius:10px;font-size:10.5px;font-weight:600">以下数据为演示示意 · 1.5 接入真实统计</span></div>
+        <!-- v1 看板为占位：默认初始数据真实为 0；当前页同步提示规划中 -->
+        <div class="dash-coming" id="dashComingNotice">
+          <div class="dc-icon">⚙</div>
+          <div class="dc-body">
+            <div class="dc-title">数据看板 · MVP 1.5 规划中</div>
+            <div class="dc-sub">下方 4 个 KPI、渠道发布次数、里程碑报喜、发布回填均来源于本机的真实推广动作；完成首次发布后会自动回填。<b>外部曝光、Star、下载量等需接入统计服务</b>（MVP 1.5 上线）。</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <div style="font-size:11px;color:var(--muted);letter-spacing:.4px">看板 · 真实数据</div>
+          <span id="dashSourceTag" style="background:rgba(14,124,123,.12);color:var(--primary);padding:2px 8px;border-radius:10px;font-size:10.5px;font-weight:600">本地回填 · 未接统计服务</span>
+        </div>
         <div class="kpis">
 
-          <div class="kpi"><div class="kl">7 日总曝光</div><div class="kv">12,480</div><div class="kd up">+38%</div></div>
+          <div class="kpi"><div class="kl">总发布次数</div><div class="kv" id="kpiPub">0</div><div class="kd" id="kpiPubSub">本机会话</div></div>
 
-          <div class="kpi"><div class="kl">下载 / 安装</div><div class="kv">342</div><div class="kd up">+61%</div></div>
+          <div class="kpi"><div class="kl">被启用渠道</div><div class="kv" id="kpiChannels">0</div><div class="kd" id="kpiChannelsSub">启用的推广渠道数</div></div>
 
-          <div class="kpi"><div class="kl">GitHub Star</div><div class="kv">156</div><div class="kd up">本周 +47</div></div>
+          <div class="kpi"><div class="kl">首发作品</div><div class="kv" id="kpiWorks">0</div><div class="kd" id="kpiWorksSub">本机登记的正式作品</div></div>
 
-          <div class="kpi"><div class="kl">好评率</div><div class="kv">92%</div><div class="kd up">反馈 87 条</div></div>
+          <div class="kpi"><div class="kl">最近发布</div><div class="kv" id="kpiLastPub" style="font-size:18px">—</div><div class="kd" id="kpiLastPubSub">未发布</div></div>
 
         </div>
 
-        <div class="panel"><h3>各渠道曝光对比</h3><div class="sub">近 7 天 · 演示数据</div><div class="bars" id="barsBox"></div></div>
+        <div class="panel">
+          <h3>各渠道发布次数</h3>
+          <div class="sub" id="barsSub">本机会话 · 按平台统计</div>
+          <div class="bars" id="barsBox"></div>
+        </div>
 
-        <div class="panel"><h3>里程碑报喜</h3><div class="sub">AI 大师主动汇报关键节点（演示示意）</div><div class="feed" id="feedBox">
-
-          <div class="f new"><div class="ic" style="background:#F59E0B">!</div><div class="fx"><div class="ft">达成第 1 个 100 Star</div><div class="fm">GitHub 今日新增 23 个 Star，V2EX 帖是主要来源</div></div></div>
-
-          <div class="f"><div class="ic" style="background:#0E7C7B">视</div><div class="fx"><div class="ft">推广视频累计播放 2.1k 次</div><div class="fm">15s 竖屏精华在抖音获最高完播率，横屏版带动 B站</div></div></div>
-
-          <div class="f"><div class="ic" style="background:#2E8B33">需</div><div class="fx"><div class="ft">2 位用户想要「暗色模式」</div><div class="fm">已归入 P2 迭代清单，可下周排期</div></div></div>
-
-          <div class="f"><div class="ic" style="background:#0E7C7B">周</div><div class="fx"><div class="ft">本周运营周报已生成</div><div class="fm">推荐优先级：P0 修 Bug → P1 新增导出 → P2 暗色模式</div></div></div>
-
-        </div></div>
+        <div class="panel"><h3>里程碑报喜</h3><div class="sub" id="feedSub">本机会话 · AI 大师会主动汇报关键节点</div><div class="feed" id="feedBox"></div></div>
 
         <div class="panel"><h3>本次会话 · 发布回填</h3><div class="sub"><span style="color:var(--success);font-weight:600">真实数据</span> · 由刚才的发布队列实时回填，非演示数据</div><div class="pub-log" id="pubLogBox"><div style="font-size:12.5px;color:var(--muted)">尚无发布记录。完成一次首秀发射后，这里会展示你实际发布的平台、时间与文案。</div></div></div>
 
       </div>
 
+    </section>
+
+
+    <section data-route="channels" style="display:none">
+      <div class="dash">
+        <div class="panel">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px">
+            <div>
+              <h3>推广渠道</h3>
+              <div class="sub" style="margin-bottom:0">这里列出《你的作品》要推送到的所有渠道。内置 13 个平台已预置，也可以添加自定义 webhook / 第三方 API 作为新渠道。</div>
+            </div>
+            <div style="display:flex;gap:8px;flex:none">
+              <button class="btn ghost sm" onclick="seedBuiltinChannels()" title="把缺失的内置平台补充进来（不会重复添加）">同步内置</button>
+              <button class="btn sm" onclick="openChannelEditor(null)">+ 新增渠道</button>
+            </div>
+          </div>
+          <div id="channelsBox" class="ch-grid"></div>
+        </div>
+
+        <div class="panel">
+          <h3>渠道说明</h3>
+          <div class="sub">两种渠道类型：</div>
+          <ul style="margin:6px 0 0 18px;font-size:13px;color:var(--ink);line-height:1.8">
+            <li><b style="color:var(--primary-dark)">内置平台</b>：Rokit 内置 13 个平台的自动填表脚本（GitHub / PH / V2EX / 掘金 / X / Facebook / 抖音 / 小红书 / B站 / 即刻 / 知乎 / 公众号 / YouTube），无需 API 也能在自动发布浏览器中一键发布。</li>
+            <li><b style="color:var(--primary-dark)">自定义渠道</b>：填入 API 地址或 Webhook URL（如企业微信 / 钉钉 / Discord / 飞书机器人 / 自建服务），Rokit 会以 POST JSON 方式把标题与正文推给你。</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
 
@@ -728,15 +910,37 @@
 
 
 
+<div class="modal-overlay" id="modelPickerModal">
+
+  <div class="modal dark" style="max-width:560px">
+
+    <div class="modal-head"><h3>添加模型</h3><button class="modal-close" onclick="closeModelPicker()" title="关闭">×</button></div>
+
+    <div class="mp-sub">选择你的模型服务商，自动填入 Base URL 与默认模型名，再填 API Key 即可使用。</div>
+
+    <button type="button" class="mp-add" onclick="modelPickerAdd()"><span style="font-size:15px;line-height:1">+</span> 添加模型</button>
+
+    <div class="mp-thead"><div>模型</div><div>服务商</div><div>操作</div></div>
+
+    <div class="mp-list" id="modelPickerList"></div>
+
+  </div>
+
+</div>
+
+
+
 <div class="modal-overlay" id="settingsModal">
 
   <div class="modal">
 
-    <h3>用户设置（模型 + 自动发布）</h3>
+    <div class="modal-head"><h3>用户设置（模型 + 自动发布）</h3><button class="modal-close" onclick="closeSettings()" title="关闭">×</button></div>
 
-    <div class="msub">你自备 API Key，本地接入任意 OpenAI 兼容端点（DeepSeek / OpenAI / 通义 / Ollama 等）。Key 只存本机，不上传任何服务器。</div>
+    <div class="msub">你自备 API Key，本地接入任意 OpenAI 兼容端点。Key 只存本机，不上传任何服务器。</div>
 
     <form onsubmit="saveCfg(event)">
+
+      <div class="field"><label>模型服务商</label><div class="field-model-trigger" id="cfgModelTrigger" onclick="openModelPicker()"><div class="fmt-info"><div class="fmt-name" id="cfgModelName">自定义模型</div><div class="fmt-brand" id="cfgModelBrand">OpenAI 兼容端点</div></div><span class="fmt-arrow">›</span></div></div>
 
       <div class="field"><label>Base URL（OpenAI 兼容端点）</label><input id="cfgBase" placeholder="https://api.deepseek.com/v1" autocomplete="off"/></div>
 
@@ -804,6 +1008,58 @@
 
 
 
+<div class="modal-overlay" id="channelModal">
+
+  <div class="modal">
+
+    <div class="modal-head"><h3 id="channelModalTitle">新增推广渠道</h3><button class="modal-close" onclick="closeChannelEditor()" title="关闭">×</button></div>
+
+    <div class="msub" id="channelModalSub">选择一个内置平台，或填入自定义 API / Webhook 作为新渠道。保存后可在首秀向导中启用它。</div>
+
+    <form onsubmit="saveChannel(event)">
+
+      <div class="field"><label>渠道名称 <span style="color:var(--danger)">*</span></label><input id="chName" placeholder="例如：我的个人微信公众号" maxlength="40" required/></div>
+
+      <div class="field"><label>渠道类型 <span style="color:var(--danger)">*</span></label><select id="chKind" class="ch-select" required onchange="updateKindHint()"></select><div class="ch-kind-hint" id="chKindHint"></div></div>
+
+      <div id="chCustomBox" style="display:none">
+
+        <div class="field"><label>API 地址（POST JSON）</label><input id="chApiBase" placeholder="https://api.example.com/v1/posts" autocomplete="off"/></div>
+
+        <div class="field"><label>API Key / Bearer 令牌（可选）</label><input id="chApiKey" type="password" placeholder="sk-..." autocomplete="off"/></div>
+
+        <div class="field"><label>Webhook URL（可选，优先于 API 地址）</label><input id="chWebhook" placeholder="https://hooks.example.com/..." autocomplete="off"/></div>
+
+        <div class="msub" style="margin:2px 0 8px">测试连接会以 POST JSON 发送 <code>{test:true, title, body, ts}</code>，Authorization: Bearer &lt;API Key&gt;（若有）。</div>
+
+      </div>
+
+      <div class="field"><label>分组标签（可选）</label><input id="chTag" placeholder="中文 / 海外 / 视频 / 通知 / ..." maxlength="20"/></div>
+
+      <div class="field"><label>备注（可选）</label><input id="chNote" placeholder="个人备注：如「主页由小绿维护」" maxlength="80"/></div>
+
+      <div class="field" style="display:flex;align-items:center;gap:8px"><label style="margin:0;flex:1">启用此渠道</label><label class="cfg-switch" style="margin:0"><input type="checkbox" id="chEnabled" checked/> <span style="font-size:12.5px;color:var(--muted);font-weight:400">关闭后不会出现在首秀发射列表</span></label></div>
+
+      <div class="cfg-status" id="chStatus"></div>
+
+      <div class="modal-acts">
+
+        <button type="button" class="btn ghost sm" id="chTestBtn" onclick="testChannel()">测试连接</button>
+
+        <button type="button" class="btn ghost sm" onclick="closeChannelEditor()">取消</button>
+
+        <button type="submit" class="btn sm" id="chSubmitBtn">保存</button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+
 <script>
 
 (function(){
@@ -853,18 +1109,22 @@
     curWork:'w1',
 
     works:[
+      // 示例作品（不入库，id 以 sample_ 前缀）
+      {id:'sample_w1',name:'便签天气',type:'效率工具',status:'首秀中',color:'#F59E0B',queue:'主推',star:0,dl:0,play:0,next:'完成录屏成片',intro:'一个把天气和便签合一的极简小应用',url:'',isSample:true},
+      {id:'sample_w2',name:'校园课表助手',type:'效率工具',status:'运营期',color:'#0E7C7B',queue:'挂机',star:0,dl:0,play:0,next:'看本周反馈',intro:'一键导入课表，自动提醒上课',url:'',isSample:true},
+      {id:'sample_w3',name:'像素猫小游戏',type:'小游戏',status:'稳定期',color:'#2E8B33',queue:'挂机',star:0,dl:0,play:0,next:'日常维护',intro:'一只会偷金币的像素猫',url:'',isSample:true},
+      {id:'sample_w4',name:'单词卡速记',type:'效率工具',status:'待启动',color:'#9CA3AF',queue:'排队',star:0,dl:0,play:0,next:'登记推广',intro:'Anki 式速记卡片',url:'',isSample:true}
+    ],
 
-      {id:'w1',name:'便签天气',type:'效率工具',status:'首秀中',color:'#F59E0B',queue:'主推',star:86,dl:342,play:'1.2k',next:'完成录屏成片',intro:'一个把天气和便签合一的极简小应用',url:''},
-
-      {id:'w2',name:'校园课表助手',type:'效率工具',status:'运营期',color:'#0E7C7B',queue:'挂机',star:342,dl:1200,play:'2.1k',next:'看本周反馈',intro:'一键导入课表，自动提醒上课',url:''},
-
-      {id:'w3',name:'像素猫小游戏',type:'小游戏',status:'稳定期',color:'#2E8B33',queue:'挂机',star:1200,dl:5000,play:'12k',next:'日常维护',intro:'一只会偷金币的像素猫',url:''},
-
-      {id:'w4',name:'单词卡速记',type:'效率工具',status:'待启动',color:'#9CA3AF',queue:'排队',star:0,dl:0,play:'0',next:'登记推广',intro:'Anki 式速记卡片',url:''}
-
-    ]
+    // 真实数据看板状态（初值为 0 / 空）
+    kpis:{pub:0,channelsEnabled:0,works:0,lastPub:null,lastPubAt:null},
+    pubByPlatform:{}, // {github:3, v2ex:1, ...}
 
   };
+
+  // 示例作品白名单：不允许被持久化、不允许以 sample_ 前缀新建
+  var SAMPLE_WORK_IDS=['sample_w1','sample_w2','sample_w3','sample_w4'];
+  function isSampleWork(id){return SAMPLE_WORK_IDS.indexOf(id)>=0;}
 
   var DEMO_STEPS=[
 
@@ -881,36 +1141,71 @@
   ];
 
   var PLATFORMS=[
-
-    {id:'github',name:'GitHub',lv:'L1 直发',color:'#24292F',region:'global',auto:true},
-
-    {id:'ph',name:'Product Hunt',lv:'L1 直发',color:'#DA552F',region:'global',auto:true},
-
+    // 与 electron/publishers.js 保持一致：auto 反映「点一键后是否需要人工最终确认」
+    {id:'github',name:'GitHub',lv:'L2 跳转',color:'#24292F',region:'global',auto:true},
+    {id:'ph',name:'Product Hunt',lv:'L2 跳转',color:'#DA552F',region:'global',auto:false},
     {id:'v2ex',name:'V2EX',lv:'L2 跳转',color:'#5779C8',region:'cn',auto:true},
-
-    {id:'juejin',name:'掘金',lv:'L2 跳转',color:'#1E80FF',region:'cn',auto:true},
-
+    {id:'juejin',name:'掘金',lv:'L2 跳转',color:'#1E80FF',region:'cn',auto:false},
     {id:'jike',name:'即刻',lv:'L2 跳转',color:'#B7A600',region:'cn',auto:false},
-
     {id:'bili',name:'B站',lv:'L2 跳转',color:'#00A1D6',region:'cn',auto:false},
-
     {id:'xhs',name:'小红书',lv:'L2 跳转',color:'#FF2442',region:'cn',auto:false},
-
     {id:'douyin',name:'抖音',lv:'L2 跳转',color:'#161823',region:'cn',auto:false},
-
     {id:'zhihu',name:'知乎',lv:'L2 跳转',color:'#0084FF',region:'cn',auto:false},
-
     {id:'wechat',name:'微信公众号',lv:'L2 跳转',color:'#07C160',region:'cn',auto:false},
-
-    {id:'facebook',name:'Facebook',lv:'L1 直发',color:'#1877F2',region:'global',auto:true},
-
-    {id:'youtube',name:'YouTube',lv:'L2 跳转',color:'#FF0000',region:'global',auto:true},
-
-    {id:'x',name:'X (Twitter)',lv:'L1 直发',color:'#000000',region:'global',auto:true}
-
+    {id:'facebook',name:'Facebook',lv:'L2 跳转',color:'#1877F2',region:'global',auto:false},
+    {id:'youtube',name:'YouTube',lv:'L2 跳转',color:'#FF0000',region:'global',auto:false},
+    {id:'x',name:'X (Twitter)',lv:'L2 跳转',color:'#000000',region:'global',auto:true}
   ];
 
   PLATFORMS.forEach(function(p){state.platforms[p.id]=false;state.sel[p.id]=false;});
+
+
+
+  /* ===== 模型服务商预设（添加模型弹窗使用） ===== */
+
+  // logo：品牌色 + 文本标识（如官方 Logo、缩写、首字）
+
+  // region：'cn' / 'global' / 'cn-global'（多区域可选），仅用于默认 base_url 路由
+
+  var MODEL_PROVIDERS=[
+
+    {id:'custom',name:'自定义模型',brand:'OpenAI 兼容端点',logo:'◆',bg:'#5A6B72',base_url:'',model:''},
+
+    {id:'deepseek',name:'DeepSeek',brand:'深度求索',logo:'DS',bg:'#1A66E6',base_url:'https://api.deepseek.com/v1',model:'deepseek-chat'},
+
+    {id:'volcengine',name:'火山引擎',brand:'字节跳动 · 豆包',logo:'🔥',bg:'#3D5BFF',base_url:'https://ark.cn-beijing.volces.com/api/v3',model:'doubao-pro-32k'},
+
+    {id:'minimax-cn',name:'MiniMax CN',brand:'MiniMax',logo:'M',bg:'#FF6B35',base_url:'https://api.MiniMax.chat/v1',model:'MiniMax-Text-01'},
+
+    {id:'minimax',name:'MiniMax Global',brand:'MiniMax',logo:'M',bg:'#E84545',base_url:'https://api.MiniMax.ai/v1',model:'MiniMax-Text-01'},
+
+    {id:'bigmodel',name:'Bigmodel',brand:'智谱 · GLM',logo:'B',bg:'#3859FF',base_url:'https://open.bigmodel.cn/api/paas/v4',model:'glm-4-plus'},
+
+    {id:'aliyun',name:'阿里云',brand:'通义千问',logo:'A',bg:'#FF6A00',base_url:'https://dashscope.aliyuncs.com/compatible-mode/v1',model:'qwen-plus'},
+
+    {id:'mimo',name:'Xiaomi MIMO',brand:'小米 · 大模型',logo:'M',bg:'#FF5722',base_url:'https://api.xiaomimimo.com/v1',model:'mimo-v2'},
+
+    {id:'siliconflow',name:'硅基流动',brand:'SiliconFlow',logo:'Si',bg:'#7C3AED',base_url:'https://api.siliconflow.cn/v1',model:'Qwen/Qwen2.5-72B-Instruct'},
+
+    {id:'zhipu',name:'Z.ai',brand:'智谱 · GLM',logo:'Z',bg:'#0F172A',base_url:'https://api.z.ai/v1',model:'glm-4.5'},
+
+    {id:'openrouter',name:'OpenRouter',brand:'路由聚合 · 多模型',logo:'OR',bg:'#5B6CFF',base_url:'https://openrouter.ai/api/v1',model:'anthropic/claude-3.5-sonnet'},
+
+    {id:'kimi-cn',name:'Kimi CN',brand:'月之暗面',logo:'K',bg:'#1A1A1A',base_url:'https://api.moonshot.cn/v1',model:'moonshot-v1-128k'},
+
+    {id:'kimi',name:'Kimi Global',brand:'Moonshot AI',logo:'K',bg:'#2D2D2D',base_url:'https://api.moonshot.ai/v1',model:'moonshot-v1-128k'},
+
+    {id:'byteplus',name:'BytePlus',brand:'字节跳动 · 火山海外',logo:'BP',bg:'#3D5BFF',base_url:'https://ark.ap-southeast.bytepluses.com/api/v3',model:'skylark-pro'},
+
+    {id:'aws',name:'AWS',brand:'Bedrock',logo:'aws',bg:'#232F3E',base_url:'https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1',model:'anthropic.claude-3-5-sonnet'},
+
+    {id:'tencent',name:'腾讯云',brand:'腾讯混元',logo:'T',bg:'#0052D9',base_url:'https://api.hunyuan.tencent.com/v1',model:'hunyuan-pro'},
+
+    {id:'modalabs',name:'模力方舟',brand:'Modalabs',logo:'模',bg:'#16A34A',base_url:'https://api.modalabs.com/v1',model:'modalabs-pro'},
+
+    {id:'ppio',name:'PPIO',brand:'派欧云',logo:'P',bg:'#0EA5E9',base_url:'https://api.ppio.com/v1',model:'ppio-72b'}
+
+  ];
 
 
 
@@ -968,6 +1263,52 @@
 
   }
 
+  // 根据当前 base_url 匹配出默认 provider（用户也可在弹窗里手动选择自定义）
+
+  function matchProviderId(){
+
+    var b=String(state.settings.base_url||'').replace(/\/+$/,'').toLowerCase();
+
+    if(!b)return 'custom';
+
+    for(var i=0;i<MODEL_PROVIDERS.length;i++){
+
+      var p=MODEL_PROVIDERS[i];
+
+      if(p.id==='custom')continue;
+
+      var pb=String(p.base_url||'').replace(/\/+$/,'').toLowerCase();
+
+      if(pb && (b===pb || b.indexOf(pb)===0))return p.id;
+
+    }
+
+    return 'custom';
+
+  }
+
+  function applyModelTrigger(providerId){
+
+    var p=null;
+
+    for(var i=0;i<MODEL_PROVIDERS.length;i++){if(MODEL_PROVIDERS[i].id===providerId){p=MODEL_PROVIDERS[i];break;}}
+
+    p=p||MODEL_PROVIDERS[0];
+
+    var nm=document.getElementById('cfgModelName');if(nm)nm.textContent=p.name;
+
+    var br=document.getElementById('cfgModelBrand');if(br)br.textContent=p.brand||'OpenAI 兼容端点';
+
+    var tr=document.getElementById('cfgModelTrigger');
+
+    if(tr){tr.classList.add('cur');var oldLogo=tr.querySelector('.fmt-logo');if(oldLogo)oldLogo.remove();
+
+      var logo=document.createElement('div');logo.className='fmt-logo';logo.style.background=p.bg||'#5A6B72';
+
+      logo.textContent=p.logo||p.name.charAt(0);tr.insertBefore(logo,tr.firstChild);}
+
+  }
+
   window.openSettings=function(){
 
     var m=document.getElementById('settingsModal');if(!m)return;
@@ -979,6 +1320,8 @@
     document.getElementById('cfgModel').value=state.settings.model||'';
 
     document.getElementById('cfgStatus').innerHTML='';
+
+    applyModelTrigger(state.settings.provider||matchProviderId());
 
     var ap=state.settings.autoPub||{enabled:false,platforms:{github:true,ph:true}};
 
@@ -1002,13 +1345,83 @@
 
   window.closeSettings=function(){var m=document.getElementById('settingsModal');if(m)m.style.display='none';};
 
+  /* ===== 添加模型（服务商选择器） ===== */
+
+  function renderModelPicker(){
+
+    var box=document.getElementById('modelPickerList');if(!box)return;
+
+    var cur=state.settings.provider||matchProviderId();
+
+    box.innerHTML=MODEL_PROVIDERS.map(function(p){
+
+      var sel=p.id===cur;
+
+      return '<div class="mp-row'+(sel?' cur':'')+'" data-pid="'+esc(p.id)+'" onclick="pickProvider(\''+p.id+'\')">'+
+
+        '<div class="mp-model"><span class="mp-logo" style="background:'+p.bg+'">'+esc(p.logo||p.name.charAt(0))+'</span><span class="mp-name">'+esc(p.name)+'</span></div>'+
+
+        '<div class="mp-brand">'+esc(p.brand||'—')+'</div>'+
+
+        '<div class="mp-arrow">›</div></div>';
+
+    }).join('');
+
+  }
+
+  window.openModelPicker=function(){
+
+    renderModelPicker();
+
+    var m=document.getElementById('modelPickerModal');if(m)m.classList.add('show');
+
+  };
+
+  window.closeModelPicker=function(){var m=document.getElementById('modelPickerModal');if(m)m.classList.remove('show');};
+
+  // 选中服务商后：填入 base_url / model，写回 settings.provider，同步刷新 trigger
+
+  window.pickProvider=function(pid){
+
+    var p=null;
+
+    for(var i=0;i<MODEL_PROVIDERS.length;i++){if(MODEL_PROVIDERS[i].id===pid){p=MODEL_PROVIDERS[i];break;}}
+
+    if(!p)return;
+
+    state.settings.provider=p.id;
+
+    var baseEl=document.getElementById('cfgBase');if(baseEl)baseEl.value=p.base_url||'';
+
+    var modelEl=document.getElementById('cfgModel');if(modelEl)modelEl.value=p.model||'';
+
+    applyModelTrigger(p.id);
+
+    closeModelPicker();
+
+    if(p.id==='custom'){
+
+      var b=document.getElementById('cfgBase');if(b){b.focus();b.select&&b.select();}
+
+    }else{
+
+      var k=document.getElementById('cfgKey');if(k)k.focus();
+
+    }
+
+  };
+
+  // “+ 添加模型” = 选中自定义（用户手动填 base_url / model / api_key）
+
+  window.modelPickerAdd=function(){pickProvider('custom');};
+
   window.saveCfg=function(e){if(e)e.preventDefault();
 
     var ap={enabled:!!document.getElementById('cfgAutoPub').checked,platforms:{}};
 
     document.querySelectorAll('#cfgPlatList input[data-pid]').forEach(function(inp){ap.platforms[inp.getAttribute('data-pid')]=inp.checked;});
 
-    state.settings={base_url:document.getElementById('cfgBase').value.trim()||'https://api.deepseek.com/v1',api_key:document.getElementById('cfgKey').value.trim(),model:document.getElementById('cfgModel').value.trim()||'deepseek-chat',autoPub:ap};
+    state.settings={provider:state.settings.provider||matchProviderId(),base_url:document.getElementById('cfgBase').value.trim()||'https://api.deepseek.com/v1',api_key:document.getElementById('cfgKey').value.trim(),model:document.getElementById('cfgModel').value.trim()||'deepseek-chat',autoPub:ap};
 
     persistSettings();noteModel();closeSettings();
 
@@ -1160,6 +1573,8 @@
 
     document.getElementById('tabDash').className=(r==='dashboard')?'on':'';
 
+    document.getElementById('tabChannels').className=(r==='channels')?'on':'';
+
     document.getElementById('tabWorks').className=(r==='works')?'on':'';
 
     if(r==='flow'){renderRail();renderFlow();}
@@ -1167,6 +1582,8 @@
     if(r==='dashboard'){renderDash();}
 
     if(r==='works'){renderWorks();}
+
+    if(r==='channels'){renderChannels();}
 
     window.scrollTo(0,0);
 
@@ -1328,6 +1745,10 @@
 
     body.scrollTop=body.scrollHeight;
 
+    // onboarding CTA：仅 step===0 显示；用户首次进入 step 1 后隐藏
+    var cta=document.getElementById('onboardCta');
+    if(cta) cta.style.display=(state.step===0)?'flex':'none';
+
   }
 
 
@@ -1476,6 +1897,8 @@
 
         '<div class="step-txt">我要开始录你的产品演示。点「开始录屏」后，选择你的产品窗口，然后按我的提示一步步操作。</div>'+
 
+        '<div class="demo-note" style="margin-top:10px;padding:8px 10px;border-radius:6px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);font-size:12px;color:#B36B00;line-height:1.6">⓵ <b>录屏本身是真实能力</b>（getDisplayMedia），<br />⓶ 后续的智能拆条 / 合成成片为 <b>原型演示</b>，正式版由服务端 Remotion 渲染高清 MP4。</div>'+
+
         '<div style="height:12px"></div><button class="btn" onclick="startRec()">开始录屏</button></div></div>';
 
     }else if(r.running){
@@ -1572,7 +1995,7 @@
 
     if(!state.shots){
 
-      ctrl.innerHTML='<button class="btn accent" onclick="analyzeShots()">开始智能拆条</button><div class="rec-tip" style="font-size:12px;color:var(--muted);margin-top:6px">AI 将检测画面切换、操作停顿，把原始录屏切成镜头并重组版本。</div>';
+      ctrl.innerHTML='<button class="btn accent" onclick="analyzeShots()">🎬 开始智能拆条 <span style="font-size:10.5px;background:rgba(245,158,11,.15);color:#B36B00;padding:1px 6px;border-radius:8px;margin-left:4px;letter-spacing:.5px">DEMO</span></button><div class="rec-tip" style="font-size:12px;color:var(--muted);margin-top:6px">AI 将检测画面切换、操作停顿，把原始录屏切成镜头并重组版本。<br /><span style="color:#B36B00">⚠ 当前为演示流程 · 正式版使用本地 ffmpeg / 服务端 Remotion。</span></div>';
 
     }else{
 
@@ -1586,7 +2009,9 @@
 
       ctrl.innerHTML='<div class="shots">'+shotsHtml+'</div>'+vhtml+
 
-      '<div style="height:10px"></div><div class="choice"><button class="btn ghost" onclick="analyzeShots()">重新拆条</button><button class="btn" onclick="goNext(6)">下一步：配置文稿</button></div>';
+      '<div style="height:10px"></div><div class="choice"><button class="btn ghost" onclick="analyzeShots()">重新拆条</button><button class="btn" onclick="goNext(6)">下一步：配置文稿</button></div>'+
+
+      '<div style="font-size:12px;color:#B36B00;margin-top:6px">⚠ 以上拆条结果为模拟数据 · 真实拆条将基于录屏内容分析镜头边界</div>';
 
     }
 
@@ -1598,7 +2023,7 @@
 
     var b=document.getElementById('ctrlBox');
 
-    var h='<div class="render-progress">';steps.forEach(function(s,i){h+='<div class="rp-row" id="rp'+i+'"><span class="rp-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.2 4.2L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'+s+'</div>';});h+='</div>';
+    var h='<div class="render-progress" style="border:1px dashed rgba(245,158,11,.4);background:rgba(245,158,11,.04)"><div style="font-size:11.5px;color:#B36B00;padding:6px 0 4px;letter-spacing:.3px">⚠ 演示流程 · 实际渲染尚未实现（DEMO）</div>';steps.forEach(function(s,i){h+='<div class="rp-row" id="rp'+i+'"><span class="rp-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.2 4.2L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'+s+'</div>';});h+='</div>';
 
     b.innerHTML=h;
 
@@ -1620,7 +2045,7 @@
 
         {n:'05',t:'回到首页',d:'0:22-0:26 · 收尾',w:30}
 
-      ];renderFlow();},500);}},700);
+      ];renderFlow();toast('DEMO：拆条结果为模拟数据 · 正式版使用本地 ffmpeg / 服务端 Remotion');},500);}},700);
 
   };
 
@@ -1780,7 +2205,7 @@
 
       state.versions.forEach(function(v){
 
-        list+='<div class="fin"><div class="fb"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" fill="#0E7C7B"/><path d="M10 9.5l4 2.5-4 2.5z" fill="#fff"/></svg></div><div class="fx"><div class="ft">'+v.name+'（'+v.dim+'） · '+v.platform+'</div><div class="fm">'+v.shots+' · '+fmtDur(v.voiceDur||0)+' 配音 · '+(v.dim==='竖屏'?'720×1280':'1280×720')+'</div></div><div class="fd">已生成</div></div>';
+        list+='<div class="fin"><div class="fb"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" fill="#0E7C7B"/><path d="M10 9.5l4 2.5-4 2.5z" fill="#fff"/></svg></div><div class="fx"><div class="ft">'+v.name+'（'+v.dim+'） · '+v.platform+'</div><div class="fm">'+v.shots+' · '+fmtDur(v.voiceDur||0)+' 配音 · '+(v.dim==='竖屏'?'720×1280':'1280×720')+'</div></div><div class="fd">已生成（DEMO）</div></div>';
 
       });
 
@@ -1792,11 +2217,13 @@
 
         '<button class="btn accent" onclick="goNext(9)">成片完成，制定发布计划</button></div>'+
 
-        '<div style="font-size:12px;color:var(--muted);margin-top:8px">正式版由服务端 Remotion 渲染高清 MP4；原型此处演示流程。</div>';
+        '<div style="font-size:12px;color:#B36B00;margin-top:8px">⚠ 当前为演示流程：下方成片为模拟结果。正式版由服务端 Remotion 渲染高清 MP4。</div>';
 
     }else{
 
-      ctrl.innerHTML='<button class="btn accent" onclick="renderAll()">合成全部成片</button>'+
+      ctrl.innerHTML='<button class="btn accent" onclick="renderAll()">🎞 合成全部成片 <span style="font-size:10.5px;background:rgba(245,158,11,.15);color:#B36B00;padding:1px 6px;border-radius:8px;margin-left:4px;letter-spacing:.5px">DEMO</span></button>'+
+
+        '<div class="rec-tip" style="font-size:12px;color:#B36B00;margin-top:6px">⚠ 当前为演示流程 · 实际渲染尚未实现</div>'+
 
       '<div class="render-progress" id="rpBox" style="display:none"></div>';
 
@@ -1810,7 +2237,7 @@
 
     var b=document.getElementById('ctrlBox');
 
-    var h='<div class="render-progress">';steps.forEach(function(s,i){h+='<div class="rp-row" id="fp'+i+'"><span class="rp-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.2 4.2L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'+s+'</div>';});h+='</div>';
+    var h='<div class="render-progress" style="border:1px dashed rgba(245,158,11,.4);background:rgba(245,158,11,.04)"><div style="font-size:11.5px;color:#B36B00;padding:6px 0 4px;letter-spacing:.3px">⚠ 演示流程 · 实际渲染尚未实现（DEMO）</div>';steps.forEach(function(s,i){h+='<div class="rp-row" id="fp'+i+'"><span class="rp-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.2 4.2L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'+s+'</div>';});h+='</div>';
 
     b.innerHTML=h;
 
@@ -1820,7 +2247,7 @@
 
       var next=document.getElementById('fp'+i);if(next)next.classList.add('act');
 
-      i++;if(i>=steps.length){clearInterval(t);setTimeout(function(){state.versions.forEach(function(v){v.done=true;});renderFlow();},500);}
+      i++;if(i>=steps.length){clearInterval(t);setTimeout(function(){state.versions.forEach(function(v){v.done=true;});renderFlow();toast('DEMO：成片为模拟结果 · 正式版由服务端 Remotion 渲染');},500);}
 
     },650);
 
@@ -2212,13 +2639,13 @@
 
     var canAuto=!!p.auto;
 
-    var abadge=canAuto?'<span class="pbadge auto" style="margin-left:8px">🚀 全自动</span>':'<span class="pbadge manual" style="margin-left:8px">半自动</span>';
+    var abadge=canAuto?'<span class="pbadge auto" style="margin-left:8px">✓ 真一键</span>':'<span class="pbadge manual" style="margin-left:8px">⚠ 需确认</span>';
 
     var autoAct=!on?(canAuto
 
-      ?'<button class="btn sm" onclick="autoPub(\''+id+'\')">🚀 火箭发布</button>'
+      ?'<button class="btn sm" onclick="autoPub(\''+id+'\')">✓ 真一键发布</button>'
 
-      :'<button class="btn sm ghost" onclick="autoPub(\''+id+'\')">⚡ 半自动填表</button>'):'';
+      :'<button class="btn sm ghost" onclick="autoPub(\''+id+'\')">⚠ 自动填表 + 确认</button>'):'';
 
     return '<div class="pub-item'+(on?' published':'')+'">'+
 
@@ -2360,11 +2787,30 @@
 
     c.done=true;c.time=nowHM();renderFlow();
 
+    var pObj=pf(id);
+
+    // 看板真实计数 + 里程碑
+    state.pubLog.push({platform:pObj.name,time:c.time,title:c.title,id:id});
+    state.pubByPlatform[id]=(state.pubByPlatform[id]||0)+1;
+    state.kpis.lastPub=pObj.name;
+    state.kpis.lastPubAt=c.time;
+    pushMilestoneIfFirst();
+
     var w=findWork(state.curWork);
 
     if(window.api&&w){window.api.addPub({work_id:w.id,platform:pf(id).name,title:c.title,body:c.body,tags:(c.tags||[]).join(' '),time:c.time}).catch(function(){});}
 
   };
+
+  // 首发完成后追加一条里程碑
+  function pushMilestoneIfFirst(){
+    state.milestones=state.milestones||[];
+    if(state.pubLog.length===1){
+      state.milestones.unshift({icon:'发',color:'#0E7C7B',title:'首发布完成',detail:'你刚完成第一次发布，去数据看板查看本次会话的汇总。',unread:true});
+    }else if(state.pubLog.length===10){
+      state.milestones.unshift({icon:'周',color:'#0E7C7B',title:'本机会话发布 10 次',detail:'各平台数据已按渠道汇总到看板。',unread:true});
+    }
+  }
 
   window.unpub=function(id){var c=state.copies[id];if(c){c.done=false;c.time=null;}renderFlow();};
 
@@ -2428,7 +2874,11 @@
 
     if(!doneIds.length)return;
 
-    doneIds.forEach(function(id){var c=state.copies[id];state.pubLog.push({platform:pf(id).name,time:c.time,title:c.title});});
+    doneIds.forEach(function(id){var c=state.copies[id];state.pubLog.push({platform:pf(id).name,time:c.time,title:c.title,id:id});state.pubByPlatform[id]=(state.pubByPlatform[id]||0)+1;});
+
+    state.kpis.lastPub=pf(doneIds[doneIds.length-1]).name;
+    state.kpis.lastPubAt=state.copies[doneIds[doneIds.length-1]].time;
+    pushMilestoneIfFirst();
 
     var w=findWork(state.curWork);
 
@@ -2450,41 +2900,285 @@
 
   function renderDash(){
 
-    var data=[{n:'B站',v:4200},{n:'小红书',v:3600},{n:'抖音',v:2100},{n:'掘金',v:1500},{n:'GitHub',v:780},{n:'V2EX',v:300}];
+    // ===== KPI 顶部 4 项（全部读自真实状态）=====
+    var realWorks = (state.works || []).filter(function(w){return !w.isSample;});
+    state.kpis.works = realWorks.length;
+    state.kpis.pub = (state.pubLog || []).length;
+    state.kpis.channelsEnabled = Object.keys(state.platforms || {}).filter(function(k){return state.platforms[k];}).length;
 
-    var max=Math.max.apply(null,data.map(function(d){return d.v;}));
-
-    var html='';
-
-    data.forEach(function(d){html+='<div class="bar-row"><div class="bn">'+d.n+'</div><div class="bt"><div class="bf" style="width:'+Math.round(d.v/max*100)+'%"></div></div><div class="bv">'+d.v+'</div></div>';});
-
-    document.getElementById('barsBox').innerHTML=html;
-
-    var pl=document.getElementById('pubLogBox');
-
-    if(pl){
-
-      if(state.pubLog.length){
-
-        var ph='';state.pubLog.forEach(function(r){ph+='<div class="pl"><div class="ic" style="background:#0E7C7B">'+esc(r.platform.charAt(0))+'</div><div class="pt">'+esc(r.platform)+'</div><div class="pm">'+esc(r.title)+'</div><div class="ptm">'+r.time+'</div></div>';});
-
-        pl.innerHTML=ph;
-
-      }
-
+    // 顶部"1.5 规划中"提示卡：发生真实发布后弱化变 .is-live
+    var dc = document.getElementById('dashComingNotice');
+    if (dc) {
+      if (state.kpis.pub > 0) dc.classList.add('is-live'); else dc.classList.remove('is-live');
     }
 
-    var fb=document.getElementById('feedBox');
+    var elKpiPub = document.getElementById('kpiPub');
+    if (elKpiPub) elKpiPub.textContent = state.kpis.pub;
+    var elKpiCh = document.getElementById('kpiChannels');
+    if (elKpiCh) elKpiCh.textContent = state.kpis.channelsEnabled;
+    var elKpiWk = document.getElementById('kpiWorks');
+    if (elKpiWk) elKpiWk.textContent = state.kpis.works;
+    var elKpiLast = document.getElementById('kpiLastPub');
+    var elKpiLastSub = document.getElementById('kpiLastPubSub');
+    if (state.kpis.lastPub) {
+      if (elKpiLast) elKpiLast.textContent = state.kpis.lastPub;
+      if (elKpiLastSub) elKpiLastSub.textContent = state.kpis.lastPubAt || '—';
+    } else {
+      if (elKpiLast) elKpiLast.textContent = '—';
+      if (elKpiLastSub) elKpiLastSub.textContent = '本机会话暂无发布';
+    }
 
-    if(fb&&state.pubLog.length){
+    // ===== 各渠道发布次数（来自真实 pubByPlatform）=====
+    var barsBox = document.getElementById('barsBox');
+    var barsSub = document.getElementById('barsSub');
+    var entries = Object.keys(state.pubByPlatform || {}).map(function(k){
+      var meta = PLATFORMS.filter(function(p){return p.id === k;})[0] || {name: k, color: '#0E7C7B'};
+      return {n: meta.name, v: state.pubByPlatform[k], c: meta.color};
+    }).sort(function(a,b){return b.v-a.v;});
 
-      var fbHtml='';state.pubLog.forEach(function(r){fbHtml+='<div class="f new"><div class="ic" style="background:#0E7C7B">发</div><div class="fx"><div class="ft">已发布到 '+esc(r.platform)+'</div><div class="fm">'+esc(r.title)+' · '+r.time+'</div></div></div>';});
+    if (entries.length === 0) {
+      if (barsSub) barsSub.textContent = '本机会话 · 尚未发布 · 完成后这里会自动出现';
+      if (barsBox) barsBox.innerHTML = '<div style="font-size:12.5px;color:var(--muted);padding:14px 0">尚无发布记录。完成一次首秀发射后，这里会按平台汇总发布次数。</div>';
+    } else {
+      if (barsSub) barsSub.textContent = '本机会话 · 按平台统计（总计 ' + entries.reduce(function(s,e){return s+e.v;},0) + ' 次）';
+      var max = Math.max.apply(null, entries.map(function(d){return d.v;}));
+      var html = '';
+      entries.forEach(function(d){
+        html += '<div class="bar-row"><div class="bn">'+esc(d.n)+'</div><div class="bt"><div class="bf" style="width:'+Math.round(d.v/max*100)+'%;background:'+d.c+'"></div></div><div class="bv">'+d.v+'</div></div>';
+      });
+      if (barsBox) barsBox.innerHTML = html;
+    }
 
-      fb.insertAdjacentHTML('afterbegin',fbHtml);
+    // ===== 本次会话发布回填（pubLog）=====
+    var pl = document.getElementById('pubLogBox');
+    if (pl) {
+      if (state.pubLog && state.pubLog.length) {
+        var ph = ''; state.pubLog.forEach(function(r){
+          ph += '<div class="pl"><div class="ic" style="background:#0E7C7B">' + esc((r.platform || '').charAt(0)) + '</div><div class="pt">' + esc(r.platform) + '</div><div class="pm">' + esc(r.title) + '</div><div class="ptm">' + esc(r.time) + '</div></div>';
+        });
+        pl.innerHTML = ph;
+      }
+      // 0 条时保留 HTML 中的默认提示
+    }
 
+    // ===== 里程碑报喜（仅本机会话，来源 state.milestones 追加；初值空）=====
+    var fb = document.getElementById('feedBox');
+    var feedSub = document.getElementById('feedSub');
+    if (fb) {
+      var milestones = state.milestones || [];
+      if (milestones.length === 0) {
+        if (feedSub) feedSub.textContent = '本机会话 · 完成后 Rokit 会主动报喜（首发布、10+ 发布等）';
+        fb.innerHTML = '<div style="font-size:12.5px;color:var(--muted);padding:10px 0">完成首次发射后，AI 大师会主动汇报关键节点。</div>';
+      } else {
+        if (feedSub) feedSub.textContent = '本机会话 · AI 大师会主动汇报关键节点';
+        var fbHtml = '';
+        milestones.forEach(function(m){
+          fbHtml += '<div class="f' + (m.unread ? ' new' : '') + '"><div class="ic" style="background:' + (m.color || '#0E7C7B') + '">' + esc(m.icon || '·') + '</div><div class="fx"><div class="ft">' + esc(m.title) + '</div><div class="fm">' + esc(m.detail || '') + '</div></div></div>';
+        });
+        fb.innerHTML = fbHtml;
+      }
     }
 
   }
+
+
+
+  /* ===== 推广渠道管理（增删改 + 连通性测试） =====
+     kind 取值：
+       - 13 个内置平台 id（github/ph/v2ex/juejin/jike/bili/xhs/douyin/zhihu/wechat/facebook/youtube/x）
+       - 'custom'（自定义 webhook / API）
+  */
+
+  // 渠道列表的内存缓存（与 store 同步）
+  state.channels=[];
+
+  // 为内置平台补齐 meta（名称、颜色、字符、说明）
+  function builtinKindMeta(){
+    var out={custom:{name:'自定义渠道',char:'自',color:'#5A6B72',hint:'填入 API 地址或 Webhook URL（如钉钉/飞书/Discord），Rokit 会以 POST JSON 方式推送文案。'}};
+    PLATFORMS.forEach(function(p){
+      out[p.id]={name:p.name,char:p.name.charAt(0),color:p.color||'#0E7C7B',hint:(PLATFORM_HINT&&PLATFORM_HINT[p.id])||'内置平台，在首秀向导中启用后可一键自动填表发布。'};
+    });
+    return out;
+  }
+  var CH_META=builtinKindMeta();
+
+  // 首次启动：把内置平台中「用户尚未添加」的 seed 到 channels 表（保持向后兼容）
+  function seedBuiltinChannels(){
+    if(!window.api){toast('请在桌面端使用本功能');return;}
+    var existingKinds={};state.channels.forEach(function(c){existingKinds[c.kind]=true;});
+    var pr=[];
+    var added=0;
+    PLATFORMS.forEach(function(p){
+      if(existingKinds[p.id])return;
+      pr.push(window.api.saveChannel({kind:p.id,name:p.name,enabled:1,tag:p.region==='cn'?'中文':'海外',note:'内置平台 · '+p.lv})
+        .then(function(row){state.channels.push(row);added++;}));
+    });
+    Promise.all(pr).then(function(){
+      if(added)toast('已补齐 '+added+' 个内置平台');else toast('已为最新，无需补充');
+      renderChannels();
+    }).catch(function(e){toast('同步失败：'+(e&&e.message?e.message:e));});
+  }
+
+  // 列表渲染：从 state.channels 读
+  function renderChannels(){
+    var box=document.getElementById('channelsBox');if(!box)return;
+    if(!state.channels.length){
+      box.innerHTML='<div class="ch-empty">还没有任何推广渠道。点击右上角「+ 新增渠道」开始，或「同步内置」一键补齐 13 个内置平台。</div>';
+      return;
+    }
+    var html='';
+    state.channels.forEach(function(c){
+      var meta=CH_META[c.kind]||{name:c.kind,char:c.kind.charAt(0).toUpperCase(),color:'#0E7C7B',hint:''};
+      var enabled=c.enabled===1||c.enabled===true;
+      html+='<div class="ch-card'+(enabled?'':' off')+'">'+
+        '<div class="ch-head">'+
+          '<div class="ch-dot" style="background:'+esc(meta.color)+'">'+esc(meta.char)+'</div>'+
+          '<div class="ch-name">'+esc(c.name)+'<small>'+esc(meta.name)+'</small></div>'+
+          '<div class="ch-actions">'+
+            '<button onclick="toggleChannel(\''+esc(c.id)+'\')" title="'+(enabled?'点击停用':'点击启用')+'">'+(enabled?'●':'○')+'</button>'+
+            '<button onclick="openChannelEditor(\''+esc(c.id)+'\')" title="编辑">✎</button>'+
+            '<button class="ch-del" onclick="deleteChannel(\''+esc(c.id)+'\')" title="删除">×</button>'+
+          '</div>'+
+        '</div>'+
+        '<div class="ch-meta">'+
+          '<span class="chip kind">'+esc(c.kind)+'</span>'+
+          (c.tag?'<span class="chip">'+esc(c.tag)+'</span>':'')+
+          (c.api_base?'<span class="chip api">API ✓</span>':'')+
+          (c.api_key?'<span class="chip api">Key ✓</span>':'')+
+          (c.webhook?'<span class="chip api">Webhook ✓</span>':'')+
+          (!enabled?'<span class="chip off">已停用</span>':'')+
+        '</div>'+
+        (c.note?'<div class="ch-note">'+esc(c.note)+'</div>':'')+
+      '</div>';
+    });
+    box.innerHTML=html;
+  }
+
+  // 渠道切换启用/停用
+  window.toggleChannel=function(id){
+    var c=null;for(var i=0;i<state.channels.length;i++){if(state.channels[i].id===id){c=state.channels[i];break;}}
+    if(!c)return;
+    c.enabled=c.enabled?0:1;
+    if(window.api){window.api.saveChannel(c).catch(function(){});}
+    renderChannels();
+  };
+
+  // 打开编辑弹窗：id 为 null 时是新增
+  var __editingId=null;
+  window.openChannelEditor=function(id){
+    __editingId=id||null;
+    var isEdit=!!id;
+    var c=null;
+    if(isEdit){for(var i=0;i<state.channels.length;i++){if(state.channels[i].id===id){c=state.channels[i];break;}}}
+    document.getElementById('channelModalTitle').textContent=isEdit?'编辑推广渠道':'新增推广渠道';
+    document.getElementById('channelModalSub').textContent=isEdit?'修改该渠道的接入信息。停用后不会出现在首秀发射列表。':'填写渠道名称与类型；自定义类型需要填 API 地址或 Webhook 才能正常推送。';
+    // 填充 select
+    var sel=document.getElementById('chKind');sel.innerHTML='';
+    // 分组：内置 + 自定义
+    var og=document.createElement('optgroup');og.label='内置平台（13 个）';
+    PLATFORMS.forEach(function(p){var o=document.createElement('option');o.value=p.id;o.textContent=p.name+' · '+p.lv;og.appendChild(o);});
+    sel.appendChild(og);
+    var og2=document.createElement('optgroup');og2.label='自定义';
+    var o2=document.createElement('option');o2.value='custom';o2.textContent='自定义渠道 · webhook / API';og2.appendChild(o2);
+    sel.appendChild(og2);
+    // 填充字段
+    document.getElementById('chName').value=c?c.name:'';
+    sel.value=c?c.kind:'custom';
+    document.getElementById('chApiBase').value=c&&c.api_base?c.api_base:'';
+    document.getElementById('chApiKey').value=c&&c.api_key?c.api_key:'';
+    document.getElementById('chWebhook').value=c&&c.webhook?c.webhook:'';
+    document.getElementById('chTag').value=c&&c.tag?c.tag:'';
+    document.getElementById('chNote').value=c&&c.note?c.note:'';
+    document.getElementById('chEnabled').checked=c?!!c.enabled:true;
+    document.getElementById('chStatus').innerHTML='';
+    document.getElementById('chSubmitBtn').textContent=isEdit?'保存修改':'创建渠道';
+    updateKindHint();
+    document.getElementById('channelModal').style.display='flex';
+    setTimeout(function(){document.getElementById('chName').focus();},50);
+  };
+
+  window.closeChannelEditor=function(){
+    document.getElementById('channelModal').style.display='none';
+    __editingId=null;
+  };
+
+  // select 切换时更新 hint 与自定义字段显隐
+  function updateKindHint(){
+    var sel=document.getElementById('chKind');
+    var hint=document.getElementById('chKindHint');
+    var custom=document.getElementById('chCustomBox');
+    if(!sel)return;
+    var kind=sel.value;
+    var meta=CH_META[kind]||{};
+    hint.textContent=meta.hint||'';
+    custom.style.display=(kind==='custom')?'':'none';
+  }
+
+  // 保存：表单 → api.saveChannel → 更新 state.channels
+  window.saveChannel=function(e){
+    if(e)e.preventDefault();
+    var name=document.getElementById('chName').value.trim();
+    var kind=document.getElementById('chKind').value;
+    if(!name){var s=document.getElementById('chStatus');s.innerHTML='<span style="color:var(--danger)">请填写渠道名称</span>';return;}
+    if(!kind){var s=document.getElementById('chStatus');s.innerHTML='<span style="color:var(--danger)">请选择渠道类型</span>';return;}
+    if(!window.api){toast('请在桌面端使用本功能');return;}
+    var payload={
+      id:__editingId||undefined,
+      name:name,kind:kind,
+      enabled:document.getElementById('chEnabled').checked?1:0,
+      api_base:document.getElementById('chApiBase').value.trim()||null,
+      api_key:document.getElementById('chApiKey').value.trim()||null,
+      webhook:document.getElementById('chWebhook').value.trim()||null,
+      tag:document.getElementById('chTag').value.trim()||null,
+      note:document.getElementById('chNote').value.trim()||null
+    };
+    window.api.saveChannel(payload).then(function(row){
+      // 替换或新增
+      var i=-1;for(var k=0;k<state.channels.length;k++){if(state.channels[k].id===row.id){i=k;break;}}
+      if(i>=0)state.channels[i]=row;else state.channels.push(row);
+      closeChannelEditor();
+      toast(__editingId?'已保存修改':'已添加渠道');
+      renderChannels();
+    }).catch(function(err){
+      var s=document.getElementById('chStatus');
+      s.innerHTML='<span style="color:var(--danger)">保存失败：'+esc(err&&err.message?err.message:err)+'</span>';
+    });
+  };
+
+  // 删除（二次确认）
+  window.deleteChannel=function(id){
+    var c=null;for(var i=0;i<state.channels.length;i++){if(state.channels[i].id===id){c=state.channels[i];break;}}
+    if(!c)return;
+    if(!confirm('确定删除渠道「'+c.name+'」吗？此操作不可撤销。'))return;
+    if(!window.api){toast('请在桌面端使用本功能');return;}
+    window.api.deleteChannel(id).then(function(){
+      state.channels=state.channels.filter(function(x){return x.id!==id;});
+      renderChannels();
+      toast('已删除渠道');
+    }).catch(function(e){toast('删除失败：'+(e&&e.message?e.message:e));});
+  };
+
+  // 测试连接（仅 custom，且需要 api_base 或 webhook 之一）
+  window.testChannel=function(){
+    var s=document.getElementById('chStatus');
+    var kind=document.getElementById('chKind').value;
+    if(kind!=='custom'){s.innerHTML='<span style="color:var(--muted)">内置平台无需测试，Rokit 会在自动发布浏览器中调用对应适配器。</span>';return;}
+    var api_base=document.getElementById('chApiBase').value.trim();
+    var api_key=document.getElementById('chApiKey').value.trim();
+    var webhook=document.getElementById('chWebhook').value.trim();
+    if(!api_base&&!webhook){s.innerHTML='<span style="color:var(--danger)">请先填写 API 地址或 Webhook URL</span>';return;}
+    if(!window.api){s.innerHTML='<span style="color:var(--muted)">浏览器演示模式：仅本地保存，不发起真实请求</span>';return;}
+    s.innerHTML='<span style="color:var(--muted)">正在发送测试请求…</span>';
+    window.api.testChannel({api_base:api_base,api_key:api_key,webhook:webhook}).then(function(r){
+      if(r&&r.ok){
+        s.innerHTML='<span style="color:var(--success)">✓ 连接成功（HTTP '+r.status+'）'+(r.preview?' · 返回：'+esc(r.preview.slice(0,40)):'')+'</span>';
+      }else{
+        s.innerHTML='<span style="color:var(--danger)">连接失败：'+(r&&r.error?esc(r.error):'HTTP '+(r&&r.status))+'</span>';
+      }
+    }).catch(function(e){
+      s.innerHTML='<span style="color:var(--danger)">连接失败：'+esc(e&&e.message?e.message:e)+'</span>';
+    });
+  };
 
 
 
@@ -2496,38 +3190,43 @@
 
     var grid=document.getElementById('worksGrid'),html='';
 
-    state.works.forEach(function(w){
+    // 顶部 4 个示例作品始终先展示（仅前端，不入库）
+    var real=state.works.filter(function(w){return !w.isSample;});
+    var samples=state.works.filter(function(w){return w.isSample;});
+    var ordered=samples.concat(real);
+
+    ordered.forEach(function(w){
 
       var isCur=w.id===state.curWork;
 
-      html+='<div class="wcard '+(isCur?'cur':'')+'" onclick="openWork(\''+w.id+'\')">'+
-
+      html+='<div class="wcard '+(isCur?'cur':'')+(w.isSample?' wsample':'')+'" onclick="openWork(\''+w.id+'\')">'+
+        (w.isSample?'<span class="wsample-tag">示例</span>':'')+
         (isCur?'<span class="cur-tag">当前</span>':'')+
-        '<button class="wdel" onclick="event.stopPropagation();window.delWork(\''+w.id+'\')" title="删除该作品">×</button>'+
-
+        '<button class="wdel" onclick="event.stopPropagation();window.delWork(\''+w.id+'\')" title="'+(w.isSample?'示例作品不可删除':'删除该作品')+'"'+(w.isSample?' disabled style="opacity:0.35;cursor:not-allowed"':'')+'>×</button>'+
         '<div class="wn">'+esc(w.name)+'</div>'+
-
         '<div class="wt">'+w.type+'</div>'+
-
         '<span class="wstat" style="background:'+w.color+'">'+w.status+'</span>'+
-
         '<span class="wq" style="background:'+(w.queue==='主推'?'#0E7C7B':'#E4ECEB')+';color:'+(w.queue==='主推'?'#fff':'#5A6B72')+'">'+w.queue+'</span>'+
-
-        '<div class="wm"><div class="wv">Star<b>'+w.star.toLocaleString()+'</b></div><div class="wv">下载<b>'+w.dl.toLocaleString()+'</b></div><div class="wv">播放<b>'+w.play+'</b></div></div>'+
-
-        '<div class="wnx">下一步：'+w.next+'</div></div>';
+        '<div class="wm"><div class="wv">Star<b>'+(w.star||0).toLocaleString()+'</b></div><div class="wv">下载<b>'+(w.dl||0).toLocaleString()+'</b></div><div class="wv">播放<b>'+(w.play||0)+'</b></div></div>'+
+        '<div class="wnx">下一步：'+esc(w.next||'登记推广')+'</div></div>';
 
     });
 
     grid.innerHTML=html;
 
-    var qs=[{t:'主推 · 全力投入',n:'便签天气',s:'正在做首秀，AI 全程引导，素材与物料优先供给',main:true},
+    // 队列栏：从真实作品中动态取，样品仅作参考
+    var main=real.find(function(w){return w.queue==='主推';});
+    var hang=real.filter(function(w){return w.queue==='挂机';});
+    var wait=real.filter(function(w){return w.queue==='排队';});
+    var qs=[];
+    if(main)qs.push({t:'主推 · 全力投入',n:main.name,s:'正在做首秀，AI 全程引导，素材与物料优先供给',main:true});
+    else qs.push({t:'主推 · 全力投入',n:'（暂无）',s:'点右上方「+ 登记新作品」创建你的首发作品'});
+    if(hang.length)qs.push({t:'挂机 · 低强度',n:hang.map(function(w){return w.name;}).join(' · '),s:'自动回复评论 + 每周 1 条内容，不抢主推资源'});
+    else qs.push({t:'挂机 · 低强度',n:'（暂无）',s:'主推进入稳定期后可挂机更多作品'});
+    if(wait.length)qs.push({t:'排队 · 待启动',n:wait.map(function(w){return w.name;}).join(' · '),s:'等主推进入稳定期后，AI 自动唤醒安排首秀'});
+    else qs.push({t:'排队 · 待启动',n:'（暂无）',s:'新登记未启动的作品会出现在这里'});
 
-            {t:'挂机 · 低强度',n:'校园课表助手 · 像素猫小游戏',s:'自动回复评论 + 每周 1 条内容，不抢主推资源'},
-
-            {t:'排队 · 待启动',n:'单词卡速记',s:'等主推进入稳定期后，AI 自动唤醒安排首秀'}];
-
-    var qh='';qs.forEach(function(q){qh+='<div class="qcard'+(q.main?' q-main':'')+'"><div class="qt">'+q.t+'</div><div class="qn">'+q.n+'</div><div class="qs">'+q.s+'</div></div>';});
+    var qh='';qs.forEach(function(q){qh+='<div class="qcard'+(q.main?' q-main':'')+'"><div class="qt">'+q.t+'</div><div class="qn">'+esc(q.n)+'</div><div class="qs">'+esc(q.s)+'</div></div>';});
 
     document.getElementById('queueBar').innerHTML=qh;
 
@@ -2536,6 +3235,12 @@
   window.openWork=function(id){stopDemo();
 
     var w=findWork(id);if(!w)return;
+
+    // 示例作品不能直接进入首秀
+    if(isSampleWork(id)){
+      toast('这是示例作品，不可直接首秀。点 + 登记新作品创建自己的');
+      return;
+    }
 
     state.curWork=id;
 
@@ -2597,7 +3302,11 @@
 
   window.addWork=function(){stopDemo();
 
-    var id='w'+(state.works.length+1);
+    // 真实作品 id 从 w1 起步，跳过示例作品占用的 id
+    var exists=state.works.filter(function(w){return !w.isSample;}).map(function(w){return w.id;});
+    var n=1;
+    while(exists.indexOf('w'+n)>=0||SAMPLE_WORK_IDS.indexOf('w'+n)>=0)n++;
+    var id='w'+n;
 
     state.works.push({id:id,name:'新作品',type:'效率工具',status:'待启动',color:'#9CA3AF',queue:'排队',star:0,dl:0,play:'0',next:'登记推广',intro:'',url:''});
 
@@ -2623,6 +3332,7 @@
 
   window.delWork=function(id){
     var w=findWork(id);if(!w)return;
+    if(isSampleWork(id)){toast('示例作品不可删除');return;}
     var msg='确认删除作品《'+w.name+'》？\n\n该操作将同时删除该作品的所有发布记录，且不可恢复。';
     if(!window.confirm(msg))return;
     state.works=state.works.filter(function(x){return x.id!==id;});
@@ -2649,13 +3359,21 @@
 
     var status=w.status||'待启动';
 
-    return {id:w.id,name:w.name||'未命名',type:w.type||'效率工具',status:status,color:STATUS_COLOR[status]||'#9CA3AF',queue:w.queue||'排队',star:Number(w.star)||0,dl:Number(w.dl)||0,play:(w.play||'0').toString(),next:w.next||'登记推广',intro:w.intro||'',url:w.url||''};
+    // 示例作品保留 isSample 标记；其他字段正常标准化
+    var out={id:w.id,name:w.name||'未命名',type:w.type||'效率工具',status:status,color:STATUS_COLOR[status]||'#9CA3AF',queue:w.queue||'排队',star:Number(w.star)||0,dl:Number(w.dl)||0,play:(w.play||'0').toString(),next:w.next||'登记推广',intro:w.intro||'',url:w.url||''};
+
+    if(w.isSample)out.isSample=true;
+
+    return out;
 
   }
 
   function persistCurrentWork(){
 
     var w=findWork(state.curWork);if(!w)return;
+
+    // 示例作品不入库
+    if(isSampleWork(w.id))return;
 
     if(state.project.name)w.name=state.project.name;
 
@@ -2691,18 +3409,15 @@
 
       if(ws&&ws.length){
 
-        state.works=ws.map(normalizeWork);
+        // 只加载真实作品；示例作品始终保留在 state.works 头部
+        var real=ws.map(normalizeWork).filter(function(w){return !w.isSample;});
+        state.works=state.works.filter(function(w){return w.isSample;}).concat(real);
 
-        state.curWork=state.works[0].id;
-
-      }else{
-
-        var pr=[];state.works.forEach(function(w){pr.push(window.api.saveWork(normalizeWork(w)));});
-
-        return Promise.all(pr);
+        if(real.length)state.curWork=real[0].id;
 
       }
 
+      // 不再 seed 示例作品到 DB；state.works 中的 sample_* 仅作为前端展示
     }).catch(function(){});
 
   }
@@ -2723,17 +3438,50 @@
 
   }
 
+  // 加载推广渠道，首次启动若为空则自动 seed 13 个内置平台
+  function loadChannels(){
+
+    if(!window.api){state.channels=[];return Promise.resolve();}
+
+    return window.api.listChannels().then(function(cs){
+
+      state.channels=Array.isArray(cs)?cs:[];
+
+      if(state.channels.length===0){
+
+        // 首次启动：一键写入内置平台
+        var pr=[];
+
+        PLATFORMS.forEach(function(p){
+
+          pr.push(window.api.saveChannel({
+
+            kind:p.id,name:p.name,enabled:1,tag:p.region==='cn'?'中文':'海外',note:'内置平台 · '+p.lv
+
+          }).then(function(row){state.channels.push(row);}));
+
+        });
+
+        return Promise.all(pr);
+
+      }
+
+    }).catch(function(){});
+
+  }
+
 
 
   /* ===== 初始化 ===== */
 
-  pushAI('你好，我是你的 <b>Rokit</b>。\n你负责把作品做出来，剩下的——推广、录屏演示、拆条、配音、发布、反馈、迭代建议——交给我。\n\n告诉我你的第一个作品，我帮你把它发射出去。');
+  // 首条欢迎语（v0.1.1）：说人话 + 指出下一步入口
+  pushAI('你好，我是 Rokit。<br>把作品交给我——<b>文案、配音、填表发布、反馈采集</b>，我帮你接管。<br><br>下面我已经摆了 4 个示例作品供你参考。<b>点下方任意一张卡片里的「以此为模板」按钮</b>，或点 “+ 登记新作品” 开始你的第一个首秀。');
 
-  loadStored().then(seedWorks).then(loadPubs).then(function(){
+  loadStored().then(seedWorks).then(loadPubs).then(loadChannels).then(function(){
 
     noteModel();
 
-    renderRail();renderFlow();
+    renderRail();renderFlow();renderChannels();
 
   });
 

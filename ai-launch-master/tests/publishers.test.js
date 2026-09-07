@@ -74,15 +74,25 @@ describe('publishers · 注入脚本语法', () => {
   });
 });
 
-describe('publishers · 自动 vs 半自动', () => {
-  it('auto:true 的平台：github / ph / v2ex / juejin / x / facebook / youtube', () => {
+describe('publishers · 自动 vs 半自动（v0.1.1 修正）', () => {
+  // 与 electron/publishers.js 保持一致：auto 反映「点一键后是否需要人工最终确认」
+  // v0.1.1 修正：ph / juejin / facebook / youtube 实际在发布前需要人工选分类/受众/上传文件，改 auto:false
+  it('auto:true 的真一键平台：github / v2ex / x', () => {
     expect(adapters.github.auto).toBe(true);
-    expect(adapters.ph.auto).toBe(true);
     expect(adapters.v2ex.auto).toBe(true);
-    expect(adapters.juejin.auto).toBe(true);
     expect(adapters.x.auto).toBe(true);
-    expect(adapters.facebook.auto).toBe(true);
-    expect(adapters.youtube.auto).toBe(true);
+  });
+
+  it('auto:false 需手动点下一步/Submit 的平台：ph / juejin / facebook / youtube', () => {
+    expect(adapters.ph.auto).toBe(false);
+    expect(adapters.juejin.auto).toBe(false);
+    expect(adapters.facebook.auto).toBe(false);
+    expect(adapters.youtube.auto).toBe(false);
+    // 这 4 个必须有 manualReason 给 UI 展示
+    expect(typeof adapters.ph.manualReason).toBe('string');
+    expect(typeof adapters.juejin.manualReason).toBe('string');
+    expect(typeof adapters.facebook.manualReason).toBe('string');
+    expect(typeof adapters.youtube.manualReason).toBe('string');
   });
 
   it('auto:false 的国内平台：douyin / xhs / bili / jike / zhihu / wechat', () => {

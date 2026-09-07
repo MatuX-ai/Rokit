@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 // 当前 schema 版本号。修改表结构时需追加新迁移，勿直接修改旧迁移。
-const CURRENT_VERSION = 1;
+const CURRENT_VERSION = 2;
 
 let Database = null;
 let driver = null;
@@ -27,6 +27,7 @@ try {
 // ---------- 迁移列表（按版本号顺序）----------
 // 每个迁移函数接收 db 实例（提供 run / get / all / exec 驱动无关接口）
 //   migrateV1：初始表结构
+//   migrateV2：新增 channels 表（推广渠道管理：用户可增删改推广渠道、设置 API/Webhook）
 const migrations = [
   {
     version: 1,
@@ -47,9 +48,31 @@ const migrations = [
         );
       `);
     }
+  },
+  {
+    // v2：新增推广渠道表。kind 为内置平台 id（github/ph/v2ex/...）或 'custom'。
+    // enabled=0 时渠道在「首秀发射」中不出现；api_base / api_key / webhook 仅对 custom 生效。
+    version: 2,
+    up: function (db) {
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS channels (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          kind TEXT NOT NULL,
+          enabled INTEGER DEFAULT 1,
+          api_base TEXT,
+          api_key TEXT,
+          webhook TEXT,
+          tag TEXT,
+          note TEXT,
+          created_at TEXT,
+          updated_at TEXT
+        );
+      `);
+    }
   }
   // 后续 schema 变更在此追加：
-  // { version: 2, up: function(db) { db.exec('ALTER TABLE works ADD COLUMN ...'); } }
+  // { version: 3, up: function(db) { db.exec('ALTER TABLE ...'); } }
 ];
 
 class Store {
@@ -140,7 +163,7 @@ class Store {
 
   // ---------- JSON 兜底 ----------
   loadJson() {
-    const empty = { settings: null, works: [], pubs: [] };
+    const empty = { settings: null, works: [], pubs: [], channels: [] };
     try {
       if (fs.existsSync(this.jsonFile)) {
         return Object.assign(empty, JSON.parse(fs.readFileSync(this.jsonFile, 'utf8')));
@@ -252,6 +275,65 @@ class Store {
       this.saveJson();
     }
     return row;
+  }
+
+  // ---------- 推广渠道 ----------
+  // 列出所有渠道（按 created_at 升序，让用户后加的显示在下面，UI 可自行重排）
+  listChannels() {
+    if (this.mode === 'sqlite') {
+      return this.all('SELECT * FROM channels ORDER BY created_at ASC');
+    }
+    return Array.isArray(this.data.channels) ? this.data.channels : [];
+  }
+  // upsert：缺 id 自动生成；enabled 强制 0/1；空字符串统一存 null 便于搜索
+  saveChannel(c) {
+    if (!c || !c.name || !c.kind) throw new Error('渠道名称与类型必填');
+    const norm = function (v) {
+      if (v === undefined || v === null) return null;
+      const s = String(v).trim();
+      return s ? s : null;
+    };
+    const now = new Date().toISOString();
+    const row = {
+      id: c.id || ('ch_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6)),
+      name: String(c.name).trim(),
+      kind: String(c.kind).trim(),
+      enabled: c.enabled === false || c.enabled === 0 || c.enabled === '0' ? 0 : 1,
+      api_base: norm(c.api_base),
+      api_key: norm(c.api_key),
+      webhook: norm(c.webhook),
+      tag: norm(c.tag),
+      note: norm(c.note),
+      created_at: c.created_at || now,
+      updated_at: now
+    };
+    if (this.mode === 'sqlite') {
+      this.run(`
+        INSERT INTO channels (id, name, kind, enabled, api_base, api_key, webhook, tag, note, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          name=excluded.name, kind=excluded.kind, enabled=excluded.enabled,
+          api_base=excluded.api_base, api_key=excluded.api_key, webhook=excluded.webhook,
+          tag=excluded.tag, note=excluded.note, updated_at=excluded.updated_at
+      `, [row.id, row.name, row.kind, row.enabled, row.api_base, row.api_key, row.webhook, row.tag, row.note, row.created_at, row.updated_at]);
+    } else {
+      // JSON 兜底：找到同 id 则替换，否则追加
+      if (!Array.isArray(this.data.channels)) this.data.channels = [];
+      const i = this.data.channels.findIndex(function (x) { return x.id === row.id; });
+      if (i >= 0) this.data.channels[i] = row; else this.data.channels.push(row);
+      this.saveJson();
+    }
+    return row;
+  }
+  deleteChannel(id) {
+    if (!id) return false;
+    if (this.mode === 'sqlite') {
+      this.run('DELETE FROM channels WHERE id = ?', [id]);
+    } else {
+      this.data.channels = (this.data.channels || []).filter(function (c) { return c.id !== id; });
+      this.saveJson();
+    }
+    return true;
   }
 }
 

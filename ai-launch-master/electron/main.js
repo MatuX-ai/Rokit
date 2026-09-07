@@ -62,6 +62,44 @@ ipcMain.handle('works:delete', (_e, id) => store.deleteWork(id));
 ipcMain.handle('pubs:list', () => store.listPubs());
 ipcMain.handle('pubs:add', (_e, r) => store.addPub(r));
 
+// ---------- 推广渠道（增删改 + 连通性测试） ----------
+ipcMain.handle('channels:list', () => store.listChannels());
+ipcMain.handle('channels:save', (_e, c) => store.saveChannel(c));
+ipcMain.handle('channels:delete', (_e, id) => store.deleteChannel(id));
+
+// 自定义渠道连通性测试：仅对 kind='custom' 的渠道生效
+//   - 优先尝试 webhook（POST JSON）；空则用 api_base（POST JSON）
+//   - 发送最小 payload：{test:true, title, body, ts}
+ipcMain.handle('channels:test', async (_e, payload) => {
+  const url = payload && (payload.webhook || payload.api_base);
+  if (!url || !/^https?:\/\//i.test(url)) {
+    return { ok: false, error: '未填写有效的 API 地址或 Webhook URL' };
+  }
+  try {
+    const res = await fetchWithTimeout(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(payload.api_key ? { 'Authorization': 'Bearer ' + payload.api_key } : {})
+      },
+      body: JSON.stringify({
+        test: true,
+        title: 'Rokit 连接测试',
+        body: '这是一条来自 Rokit 的测试消息，用于验证你的渠道接入是否成功。',
+        ts: new Date().toISOString()
+      })
+    }, 9000);
+    return {
+      ok: res.ok,
+      status: res.status,
+      // 部分 webhook 服务会返回纯文本，仅截取前 200 字符避免日志爆炸
+      preview: (await res.text().catch(function () { return ''; })).slice(0, 200)
+    };
+  } catch (e) {
+    return { ok: false, error: String((e && e.message) || e) };
+  }
+});
+
 ipcMain.handle('llm:generate', async (_e, req) => {
   const settings = store.getSettings();
   if (!settings.api_key) throw new Error('未配置 API Key，请先在右上角设置中填写');

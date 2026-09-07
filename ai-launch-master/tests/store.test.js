@@ -214,3 +214,117 @@ describe('Store · JSON 兜底', () => {
     expect(data.settings.api_key).toBe('k');
   });
 });
+
+describe('Store · Channels（推广渠道）', () => {
+  it('空库应返回空数组', () => {
+    const { Store } = require('../electron/store');
+    const store = new Store(dbPath);
+    expect(store.listChannels()).toEqual([]);
+  });
+
+  it('应当支持完整的渠道 upsert（自定义 webhook + API）', () => {
+    const { Store } = require('../electron/store');
+    const store = new Store(dbPath);
+    const r = store.saveChannel({
+      name: '钉钉机器人',
+      kind: 'custom',
+      enabled: 1,
+      api_base: '',
+      api_key: 'sec-abc',
+      webhook: 'https://oapi.dingtalk.com/robot/send?access_token=xyz',
+      tag: '通知',
+      note: '团队机器人'
+    });
+    expect(r.id).toMatch(/^ch_/);
+    expect(r.name).toBe('钉钉机器人');
+    expect(r.kind).toBe('custom');
+    expect(r.enabled).toBe(1);
+    expect(r.api_key).toBe('sec-abc');
+    expect(r.tag).toBe('通知');
+    expect(r.created_at).toBeTruthy();
+    expect(r.updated_at).toBeTruthy();
+
+    const list = store.listChannels();
+    expect(list).toHaveLength(1);
+    expect(list[0].id).toBe(r.id);
+  });
+
+  it('必填字段缺失时应抛错（name / kind）', () => {
+    const { Store } = require('../electron/store');
+    const store = new Store(dbPath);
+    expect(() => store.saveChannel({ kind: 'custom' })).toThrow();
+    expect(() => store.saveChannel({ name: '无名' })).toThrow();
+    expect(store.listChannels()).toHaveLength(0);
+  });
+
+  it('enabled 应被规范化为 0 / 1（不接受 truthy 字符串）', () => {
+    const { Store } = require('../electron/store');
+    const store = new Store(dbPath);
+    store.saveChannel({ name: 'A', kind: 'github', enabled: false });
+    store.saveChannel({ name: 'B', kind: 'github', enabled: true });
+    const list = store.listChannels();
+    const a = list.find((c) => c.name === 'A');
+    const b = list.find((c) => c.name === 'B');
+    expect(Number(a.enabled)).toBe(0);
+    expect(Number(b.enabled)).toBe(1);
+  });
+
+  it('空字符串应被规范化为 null', () => {
+    const { Store } = require('../electron/store');
+    const store = new Store(dbPath);
+    const r = store.saveChannel({
+      name: 'X', kind: 'wechat',
+      api_base: '   ', api_key: '', webhook: '', tag: '', note: ''
+    });
+    expect(r.api_base).toBeNull();
+    expect(r.api_key).toBeNull();
+    expect(r.webhook).toBeNull();
+    expect(r.tag).toBeNull();
+    expect(r.note).toBeNull();
+  });
+
+  it('相同 id 应更新而非新增', () => {
+    const { Store } = require('../electron/store');
+    const store = new Store(dbPath);
+    const c1 = store.saveChannel({ name: '原名', kind: 'github', enabled: 1 });
+    const c2 = store.saveChannel({ id: c1.id, name: '新名', kind: 'github', enabled: 0 });
+    expect(c2.id).toBe(c1.id);
+    expect(c2.name).toBe('新名');
+    expect(Number(c2.enabled)).toBe(0);
+    expect(store.listChannels()).toHaveLength(1);
+  });
+
+  it('删除应仅移除指定 id，其他渠道不受影响', () => {
+    const { Store } = require('../electron/store');
+    const store = new Store(dbPath);
+    const a = store.saveChannel({ name: 'A', kind: 'github' });
+    store.saveChannel({ name: 'B', kind: 'v2ex' });
+    expect(store.listChannels()).toHaveLength(2);
+
+    store.deleteChannel(a.id);
+    const list = store.listChannels();
+    expect(list).toHaveLength(1);
+    expect(list[0].name).toBe('B');
+  });
+
+  it('内置平台 kind 应被正常存储（与 publishers.js 适配器一一对应）', () => {
+    const { Store } = require('../electron/store');
+    const store = new Store(dbPath);
+    const kinds = ['github','ph','v2ex','juejin','jike','bili','xhs','douyin','zhihu','wechat','facebook','youtube','x'];
+    kinds.forEach((k) => store.saveChannel({ name: k, kind: k }));
+    expect(store.listChannels()).toHaveLength(kinds.length);
+    store.listChannels().forEach((c) => expect(kinds).toContain(c.kind));
+  });
+
+  it('迁移应当幂等：旧库 v1 升级到 v2 后可正常增删渠道', () => {
+    const { Store } = require('../electron/store');
+    const s1 = new Store(dbPath);
+    s1.saveSettings({ api_key: 'k' });
+    // 再次实例化：触发 migrate 检查（已是 v2 应直接跳过）
+    const s2 = new Store(dbPath);
+    expect(s2.getSettings().api_key).toBe('k');
+    // 新表可写
+    s2.saveChannel({ name: 'A', kind: 'custom' });
+    expect(s2.listChannels()).toHaveLength(1);
+  });
+});

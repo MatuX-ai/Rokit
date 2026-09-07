@@ -12,6 +12,11 @@ contextBridge.exposeInMainWorld('api', {
   // 发布记录
   listPubs: () => ipcRenderer.invoke('pubs:list'),
   addPub: (r) => ipcRenderer.invoke('pubs:add', r),
+  // 推广渠道（增删改 + 连通性测试）
+  listChannels: () => ipcRenderer.invoke('channels:list'),
+  saveChannel: (c) => ipcRenderer.invoke('channels:save', c),
+  deleteChannel: (id) => ipcRenderer.invoke('channels:delete', id),
+  testChannel: (payload) => ipcRenderer.invoke('channels:test', payload),
   // AI 能力
   generate: (req) => ipcRenderer.invoke('llm:generate', req),
   // 抓取作品信息（GitHub / 普通网址）

@@ -29,9 +29,10 @@ var PASTE = "function paste(el,t){el.focus();document.execCommand('insertText',f
 
 var adapters = {
 
-  // ---- GitHub Release（全自动） ----
+  // ---- GitHub Release（全自动：仅需登录，填表后自动点击 Publish Release） ----
   github: {
     auto: true,
+    note: '进入 GitHub Release 发布页后自动填 tag / title / body，识别到 Publish Release 按钮后自动点击提交。需在发布浏览器中已登录 GitHub。',
     launch: function (p) {
       var m = /github\.com\/([^/?#]+\/[^/?#]+)/i.exec(p.link || '');
       if (!m) return null;
@@ -56,9 +57,11 @@ var adapters = {
     }
   },
 
-  // ---- Product Hunt（全自动，多步表单，最后一步可能需确认） ----
+  // ---- Product Hunt（多步表单，每步需手动 Next/Submit） ----
   ph: {
-    auto: true,
+    auto: false,
+    manualReason: '多步表单，每一步都需手动 Next，最后一步手动 Submit',
+    note: 'Product Hunt 是多步向导，Rokit 只填第一步的 name / tagline / description / url，后续每一步都需用户手动点击 Next。',
     launch: function () { return 'https://www.producthunt.com/posts/new'; },
     fill: function (p) {
       return inject('(async function(p){\n' + WAIT + '\n' + SETV + '\n' +
@@ -98,9 +101,11 @@ var adapters = {
     }
   },
 
-  // ---- 掘金发文章（全自动填表，发布需选分类/标签，弹窗时等确认） ----
+  // ---- 掘金发文章（自动填 title / body，发布需选分类/标签） ----
   juejin: {
-    auto: true,
+    auto: false,
+    manualReason: '发布前需选分类、标签、封面',
+    note: 'Rokit 填好标题与正文，发布按钮点击前会弹分类 / 标签 / 封面设置，需用户手动选完后点发布。',
     launch: function () { return 'https://juejin.cn/editor/drafts/new'; },
     fill: function (p) {
       return inject('(async function(p){\n' + WAIT + '\n' + SETV + '\n' +
@@ -135,9 +140,11 @@ var adapters = {
     }
   },
 
-  // ---- Facebook 发帖（全自动，遇到受众选择则等确认） ----
+  // ---- Facebook 发帖（自动填正文，发布前需选受众 / 隐私） ----
   facebook: {
-    auto: true,
+    auto: false,
+    manualReason: '发布前需选受众、隐私设置',
+    note: 'Rokit 填好正文，发布前 Facebook 会弹受众 / 隐私 / 心情选择，需用户手动选完点发布。',
     launch: function () { return 'https://www.facebook.com/'; },
     fill: function (p) {
       return inject('(async function(p){\n' + WAIT + '\n' + PASTE + '\n' +
@@ -154,9 +161,11 @@ var adapters = {
     }
   },
 
-  // ---- YouTube（进自动列表，但视频上传需要本地文件，无文件时降级提示） ----
+  // ---- YouTube（视频发布需要本地成片文件） ----
   youtube: {
-    auto: true,
+    auto: false,
+    manualReason: '需本地成片视频文件',
+    note: 'YouTube 视频发布必须先上传本地视频文件，Rokit 自动跳到 YouTube Studio 但不会自动选择本地文件，请手动上传。',
     launch: function () { return 'https://studio.youtube.com/'; },
     fill: function (p) {
       return inject('(async function(p){\n' +

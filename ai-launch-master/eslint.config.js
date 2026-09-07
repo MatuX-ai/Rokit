@@ -20,6 +20,7 @@ module.exports = [
     files: [
       'electron/**/*.js',
       'tests/**/*.js',
+      'scripts/**/*.js',
       '*.config.js'
     ],
     languageOptions: {
