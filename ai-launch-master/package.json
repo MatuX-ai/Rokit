@@ -1,7 +1,7 @@
 {
   "name": "rokit",
   "productName": "Rokit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Rokit · 开源桌面端 AI 推广自动化（BYOK · 本地 SQLite · 作品首秀发射台）",
   "main": "electron/main.js",
   "scripts": {
