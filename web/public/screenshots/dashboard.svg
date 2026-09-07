@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0e14"/>
+      <stop offset="100%" stop-color="#10171f"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="540" fill="url(#bg2)"/>
+  <rect x="0" y="0" width="960" height="32" fill="#0e141b" stroke="#1f2a33" stroke-width="1"/>
+  <circle cx="20" cy="16" r="5" fill="#ff5f57"/>
+  <circle cx="36" cy="16" r="5" fill="#febc2e"/>
+  <circle cx="52" cy="16" r="5" fill="#28c840"/>
+  <text x="480" y="20" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#5A6B72">Rokit · 作品首秀发射台 · v0.1.1</text>
+  <rect x="0" y="32" width="960" height="40" fill="#0a1018" stroke="#1f2a33"/>
+  <text x="20" y="58" font-family="-apple-system,sans-serif" font-size="13" fill="#94D4D0" font-weight="700">🚀 Rokit</text>
+  <text x="322" y="58" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="#7a8a93">首秀向导</text>
+  <rect x="370" y="40" width="84" height="32" fill="#0e7c7b" opacity="0.7"/>
+  <text x="412" y="58" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="#fff" font-weight="600">数据看板</text>
+  <text x="510" y="58" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="#7a8a93">推广渠道</text>
+  <text x="604" y="58" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="#7a8a93">我的作品</text>
+  <!-- main content -->
+  <g transform="translate(40, 100)">
+    <text x="0" y="0" font-family="-apple-system,sans-serif" font-size="11" fill="#5A6B72" letter-spacing="2">看板 · 真实数据</text>
+    <rect x="700" y="-12" width="180" height="20" rx="10" fill="#0e7c7b" opacity="0.18"/>
+    <text x="790" y="2" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#94D4D0" font-weight="600">本地回填 · 未接统计服务</text>
+    <!-- KPIs -->
+    <g transform="translate(0, 20)">
+      <rect x="0" y="0" width="210" height="100" rx="8" fill="#0e141b" stroke="#1f2a33"/>
+      <text x="14" y="24" font-family="-apple-system,sans-serif" font-size="10" fill="#5A6B72">总发布次数</text>
+      <text x="14" y="62" font-family="-apple-system,sans-serif" font-size="28" fill="#fff" font-weight="800">0</text>
+      <text x="14" y="84" font-family="-apple-system,sans-serif" font-size="10" fill="#94a3a8">本机会话</text>
+
+      <rect x="222" y="0" width="210" height="100" rx="8" fill="#0e141b" stroke="#1f2a33"/>
+      <text x="236" y="24" font-family="-apple-system,sans-serif" font-size="10" fill="#5A6B72">被启用渠道</text>
+      <text x="236" y="62" font-family="-apple-system,sans-serif" font-size="28" fill="#fff" font-weight="800">0</text>
+      <text x="236" y="84" font-family="-apple-system,sans-serif" font-size="10" fill="#94a3a8">启用的推广渠道数</text>
+
+      <rect x="444" y="0" width="210" height="100" rx="8" fill="#0e141b" stroke="#1f2a33"/>
+      <text x="458" y="24" font-family="-apple-system,sans-serif" font-size="10" fill="#5A6B72">首发作品</text>
+      <text x="458" y="62" font-family="-apple-system,sans-serif" font-size="28" fill="#fff" font-weight="800">0</text>
+      <text x="458" y="84" font-family="-apple-system,sans-serif" font-size="10" fill="#94a3a8">本机登记的正式作品</text>
+
+      <rect x="666" y="0" width="214" height="100" rx="8" fill="#0e141b" stroke="#1f2a33"/>
+      <text x="680" y="24" font-family="-apple-system,sans-serif" font-size="10" fill="#5A6B72">最近发布</text>
+      <text x="680" y="62" font-family="-apple-system,sans-serif" font-size="22" fill="#fff" font-weight="800">—</text>
+      <text x="680" y="84" font-family="-apple-system,sans-serif" font-size="10" fill="#94a3a8">本机会话暂无发布</text>
+    </g>
+    <!-- bars empty state -->
+    <g transform="translate(0, 140)">
+      <rect x="0" y="0" width="880" height="180" rx="8" fill="#0e141b" stroke="#1f2a33"/>
+      <text x="14" y="24" font-family="-apple-system,sans-serif" font-size="13" fill="#fff" font-weight="700">各渠道发布次数</text>
+      <text x="14" y="42" font-family="-apple-system,sans-serif" font-size="11" fill="#5A6B72">本机会话 · 尚未发布 · 完成后这里会自动出现</text>
+      <text x="440" y="106" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="#5A6B72">尚无发布记录。完成一次首秀发射后，这里会按平台汇总发布次数。</text>
+    </g>
+    <!-- pub log -->
+    <g transform="translate(0, 340)">
+      <rect x="0" y="0" width="880" height="140" rx="8" fill="#0e141b" stroke="#1f2a33"/>
+      <text x="14" y="24" font-family="-apple-system,sans-serif" font-size="13" fill="#fff" font-weight="700">本次会话 · 发布回填</text>
+      <text x="14" y="42" font-family="-apple-system,sans-serif" font-size="11" fill="#2E8B33" font-weight="600">真实数据</text>
+      <text x="80" y="42" font-family="-apple-system,sans-serif" font-size="11" fill="#5A6B72">· 由刚才的发布队列实时回填</text>
+      <text x="14" y="68" font-family="-apple-system,sans-serif" font-size="12" fill="#5A6B72">尚无发布记录。完成一次首秀发射后，这里会展示你实际发布的平台、时间与文案。</text>
+    </g>
+  </g>
+  <text x="480" y="530" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#5A6B72" letter-spacing="1">v0.1.1 真实界面占位 · v0.1.2 正式打包时替换为 PNG</text>
+</svg>

@@ -4,9 +4,14 @@
  * - 毛玻璃深色背景
  * - Logo + 锚点 + Star + 下载 CTA
  * - 移动端汉堡菜单（纯 CSS）
+ *
+ * ⚠ DOM 顺序依赖（移动端 CSS 兄弟选择器）：
+ *   必须保持顺序  checkbox#nav-toggle  →  label.nav-burger  →  nav.nav-links
+ *   调换顺序会导致汉堡菜单打不开 / 收不回。
  */
 const githubUrl = 'https://github.com/ProClips/Rokit';
 const releaseUrl = 'https://github.com/ProClips/Rokit/releases/latest';
+const version = '0.1.1'; // 与 ai-launch-master/package.json 同步
 ---
 
 <header class="nav">
@@ -26,6 +31,8 @@ const releaseUrl = 'https://github.com/ProClips/Rokit/releases/latest';
       </svg>
       <span class="brand-text">Rokit</span>
     </a>
+
+    <!-- ⚠ 移动端汉堡菜单依赖兄弟选择器：以下三个节点顺序不可调换 -->
 
     <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-hidden="true" />
     <label for="nav-toggle" class="nav-burger" aria-label="切换菜单" role="button" tabindex="0" aria-expanded="false">
@@ -49,7 +56,7 @@ const releaseUrl = 'https://github.com/ProClips/Rokit/releases/latest';
         Star
       </a>
       <a href={releaseUrl} class="btn btn-primary btn-sm" target="_blank" rel="noopener noreferrer">
-        下载 v0.1.0
+        下载 v{version}
       </a>
     </nav>
   </div>

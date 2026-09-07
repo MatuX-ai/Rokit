@@ -8,6 +8,7 @@ import rocketSvg from '../assets/rocket.svg?raw';
 
 const githubUrl = 'https://github.com/ProClips/Rokit';
 const releaseUrl = 'https://github.com/ProClips/Rokit/releases/latest';
+const version = '0.1.1'; // 与 ai-launch-master/package.json 同步
 ---
 
 <section class="hero" id="top">
@@ -25,7 +26,7 @@ const releaseUrl = 'https://github.com/ProClips/Rokit/releases/latest';
     <div class="hero-copy">
       <span class="badge">
         <span class="badge-dot"></span>
-        v0.1.0 已发布 · 开源 · MIT
+        v{version} 已发布 · 开源 · MIT
       </span>
 
       <h1 class="hero-title">
@@ -35,7 +36,7 @@ const releaseUrl = 'https://github.com/ProClips/Rokit/releases/latest';
 
       <p class="hero-sub">
         Rokit 用 AI 帮你把作品一键发到 13 个平台，<br />
-        从文案到发布，<b>15 分钟搞定</b>。
+        从文案到发布，<b>一条龙搞定</b>。
       </p>
 
       <div class="hero-cta">
@@ -45,7 +46,7 @@ const releaseUrl = 'https://github.com/ProClips/Rokit/releases/latest';
             <polyline points="7 10 12 15 17 10"/>
             <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
-          下载 Rokit v0.1.0
+          下载 Rokit v{version}
         </a>
         <a href={githubUrl} class="btn btn-ghost btn-lg" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
