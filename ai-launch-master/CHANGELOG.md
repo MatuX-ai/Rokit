@@ -5,6 +5,16 @@
 
 ## [Unreleased]
 
+### Added
+- **推广渠道 BYOK 说明补强**（UX 改进，避免用户晕菜）：
+  - 推广渠道 tab 顶部新增「本地优先 + BYOK」常驻说明卡
+  - 「渠道说明」面板补入 3 条常见疑问（为什么不填账号 / 登录态存哪 / 换电脑怎么办）
+  - 编辑内置渠道时 `chKindHint` 统一显示 BYOK 解释（不存你的账号密码）
+  - 「🚀 火箭发送」弹窗内插入发布浏览器 + 登录态说明
+  - 新增 [docs/channels-faq.md](../docs/channels-faq.md)（8 个常见问题答疑）
+  - `PRIVACY.md` 增补「一点五、BYOK 原则」章节
+- **推广渠道开关启用态变色**：启用态（●）背景改为绿色 `primary-soft` + `primary-dark` 描边 + 阴影环；停用态保持 `muted` 灰色。区分更明显，并加 `aria-pressed` 无障碍属性。
+
 ### Planned
 - 多作品库独立首秀
 - 数据导出 / 导入

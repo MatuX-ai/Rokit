@@ -423,8 +423,11 @@
   .ch-card .ch-name{font-size:14px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .ch-card .ch-name small{display:block;font-size:11px;font-weight:400;color:var(--muted);margin-top:1px}
   .ch-card .ch-actions{display:flex;gap:4px;flex:none}
-  .ch-card .ch-actions button{width:26px;height:26px;border:1px solid var(--line);background:var(--card);border-radius:7px;font-size:13px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;font-family:inherit;padding:0}
+  .ch-card .ch-actions button{width:26px;height:26px;border:1px solid var(--line);background:var(--card);border-radius:7px;font-size:13px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;font-family:inherit;padding:0;transition:all .15s}
   .ch-card .ch-actions button:hover{background:var(--primary-soft);color:var(--primary-dark);border-color:var(--primary)}
+  .ch-card .ch-actions .ch-toggle.on{background:var(--primary-soft);color:var(--primary-dark);border-color:var(--primary);box-shadow:0 0 0 2px rgba(14,124,123,.10)}
+  .ch-card .ch-actions .ch-toggle.on:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .ch-card .ch-actions .ch-toggle.off:hover{background:var(--primary-soft);color:var(--primary-dark);border-color:var(--primary)}
   .ch-card .ch-actions .ch-del:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
   .ch-card .ch-meta{font-size:11.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
   .ch-card .ch-meta .chip{display:inline-flex;align-items:center;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-size:11px;color:var(--ink)}
@@ -855,6 +858,13 @@
               <button class="btn sm" onclick="openChannelEditor(null)">+ 新增渠道</button>
             </div>
           </div>
+          <div class="dash-coming is-live" style="margin:2px 0 14px">
+            <div class="dc-icon">💡</div>
+            <div class="dc-body">
+              <div class="dc-title">本地优先 + BYOK · 不存你的账号密码</div>
+              <div class="dc-sub">Rokit <b>不要求、不存储</b>你在 GitHub / 小红书 / B站 / 抖音 等任何平台的账号密码。13 个内置平台的发布页与自动填表脚本已写死在 <code>publishers.js</code>；首次发射时 Rokit 会打开内嵌的「发布浏览器」让你登录一次，登录态由 Chromium 加密保存到 <code>%APPDATA%/Rokit/Partitions/pub/</code>，<b>仅存本机，不上传</b>。想推到钉钉 / 飞书 / Discord 等自定义服务？点 <b>+ 新增渠道</b> 选「自定义渠道」填一个 Webhook URL 即可。<a href="#" onclick="event.preventDefault();openFaq()" style="color:var(--primary);text-decoration:underline">查看 FAQ</a></div>
+            </div>
+          </div>
           <div id="channelsBox" class="ch-grid"></div>
         </div>
 
@@ -865,6 +875,16 @@
             <li><b style="color:var(--primary-dark)">内置平台</b>：Rokit 内置 13 个平台的自动填表脚本（GitHub / PH / V2EX / 掘金 / X / Facebook / 抖音 / 小红书 / B站 / 即刻 / 知乎 / 公众号 / YouTube），无需 API 也能在自动发布浏览器中一键发布。</li>
             <li><b style="color:var(--primary-dark)">自定义渠道</b>：填入 API 地址或 Webhook URL（如企业微信 / 钉钉 / Discord / 飞书机器人 / 自建服务），Rokit 会以 POST JSON 方式把标题与正文推给你。</li>
           </ul>
+        </div>
+
+        <div class="panel">
+          <h3>关于 BYOK · 3 个常见疑问</h3>
+          <ul style="margin:6px 0 0 18px;font-size:13px;color:var(--ink);line-height:1.8">
+            <li><b style="color:var(--primary-dark)">Q：为什么不让我填账号密码？</b><br /><span style="color:var(--muted)">A：Rokit 不调用平台 API，也不存账号。你只需在 Rokit 内嵌的「发布浏览器」里手动登录一次即可。</span></li>
+            <li><b style="color:var(--primary-dark)">Q：登录态存在哪？</b><br /><span style="color:var(--muted)">A：<code>%APPDATA%/Rokit/Partitions/pub/</code>（与 SQLite 同目录分区，由 Chromium 加密）。主进程不会读取 / 转发。</span></li>
+            <li><b style="color:var(--primary-dark)">Q：换电脑怎么办？</b><br /><span style="color:var(--muted)">A：Rokit 不做云同步，换电脑 = 在新机器上重新登录每个平台。配合浏览器自带密码同步可一键登录。</span></li>
+          </ul>
+          <div style="margin-top:8px;font-size:12.5px;color:var(--muted)">更多答疑（企业微信 / 多电脑同步 / 平台大改版应对等）见 <a href="#" onclick="event.preventDefault();openFaq()" style="color:var(--primary);text-decoration:underline">推广渠道 FAQ</a> 或 <code>docs/channels-faq.md</code>。</div>
         </div>
       </div>
     </section>
@@ -993,6 +1013,14 @@
 
     <div class="msub">选择要自动发布的平台（默认全选，可取消）。自动发布浏览器会自动登录态填表并一键发布；未登录的平台会提示你登录后重试。</div>
 
+    <div class="dash-coming is-live" style="margin:8px 0 12px">
+      <div class="dc-icon">ⓘ</div>
+      <div class="dc-body">
+        <div class="dc-title">即将打开 Rokit 内嵌的「发布浏览器」</div>
+        <div class="dc-sub">Rokit <b>不会读取或上传你的账号密码</b>——登录态由 Chromium 加密保存在本机 <code>%APPDATA%/Rokit/Partitions/pub/</code>。如某平台状态显示「需要登录」，请在弹出窗口手动登录后重试。<a href="#" onclick="event.preventDefault();openFaq()" style="color:var(--primary);text-decoration:underline">为什么不要我填账号？</a></div>
+      </div>
+    </div>
+
     <div class="rocket-list" id="rocketList"></div>
 
     <div class="rocket-status" id="rocketStatus"></div>
@@ -1056,6 +1084,47 @@
       </div>
 
     </form>
+
+  </div>
+
+</div>
+
+
+
+<div class="modal-overlay" id="faqModal" style="display:none">
+
+  <div class="modal" style="max-width:560px">
+
+    <div class="modal-head"><h3>推广渠道 FAQ · 关于 BYOK</h3><button class="modal-close" onclick="closeFaq()" title="关闭">×</button></div>
+
+    <div class="msub">点击 <a href="#" onclick="event.preventDefault();openExt('https://github.com/MatuX-ai/Rokit/blob/main/docs/channels-faq.md')" style="color:var(--primary)">查看完整文档（含 8 条答疑）</a> · 完整 FAQ 同步存于 <code>docs/channels-faq.md</code></div>
+
+    <div style="font-size:13px;color:var(--ink);line-height:1.7;margin-top:8px">
+
+      <div style="font-weight:700;color:var(--primary-dark);margin:10px 0 4px">Q1. 为什么推广渠道里没有「账号 / 密码」字段？</div>
+      <div style="color:var(--muted);margin-bottom:4px">Rokit 不调用平台 API，也不存你的账号密码。13 个内置平台的发布页与自动填表脚本都写死在 <code>publishers.js</code>，登录走 Rokit 内嵌的「发布浏览器」，登录态由 Chromium 加密保存到本机。</div>
+
+      <div style="font-weight:700;color:var(--primary-dark);margin:10px 0 4px">Q2. 登录态存在哪？怎么换电脑？</div>
+      <div style="color:var(--muted);margin-bottom:4px"><code>%APPDATA%/Rokit/Partitions/pub/</code>（与 SQLite 同目录分区，Chromium 加密）。<b>不做云同步</b>——换电脑 = 在新 Rokit 上重新登录每个平台。配合浏览器自带密码管理器可一键登录。</div>
+
+      <div style="font-weight:700;color:var(--primary-dark);margin:10px 0 4px">Q3. 怎么彻底删除 Rokit 留下的登录信息？</div>
+      <div style="color:var(--muted);margin-bottom:4px">删除整个 <code>%APPDATA%/Rokit/</code> 目录即可。Windows 设置 → 应用 → Rokit → 卸载 也会一并清理。</div>
+
+      <div style="font-weight:700;color:var(--primary-dark);margin:10px 0 4px">Q4. 平台大改版导致自动发布失败怎么办？</div>
+      <div style="color:var(--muted);margin-bottom:4px">短期用「复制 + 打开」手动发布；长期在 GitHub Issue 反馈，维护者会同步 <code>publishers.js</code>。MVP 1.5 会接入 L1 直发（本地 OAuth / 平台 API）作为兑底。</div>
+
+      <div style="font-weight:700;color:var(--primary-dark);margin:10px 0 4px">Q5. 自定义渠道的 Webhook / API 安全吗？</div>
+      <div style="color:var(--muted);margin-bottom:4px">URL / Key 仅存本机 SQLite，POST JSON 推给你自己的服务。Rokit 不验证目标合法性——<b>请确认你填的 URL 确实是你自己的服务</b>（企业微信 / 钉钉 / 飞书 / Discord Webhook 等）。</div>
+
+    </div>
+
+    <div class="modal-acts">
+
+      <button type="button" class="btn ghost sm" onclick="closeFaq()">关闭</button>
+
+      <button type="button" class="btn sm" onclick="openExt('https://github.com/MatuX-ai/Rokit/blob/main/docs/channels-faq.md');closeFaq()">查看完整 FAQ →</button>
+
+    </div>
 
   </div>
 
@@ -1161,6 +1230,11 @@
   ];
 
   PLATFORMS.forEach(function(p){state.platforms[p.id]=false;state.sel[p.id]=false;});
+
+  // 各内置平台定制 hint（缺省走 builtinHint 通用 BYOK 说明）
+  var PLATFORM_HINT={};
+  // 通用 BYOK 说明：所有内置平台的 chKindHint 默认文案
+  var builtinHint='Rokit 已内置此平台的发布页与自动填表脚本；<b style="color:var(--primary-dark)">不存你的账号密码</b>——首次发射时，Rokit 内嵌的「发布浏览器」会让你登录一次，登录态仅存本机。';
 
 
 
@@ -2997,9 +3071,9 @@
 
   // 为内置平台补齐 meta（名称、颜色、字符、说明）
   function builtinKindMeta(){
-    var out={custom:{name:'自定义渠道',char:'自',color:'#5A6B72',hint:'填入 API 地址或 Webhook URL（如钉钉/飞书/Discord），Rokit 会以 POST JSON 方式推送文案。'}};
+    var out={custom:{name:'自定义渠道',char:'自',color:'#5A6B72',hint:'填入 API 地址或 Webhook URL（如钉钉/飞书/Discord），Rokit 会以 POST JSON 方式推送文案（Authorization: Bearer <API Key> 若有）。'}};
     PLATFORMS.forEach(function(p){
-      out[p.id]={name:p.name,char:p.name.charAt(0),color:p.color||'#0E7C7B',hint:(PLATFORM_HINT&&PLATFORM_HINT[p.id])||'内置平台，在首秀向导中启用后可一键自动填表发布。'};
+      out[p.id]={name:p.name,char:p.name.charAt(0),color:p.color||'#0E7C7B',hint:(PLATFORM_HINT&&PLATFORM_HINT[p.id])||builtinHint};
     });
     return out;
   }
@@ -3038,7 +3112,7 @@
           '<div class="ch-dot" style="background:'+esc(meta.color)+'">'+esc(meta.char)+'</div>'+
           '<div class="ch-name">'+esc(c.name)+'<small>'+esc(meta.name)+'</small></div>'+
           '<div class="ch-actions">'+
-            '<button onclick="toggleChannel(\''+esc(c.id)+'\')" title="'+(enabled?'点击停用':'点击启用')+'">'+(enabled?'●':'○')+'</button>'+
+            '<button class="ch-toggle '+(enabled?'on':'off')+'" onclick="toggleChannel(\''+esc(c.id)+'\')" title="'+(enabled?'点击停用':'点击启用')+'" aria-pressed="'+(enabled?'true':'false')+'">'+(enabled?'●':'○')+'</button>'+
             '<button onclick="openChannelEditor(\''+esc(c.id)+'\')" title="编辑">✎</button>'+
             '<button class="ch-del" onclick="deleteChannel(\''+esc(c.id)+'\')" title="删除">×</button>'+
           '</div>'+
@@ -3103,6 +3177,22 @@
   window.closeChannelEditor=function(){
     document.getElementById('channelModal').style.display='none';
     __editingId=null;
+  };
+
+  // FAQ 弹窗（推广渠道 BYOK 答疑）
+  window.openFaq=function(){
+    var m=document.getElementById('faqModal');if(m)m.style.display='flex';
+  };
+  window.closeFaq=function(){
+    var m=document.getElementById('faqModal');if(m)m.style.display='none';
+  };
+  // 用系统浏览器打开外部链接（Electron 走 window.api.openExternal，避免在 app 内嵌窗口被拦截）
+  window.openExt=function(url){
+    if(!url)return;
+    try{
+      if(window.api&&window.api.openExternal){window.api.openExternal(url);return;}
+    }catch(e){}
+    try{window.open(url,'_blank','noopener');}catch(_){ /* 演示模式可能不可用 */ }
   };
 
   // select 切换时更新 hint 与自定义字段显隐

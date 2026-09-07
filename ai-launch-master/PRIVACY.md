@@ -15,6 +15,23 @@ Rokit 是**完全本地运行**的开源桌面应用：
 
 你可以随时通过删除 `%APPDATA%/Rokit/` 目录来彻底擦除所有数据。
 
+## 一点五、BYOK 原则（Bring Your Own Login）
+
+Rokit 在推广渠道场景采用 **BYOK（Bring Your Own Login，自带登录态）** 原则：
+
+- 13 个内置平台（GitHub / PH / V2EX / 掘金 / X / Facebook / 抖音 / 小红书 / B站 / 即刻 / 知乎 / 公众号 / YouTube）的发布页与自动填表脚本都**写死在程序里**（见 `electron/publishers.js`）。
+- Rokit **不要求、不存储**你在这些平台的账号密码。你需要在 Rokit 内嵌的「发布浏览器」（Electron 嵌入的 Chromium 实例，`persist:pub` 分区）里手动登录一次。
+- 登录态仅保存在本机：`%APPDATA%/Rokit/Partitions/pub/`，由 Chromium **加密**保存。
+- Rokit 主进程**不会**读取 / 转发 / 上传这些 Cookie。
+- 自定义渠道的 Webhook URL / API Key 同样仅存本机 SQLite，**仅**用于 Rokit 把文案以 POST JSON 推给你自己的服务（企业微信 / 钉钉 / 飞书机器人 / Discord / 自建 API 等）。
+
+> 这不是妥协，是有意为之：
+> 1. 账号不存本机 → 泄露面降低到你电脑磁盘加密 / 本身
+> 2. 真实浏览器上下文 → 不容易被平台风控识别为机器人
+> 3. 国内平台多数不开放公开发布 API → 浏览器方案是唯一可行路径
+>
+> 详细答疑见 [docs/channels-faq.md](../docs/channels-faq.md)。
+
 ## 二、数据存储
 
 | 数据类型 | 存储位置 | 加密 |
