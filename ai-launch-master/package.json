@@ -1,7 +1,7 @@
 {
   "name": "rokit",
   "productName": "Rokit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Rokit · 开源桌面端 AI 推广自动化（BYOK · 本地 SQLite · 作品首秀发射台）",
   "main": "electron/main.js",
   "scripts": {
@@ -12,18 +12,24 @@
     "format:check": "prettier --check \"electron/**/*.js\" \"tests/**/*.js\" \"*.{js,json,md}\"",
     "test": "vitest run",
     "test:watch": "vitest",
-    "dist": "electron-builder",
-    "dist:win": "electron-builder --win",
-    "dist:portable": "electron-builder --win portable"
+    "audit": "node tests/audit.js && node tests/audit-ux.js",
+    "icon:build": "node scripts/prepare-icon.js",
+    "dist": "npm run icon:build && electron-builder",
+    "dist:win": "npm run icon:build && electron-builder --win",
+    "dist:portable": "npm run icon:build && electron-builder --win portable",
+    "bump": "node scripts/bump-version.js",
+    "pack": "npm run icon:build && node scripts/bump-version.js && electron-builder --win",
+    "pack:portable": "npm run icon:build && node scripts/bump-version.js && electron-builder --win portable"
   },
   "author": "ProClips+",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "^9.13.0",
     "electron": "^36.9.5",
     "electron-builder": "^25.1.8",
     "eslint": "^9.13.0",
-    "@eslint/js": "^9.13.0",
     "globals": "^15.11.0",
+    "png-to-ico": "^2.1.8",
     "prettier": "^3.3.3",
     "vitest": "^2.1.4"
   },
@@ -32,7 +38,7 @@
     "productName": "Rokit",
     "copyright": "Copyright © 2026 ProClips+",
     "directories": {
-      "output": "release",
+      "output": "../RELEASE",
       "buildResources": "build"
     },
     "files": [
@@ -49,14 +55,19 @@
     ],
     "asar": true,
     "win": {
+      "icon": "build/icon.ico",
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         },
         {
           "target": "portable",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "artifactName": "${productName}-${version}-${arch}.${ext}"

@@ -1,9 +1,9 @@
 {
   "name": "rokit-web",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
-  "description": "Rokit v0.1.0 首发推广静态站（Astro）",
+  "description": "Rokit v0.1.1 首发推广静态站（Astro）",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

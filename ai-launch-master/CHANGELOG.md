@@ -8,9 +8,37 @@
 ### Planned
 - 多作品库独立首秀
 - 数据导出 / 导入
-- L1 直发（本地 OAuth）
+- L1 直发（本地 OAuth / GitHub Release API）
 - 反馈采集 + AI 分析
-- 录屏成片本地剪辑
+- 录屏成片本地剪辑（Remotion 服务端渲染）
+- 数据看板接入各平台官方统计 API
+
+## [0.1.1] - 2026-09-07
+
+交付前 UX 审计 + 假功能 / 假数据 / 误导文案专项修复。
+
+### Changed
+- **数据看板**：移除 4 项硬编码 demo KPI（12,480 / 342 / 156 / 92%），改为绑定本机会话真实计数（总发布、被启用渠道、首发作品、最近发布）；渠道条形图与里程碑报喜改为读 `state.pubByPlatform` / `state.milestones`，无数据时显示空态
+- **示例作品**：4 个示例作品（便签天气 / 校园课表助手 / 像素猫小游戏 / 单词卡速记）加「示例」角标；**不再写入 SQLite**；点击弹 toast「这是示例作品，不可直接首秀」；`persistCurrentWork` 强制拦截 `sample_` 前缀
+- **智能拆条 / 合成成片**：所有按钮加「DEMO」角标 + 黄色提示横条 + 完成后 toast 标注「拆条 / 成片为模拟数据 · 正式版由服务端 Remotion 渲染」
+- **L1/L2 命名**：13 平台全部按真实能力修正为 L2（AI 备料 + 浏览器自动填表）；ph / juejin / facebook / youtube 4 个原本 `auto:true` 的平台按实际依赖改为 `auto:false` + `manualReason`
+- **Web 站文案**：「数据看板」徽章从「已上线」改为「MVP 1.5」；「15 分钟搞定」改为「一条龙搞定」；GitHub chip 从 L1 直发改 L2；首秀耗时从 15 分钟上调为「1 小时 · 熟练后更快」
+- **Web 站订阅表单**：彻底移除，改为 GitHub Watch 引导（不再假装能"订阅"）
+- **Web 站截图区**：从 CSS 画的伪截图改为 2 张真实 UI 占位 SVG（v0.1.2 替换为 PNG）
+- **审计脚本**：`tests/audit.js` 移除强制导航顺序断言；新增 `tests/audit-ux.js` 守门"营销文案与代码能力一致"
+
+### Fixed
+- `index.html` 移除 4 条写死的里程碑报喜和 6 条假渠道条形图
+- `index.html` 示例作品 `star/dl/play` 从伪造数据归零
+- `publishers.js` 误导性 `auto:true` 标注
+- `audit.js` 不再强制错误的"首秀→数据看板→推广渠道→我的作品"DOM 顺序
+- 桌面端首次启动不再向 `%APPDATA%/Rokit/ai-launch-master.db` 写入示例作品
+- Web 站底部版权年份从 2024 改为 2026
+
+### Known Limitations（仍然存在）
+- 智能拆条与合成成片为 demo 流程（v0.1.1 不包含 Remotion 服务端）
+- 13 平台 L1 直发（API 直发）尚未实现
+- 应用未做代码签名，Windows 首次启动会触发 SmartScreen 拦截
 
 ## [0.1.0] - 2026-09-05
 
@@ -35,7 +63,7 @@ MVP 1.0 首发。本版本在原 `ai-launch-master` 原型基础上完成上线�
 - API Key 仅存本机 SQLite，明文存储（用户自负；如需加密存储见 1.5 路线图）
 
 ### Known Limitations
-- L1 直发（GitHub OAuth 自动发布）尚未实现，需手动粘贴
-- 国内抖音 / 小红书 / 公众号 / B站 / 知乎 / 即刻 6 个平台为半自动（自动填正文，最后一步需人工）
+- 智能拆条 + 合成成片为 demo 流程（v0.1.1 不含 Remotion 服务端，正式版规划在 MVP 1.5）
+- L1 直发（GitHub OAuth / 平台开放 API）尚未实现；当前 13 平台均为 L2（浏览器自动填表），自动发布成功后最后一步需用户在发布窗口点击"发布"完成提交
 - 应用未做代码签名，Windows 首次启动会触发 SmartScreen 拦截
 - `node:sqlite` 为 Electron 36 新特性，< 36 版本会回退 JSON 兜底

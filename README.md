@@ -5,7 +5,7 @@
 **技术形态**：开源软件 · 桌面端应用 · 本地 SQLite · BYOK（用户自带 API Key）
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](ai-launch-master/LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.0-success.svg)](ai-launch-master/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.1.1-success.svg)](ai-launch-master/CHANGELOG.md)
 [![Platform: Windows](https://img.shields.io/badge/platform-Windows%2010%2F11-blueviolet.svg)](#)
 [![Electron](https://img.shields.io/badge/electron-36-47848F?logo=electron&logoColor=white)](#)
 [![Node](https://img.shields.io/badge/node-22%2B-339933?logo=node.js&logoColor=white)](#)
@@ -77,7 +77,7 @@ Rokit/
 | 🛡️ **数据主权** | 完全本地 SQLite，无账号、无云同步、无遥测 | 创作者最在意作品与素材的所有权；零账号零摩擦 |
 | 🔌 **AI 接入** | BYOK：用户自配 Base URL / Key / 模型名 | 与 DeepSeek Harness 同思路；可接任意 OpenAI 兼容端点（DeepSeek / OpenAI / 通义 / Ollama / LM Studio …） |
 | 🖥️ **运行形态** | Electron 36 单桌面壳，内置 Node 22 + `node:sqlite` | 零原生编译依赖；启动即用；离线可用 |
-| 🌐 **平台发布** | 13 平台适配器，按 L1（API 直发）/ L2（AI 备料 + 一键跳转）/ L3（RPA）分层 | 个人开发者绕开「平台不发 API」与「自动化风控」两大壁垒 |
+| 🌐 **平台发布** | 13 平台适配器，统一为 L2（AI 备料 + 浏览器自动填表），最终点击需用户确认 | v0.1.1 全部平台均通过浏览器自动化实现；真正的 L1（API 直发）规划在 MVP 1.5 |
 | 📦 **分发** | electron-builder 出 NSIS + Portable 双产物 | Windows 用户既可安装也可单文件运行 |
 | 🔒 **安全** | `contextIsolation` + `nodeIntegration:false` + 白名单 `openExternal` | 渲染进程无 Node 能力，外链仅 http/https |
 
@@ -85,7 +85,7 @@ Rokit/
 
 | 版本 | 状态 | 核心能力 |
 |---|---|---|
-| **MVP 1.0**（当前 v0.1.0） | ✅ | 桌面壳 + BYOK + 对话向导 + 本地 SQLite + 多平台文案 + L2 跳转 + 发布队列 + 自动发布浏览器 |
+| **MVP 1.0**（当前 v0.1.1） | ✅ | 桌面壳 + BYOK + 对话向导 + 本地 SQLite + 多平台文案 + L2 自动填表 + 发布队列 + 自动发布浏览器 + 真实数据看板 |
 | **MVP 1.5** | 🚧 规划 | 落地页生成 · L1 直发（本地 OAuth）· 数据看板 · 里程碑报喜 · 录屏成片 · 多作品库 · 数据导出/导入 |
 | **MVP 2.0** | 📋 后续 | 反馈采集 + AI 分析 · 多画幅多版本渲染 · 开源发布与社区案例库 |
 
@@ -95,7 +95,8 @@ Rokit/
 
 GitHub · Product Hunt · V2EX · 掘金 · X(Twitter) · Facebook · YouTube · 抖音 · 小红书 · B站 · 即刻 · 知乎 · 微信公众号
 
-> 部分国内平台为半自动（自动填正文，最后一步需人工确认），符合个人开发者合规边界。
+> 当前 13 平台均为 L2（浏览器自动填正文 + 自动跳转，最后一步需用户手动点击发布）。
+> API 直发（L1）和 RPA 兜底（L3）规划在 MVP 1.5 / 2.0。
 
 ## 安全与隐私
 

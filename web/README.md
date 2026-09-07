@@ -110,3 +110,7 @@ web/
 - [ ] 所有锚点跳转平滑
 - [ ] 「下载」/「Star」CTA 链接可达
 - [ ] Lighthouse（移动端）：Performance / SEO / Best Practices ≥ 95
+
+## 开发约定
+
+- ⚠ **修改 `src/components/Nav.astro` 节点顺序需重新验证汉堡菜单**：依赖 `checkbox#nav-toggle → label.nav-burger → nav.nav-links` 的 CSS 兄弟选择器，调换顺序会导致移动端菜单打不开 / 收不回（详见组件顶部注释）。

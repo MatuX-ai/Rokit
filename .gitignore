@@ -4,6 +4,7 @@
 **/dist/
 **/out/
 **/release/
+/RELEASE/         # 项目根下的本地安装包输出（electron-builder）
 
 # 调试日志
 npm-debug.log*

@@ -75,12 +75,19 @@ npm run format         # Prettier 格式化
 ## 打包发布
 
 ```bash
-npm run dist           # 按 package.json "build" 段打包（默认 Win nsis + portable）
-npm run dist:win       # 仅 Windows nsis + portable
-npm run dist:portable  # 仅 Windows portable 单文件
+npm run bump          # 仅自增板号（0.1.0 -> 0.1.1 ...），不打包
+npm run pack          # 自增板号 + 打 Windows 本地安装包（NSIS + Portable）
+npm run pack:portable # 自增板号 + 仅打绿色版（Portable）
+npm run dist:win      # 不自增板号，仅打 Windows 安装包
 ```
 
-产物输出到 `release/` 目录。
+产物输出到 **项目根 `RELEASE/`** 目录（即 `../RELEASE`，相对 `ai-launch-master/`）。
+
+> **板号自增规则**（写在 `scripts/bump-version.js`，16 个单元测试覆盖）：
+> - 起始版本号：`0.1.0`（语义化版本 MAJOR.MINOR.PATCH）
+> - 每次打包：尾数 PATCH +1
+> - PATCH 上限为两位数；一旦下一步会超过两位数（≥100），立即进位到 MINOR（前一位），PATCH 归零；如果 MINOR 也超过两位数则继续进 MAJOR。
+> - 例：`0.1.0 → 0.1.1 → … → 0.1.99 → 0.2.0 → …`
 
 > **首次打包注意**：
 > - Windows 上需先准备 `build/icon.ico`（多尺寸 PNG 转 ICO，详见 `build/README.md`）
