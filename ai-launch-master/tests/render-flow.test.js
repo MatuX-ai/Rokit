@@ -45,7 +45,8 @@ function loadFns(...names) {
   return new Function(bodies + '\n' + ret)();
 }
 
-const { miniMd, esc, av, msgAI, msgUser } = loadFns('miniMd', 'esc', 'av', 'msgAI', 'msgUser');
+// av 由 msgAI 内部调用，这里仅解构以触发一起加载，避免作用域问题。
+const { miniMd, esc, msgAI, msgUser } = loadFns('miniMd', 'esc', 'av', 'msgAI', 'msgUser');
 
 // ---------- 渲染管线镜像 ----------
 // pushAI / pushAIHtml 在原代码里是依赖外层 state 的纯函数，
