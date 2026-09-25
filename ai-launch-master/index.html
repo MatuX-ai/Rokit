@@ -670,6 +670,34 @@
   .cmdk-item .ci-sub{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .cmdk-item .ci-tag{font-size:10px;color:var(--muted);padding:2px 6px;border:1px solid var(--line);border-radius:4px}
   .cmdk-empty{padding:24px;text-align:center;color:var(--muted);font-size:13px}
+    .cmdk-mru-tag{font-size:10px;color:var(--primary);background:var(--primary-soft);padding:1px 5px;border-radius:4px;margin-left:auto;font-weight:600;letter-spacing:.3px}
+  
+    /* v1.5 UX：状态栏 popover + 主题 mini（任务 28） */
+    .sb-pop{position:absolute;bottom:calc(100% + 6px);right:0;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-md);padding:12px;min-width:220px;display:none;margin-bottom:6px;z-index:160}
+    .sb-pop.show{display:block}
+    .sb-pop-title{font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:4px}
+    .sb-pop-sub{font-size:11.5px;color:var(--muted);line-height:1.5;margin-bottom:8px}
+    .sb-pop .btn{font-size:12px;padding:5px 12px}
+    .sb-byok-wrap{position:relative;display:inline-flex;align-items:center;cursor:pointer}
+    .sb-byok-wrap:hover .sb-dot{transform:scale(1.3);transition:transform .15s}
+    .sb-theme-mini{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:var(--card);cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .15s;font-family:inherit}
+    .sb-theme-mini:hover{background:var(--primary-soft);border-color:var(--primary);color:var(--primary-dark)}
+    .sb-theme-mini .icon{width:12px;height:12px;vertical-align:0}
+  
+    /* v1.5 UX：rail 进度环（任务 29） */
+    .rail .seg{position:relative;cursor:pointer;transition:transform .15s}
+    .rail .seg:hover{transform:translateX(2px)}
+    .rail .seg.cur::before{content:'';position:absolute;inset:-4px;border:2px dashed var(--primary);border-radius:50%;animation:railSpin 2.4s linear infinite;pointer-events:none}
+    @keyframes railSpin{to{transform:rotate(360deg)}}
+    .rail .seg.cur{cursor:default}
+    .rail .seg.cur:hover{transform:none}
+  
+    /* v1.5 UX：AI 思考状态平滑过渡（任务 30） */
+    .msg.thinking{opacity:0;animation:thinkIn .25s ease-out forwards}
+    @keyframes thinkIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .think-label{font-size:11px;color:var(--muted);margin-left:40px;margin-bottom:-6px;display:flex;align-items:center;gap:5px;padding:0 4px}
+    .think-label::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--primary);animation:thinkDot 1.2s infinite}
+    @keyframes thinkDot{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
 
   /* v1.5 UX：底部状态栏（任务 17） */
   .statusbar{height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-top:1px solid var(--line);background:var(--card);color:var(--muted);font-size:11.5px;flex:none}
@@ -1290,8 +1318,15 @@
       <span>🚀 Rokit</span>
       <span id="sbVer">v0.1.3</span>
       <span>·</span>
-      <span class="sb-dot" id="sbByokDot" aria-hidden="true"></span>
-      <span id="sbByok">BYOK 检测中…</span>
+      <span class="sb-byok-wrap" onclick="toggleByokPop()" title="点击查看 BYOK 状态">
+        <span class="sb-dot" id="sbByokDot" aria-hidden="true"></span>
+        <span id="sbByok">BYOK 检测中…</span>
+        <span class="sb-pop" id="byokPop">
+          <div class="sb-pop-title" id="byokPopTitle">BYOK 状态</div>
+          <div class="sb-pop-sub" id="byokPopSub">检查中…</div>
+          <button class="btn btn-primary" onclick="closeByokPop();openSettings();">去设置</button>
+        </span>
+      </span>
     </div>
     <div class="sb-mid" id="sbRoute">
       <span class="sb-route-wrap">
@@ -1300,6 +1335,9 @@
       </span>
     </div>
     <div class="sb-right">
+      <button class="sb-theme-mini" id="sbThemeMini" onclick="toggleTheme()" title="切换暗色 / 亮色" aria-label="切换主题">
+        <svg class="icon" viewBox="0 0 24 24" id="sbThemeIcon"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
       <button class="sb-link" onclick="openFaq()" title="查看快捷键 (按 ?)"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg> 快捷键</button>
     </div>
   </footer>
@@ -2480,6 +2518,38 @@
 
     // v1.5 UX：底部状态栏同步（任务 17）
     var _ROUTE_LABEL = {flow:'首秀向导',works:'我的作品',channels:'推广渠道',dashboard:'数据看板',settings:'设置'};
+    window.toggleByokPop = function(){
+      var p = document.getElementById('byokPop');
+      if(!p) return;
+      var isOpen = p.classList.contains('show');
+      // 关闭其它 popover
+      document.querySelectorAll('.sb-pop.show').forEach(function(el){ if(el!==p) el.classList.remove('show'); });
+      if(isOpen){ p.classList.remove('show'); return; }
+      // 渲染内容
+      var byok = state.byokOn;
+      var model = (state.apiKeys && state.apiKeys.length) ? (state.apiKeys[state.apiKeys.length-1].model || '未指定') : '未指定';
+      var titleEl = document.getElementById('byokPopTitle');
+      var subEl = document.getElementById('byokPopSub');
+      if(byok){
+        if(titleEl) titleEl.textContent = 'BYOK 已配置 ✓';
+        if(subEl) subEl.innerHTML = '当前模型：<strong>'+esc(model)+'</strong><br/>所有调用走你的 API Key，本机不缓存数据。';
+      } else {
+        if(titleEl) titleEl.textContent = 'BYOK 未配置';
+        if(subEl) subEl.innerHTML = '还没填 API Key，本机无任何大模型可调用。<br/>点下方按钮跳到设置填入。';
+      }
+      p.classList.add('show');
+    };
+    window.closeByokPop = function(){
+      var p = document.getElementById('byokPop');
+      if(p) p.classList.remove('show');
+    };
+    document.addEventListener('click', function(e){
+      // 点击 popover 外部关闭
+      var pop = document.getElementById('byokPop');
+      if(!pop || !pop.classList.contains('show')) return;
+      var wrap = pop.parentElement;
+      if(wrap && !wrap.contains(e.target)) pop.classList.remove('show');
+    });
     window.updateStatusBar = function(){
       try{
         var rt = (state && state.route) || 'flow';
@@ -2495,12 +2565,14 @@
         var lab = document.getElementById('sbByok');
         if(dot) dot.classList.toggle('off', !byok);
         if(lab) lab.textContent = byok ? 'BYOK 已配置' : 'BYOK 未配置 · 点 ⚙ 填入';
-        // 主题按钮文字
+        // 主题按钮（顶栏 + 状态栏 mini 同步）
+        var isDark = document.documentElement.classList.contains('dark');
         var tb = document.getElementById('themeToggle');
-        if(tb){
-          var isDark = document.documentElement.classList.contains('dark');
-          tb.textContent = isDark ? '☀️' : '🌙';
-        }
+        if(tb){ tb.innerHTML = isDark ? _SUN_SVG : _MOON_SVG; tb.setAttribute('aria-pressed', isDark?'true':'false'); }
+        var sti = document.getElementById('sbThemeIcon');
+        if(sti){ sti.innerHTML = isDark ? '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>' : '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'; }
+        var stm = document.getElementById('sbThemeMini');
+        if(stm) stm.setAttribute('title', isDark ? '切到亮色' : '切到暗色');
         // 若下拉打开则重新渲染（高亮当前项）
         var menu = document.getElementById('sbRouteMenu');
         if(menu && menu.classList.contains('show')) renderRouteMenu();
@@ -2560,7 +2632,8 @@
       var all = buildCmdKCommands();
       var q = (filter||'').trim().toLowerCase();
       var items;
-      if(!q){ items = all.slice(0, 12); }
+      var mruIds = [];
+      if(!q){ mruIds = loadCmdKMru(); items = all.slice(0, 12); }
       else {
         items = all.filter(function(c){
           var hay = ((c.title||'')+' '+(c.sub||'')+' '+(c.kw||'')).toLowerCase();
@@ -2570,6 +2643,19 @@
       // 分组
       var groups = {};
       var order = [];
+      // MRU 优先置顶（仅无 query 且 MRU 命中）
+      if(!q && mruIds.length){
+        var byId = {}; items.forEach(function(it){ byId[it.id] = it; });
+        var mruItems = [];
+        mruIds.forEach(function(id){ if(byId[id]){ mruItems.push(byId[id]); } });
+        if(mruItems.length){
+          groups['🕐 最近使用'] = mruItems;
+          order.push('🕐 最近使用');
+          // 已收录到 MRU 的从原 items 移除，避免重复
+          var usedSet = {}; mruItems.forEach(function(it){ usedSet[it.id]=true; });
+          items = items.filter(function(it){ return !usedSet[it.id]; });
+        }
+      }
       items.forEach(function(it){
         var g = it.group || '其他';
         if(!groups[g]){ groups[g]=[]; order.push(g); }
@@ -2579,20 +2665,35 @@
       order.forEach(function(g){
         html += '<div class="cmdk-group">'+esc(g)+'</div>';
         groups[g].forEach(function(it){
+          var isMru = (g === '🕐 最近使用');
           html += '<div class="cmdk-item" data-cmd-id="'+esc(it.id)+'" onclick="runCmdK(\''+esc(it.id).replace(/'/g,"\\'")+'\')">'
                 + '<div class="ci-icon">'+esc(it.icon||'·')+'</div>'
                 + '<div class="ci-text"><div class="ci-title">'+esc(it.title)+'</div><div class="ci-sub">'+esc(it.sub||'')+'</div></div>'
-                + '<div class="ci-tag">'+esc(it.group)+'</div>'
+                + (isMru ? '<div class="ci-tag cmdk-mru-tag">最近</div>' : '<div class="ci-tag">'+esc(it.group)+'</div>')
                 + '</div>';
         });
       });
-      if(!items.length){
+      if(!items.length && !mruIds.length){
         html = '<div class="cmdk-empty">没找到匹配命令 · 试试「渠道」「设置」「暗色」</div>';
+      } else if(!items.length && mruIds.length){
+        html += '<div class="cmdk-empty" style="padding:8px 0 4px">没有更多匹配结果</div>';
       }
       list.innerHTML = html;
-      _cmdkItems = items;
-      _cmdkOn = items.length ? 0 : -1;
+      // 重建为「MRU + 其它」用于键盘导航
+      var allVisible = [];
+      order.forEach(function(g){ (groups[g]||[]).forEach(function(it){ allVisible.push(it); }); });
+      _cmdkItems = allVisible;
+      _cmdkOn = allVisible.length ? 0 : -1;
       highlightCmdK();
+    }
+    function loadCmdKMru(){ try{ var arr = JSON.parse(localStorage.getItem('rokit-cmdk-mru')||'[]'); return Array.isArray(arr)?arr.slice(0,5):[]; }catch(_){ return []; } }
+    function saveCmdKMru(arr){ try{ localStorage.setItem('rokit-cmdk-mru', JSON.stringify((arr||[]).slice(0,5))); }catch(_){} }
+    function pushCmdKMru(id){
+      if(!id) return;
+      var arr = loadCmdKMru();
+      arr = arr.filter(function(x){ return x!==id; });
+      arr.unshift(id);
+      saveCmdKMru(arr);
     }
     function highlightCmdK(){
       var list = document.getElementById('cmdkList');
@@ -2619,7 +2720,7 @@
     };
     window.runCmdK = function(id){
       var cmds = buildCmdKCommands();
-      for(var i=0;i<cmds.length;i++){ if(cmds[i].id===id){ cmds[i].run(); break; } }
+      for(var i=0;i<cmds.length;i++){ if(cmds[i].id===id){ cmds[i].run(); pushCmdKMru(id); break; } }
       closeCmdK();
     };
     // 输入过滤 + 键盘
@@ -2772,11 +2873,28 @@
 
     var now=stageOf(state.step),html='';
 
-    STAGES.forEach(function(s,i){html+='<div class="seg '+(i<now?'done':(i===now?'now':''))+'"><span class="dot"></span><span class="lab">'+s.name+'</span>'+(i<STAGES.length-1?'<span class="bar"></span>':'')+'</div>';});
+    STAGES.forEach(function(s,i){
+      var cls = i<now ? 'done' : (i===now ? 'cur' : '');
+      var isCur = (i===now);
+      var jump = isCur ? '' : ' onclick="railJump('+i+');return false"';
+      html+='<div class="seg '+cls+'" data-rail-step="'+i+'" data-rail-name="'+esc(s.name||'')+'"'+jump+' title="'+esc(s.name||'')+'"><span class="dot"></span><span class="lab">'+esc(s.name)+'</span>'+(i<STAGES.length-1?'<span class="bar"></span>':'')+'</div>';
+    });
 
     document.getElementById('railTrack').innerHTML=html;
 
   }
+
+  // v1.5 UX：rail 节点点击跳转（任务 29）
+  window.railJump = function(step){
+    var max = STAGES.length - 1;
+    var target = Math.max(0, Math.min(max, step|0));
+    if(target === state.step) return;
+    var prev = state.step;
+    state.step = target;
+    try{ renderRail(); }catch(_){}
+    try{ renderFlow(); }catch(_){}
+    try{ toast('已跳到「'+esc(STAGES[target]&&STAGES[target].name||('步骤 '+(target+1)))+'」','ok',1200); }catch(_){}
+  };
 
 
 
@@ -2798,17 +2916,27 @@
       if(document.getElementById('thinkingMsg')) return;
       var body = document.getElementById('chatBody');
       if(!body) return;
-      var html = '<div class="msg thinking" id="thinkingMsg"><div class="m-av"></div><div class="bubble"><span class="skel-line"></span><span class="skel-line"></span><span class="skel-line"></span></div></div><div class="ctrl" id="ctrlBox"></div>';
+      var html = '<div class="think-label">AI 正在思考…</div><div class="msg thinking" id="thinkingMsg"><div class="m-av"></div><div class="bubble"><span class="skel-line"></span><span class="skel-line"></span><span class="skel-line"></span></div></div><div class="ctrl" id="ctrlBox"></div>';
       // 替换掉原 ctrlBox；renderFlow 会重建
       var oldCtrl = document.getElementById('ctrlBox');
       if(oldCtrl) oldCtrl.remove();
       var wrap = document.createElement('div');
       wrap.innerHTML = html;
       while(wrap.firstChild) body.appendChild(wrap.firstChild);
-      body.scrollTop = body.scrollHeight;
+      // 平滑滚到底
+      requestAnimationFrame(function(){
+        try{ body.scrollTo({top: body.scrollHeight, behavior:'smooth'}); }catch(_){ body.scrollTop = body.scrollHeight; }
+      });
     }else{
       var el = document.getElementById('thinkingMsg');
+      var lab = el && el.previousElementSibling;
+      if(lab && lab.classList && lab.classList.contains('think-label')) lab.remove();
       if(el) el.remove();
+      // AI 回复到达后再次平滑滚到底
+      try{
+        var body2 = document.getElementById('chatBody');
+        if(body2) requestAnimationFrame(function(){ try{ body2.scrollTo({top: body2.scrollHeight, behavior:'smooth'}); }catch(_){ body2.scrollTop = body2.scrollHeight; } });
+      }catch(_){}
     }
   }
 
