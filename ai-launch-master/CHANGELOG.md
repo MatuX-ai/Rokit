@@ -3,7 +3,9 @@
 本项目所有显著变更记录于此。格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased]
+## [0.1.4] - 2026-09-25
+
+MVP 1.5 全量上线 + 首秀向导文案 / 渲染管线加固。
 
 ### Added (MVP 1.5 · 本机推广引擎全量上线)
 - **OS 凭据管理器接入敏感凭据**（secrets.js）：API Key / GitHub PAT 从 SQLite 明文迁出，写入 Windows DPAPI（macOS Keychain / Linux libsecret）。keytar 加载失败降级为进程内存单例 + 警告日志。首次启动自动迁移现有明文 Key，迁移成功即清空 SQLite 字段
@@ -29,16 +31,7 @@
 - **XSS 修复**：两处 AI 消息拼接用户可控的 `w.name` 作品名时未 `esc()`，恶意作品名（如含 `<script>`）可注入 HTML —— L5100、L5190 两处补 `esc(w.name)`
 - **单测覆盖**新增 `tests/render-flow.test.js` · 28 用例：`miniMd` 转义 / markdown 转换（11）、`pushAI` / `pushAIHtml` 入栈语义（3）、`render` 分叉渲染（6）、回归保护（5：欢迎语修复前后、发射成功、打字机、抓取卡片）、`esc` 基础（3）。测试直接从 `index.html` 提取函数体，零新依赖（不引 happy-dom / jsdom）
 
-### Planned (MVP 2.0 · 后续推进)
-- 数据导出 / 导入
-- Remotion 服务端渲染拆条 / 成片
-- 13 平台官方统计 API 接入数据看板
-- i18n 多语言
-- macOS / Linux 打包
-
-## [Unreleased]
-
-### Added
+### Added (BYOK 说明补强 · 同步随本次发版合并)
 - **推广渠道 BYOK 说明补强**（UX 改进，避免用户晕菜）：
   - 推广渠道 tab 顶部新增「本地优先 + BYOK」常驻说明卡
   - 「渠道说明」面板补入 3 条常见疑问（为什么不填账号 / 登录态存哪 / 换电脑怎么办）
@@ -48,13 +41,12 @@
   - `PRIVACY.md` 增补「一点五、BYOK 原则」章节
 - **推广渠道开关启用态变色**：启用态（●）背景改为绿色 `primary-soft` + `primary-dark` 描边 + 阴影环；停用态保持 `muted` 灰色。区分更明显，并加 `aria-pressed` 无障碍属性。
 
-### Planned
-- 多作品库独立首秀
+### Planned (MVP 2.0 · 后续推进)
 - 数据导出 / 导入
-- L1 直发（本地 OAuth / GitHub Release API）
-- 反馈采集 + AI 分析
-- 录屏成片本地剪辑（Remotion 服务端渲染）
-- 数据看板接入各平台官方统计 API
+- Remotion 服务端渲染拆条 / 成片
+- 13 平台官方统计 API 接入数据看板
+- i18n 多语言
+- macOS / Linux 打包
 
 ## [0.1.3] - 2026-09-07
 
