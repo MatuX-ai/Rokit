@@ -135,7 +135,9 @@ function ok(cond, msg) {
     ok(/id="tabWorks"/.test(inner), 'navtab 内含我的作品');
   }
   // v0.1.1 之后，未实现的看板 tab 加 data-coming 属性作为渐进式设计证据
-  ok(/id="tabDash"[^>]*data-coming=/.test(html), '数据看板 tab 带 data-coming 属性（标识“规划中”状态）');
+  // 数据看板 v1.5 已正式上线（KPI / 时段筛选 / 里程碑 / 发布回填均已交付），
+  // 不应再带 data-coming “规划中”标记。
+  ok(!/<button[^>]*\bid="tabDash"[^>]*\bdata-coming\b/i.test(html), '数据看板 tab 不应带 data-coming 属性（v1.5 已交付）');
 
   // go() 处理 channels 路由
   ok(/if\(r==='channels'\)\{renderChannels\(\);?\}/.test(html), 'go() 处理 channels 路由');

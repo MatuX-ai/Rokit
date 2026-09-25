@@ -163,9 +163,9 @@ if (indexHtml) {
   ok(/kpis\s*:\s*\{[^}]*channelsEnabled\s*:\s*0/.test(indexHtml), 'kpis.channelsEnabled 默认 0');
   ok(/kpis\s*:\s*\{[^}]*works\s*:\s*0/.test(indexHtml), 'kpis.works 默认 0');
 
-  // 4.3 数据看板未就绪提示
-  ok(/id=["']tabDash["'][^>]*data-coming=/.test(indexHtml), 'tabDash 按钮带 data-coming 属性（标识"规划中"状态）');
-  ok(/dashComingNotice|MVP\s*1\.5\s*规划中/.test(indexHtml), '数据看板有"MVP 1.5 规划中"提示卡');
+  // 4.3 数据看板状态：v1.5 已正式上线（KPI / 时段筛选 / 里程碑 / 发布回填）。旧版“规划中”提示卡（dashComingNotice）已下线，
+  // tabDash 不应再带 data-coming “规划中”标记。
+  ok(!/<button[^>]*\bid=["']tabDash["'][^>]*\bdata-coming\b/i.test(indexHtml), 'tabDash 不带 data-coming（v1.5 看板已交付）');
 
   // 4.4 拆条 / 成片 DEMO 标注
   ok(/DEMO/.test(indexHtml), 'index.html 含 DEMO 标注');
