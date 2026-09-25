@@ -680,6 +680,55 @@
   .statusbar .sb-dot{width:6px;height:6px;border-radius:50%;background:var(--success);display:inline-block}
   .statusbar .sb-dot.off{background:var(--danger)}
 
+  /* v1.5 UX：设置页 sticky side-nav（任务 19） */
+  .cfg-layout{display:grid;grid-template-columns:200px 1fr;gap:20px}
+  .cfg-nav{position:sticky;top:0;align-self:start;display:flex;flex-direction:column;gap:4px;padding-right:8px;border-right:1px solid var(--line)}
+  .cfg-nav-item{display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-radius:8px;cursor:pointer;font-size:12.5px;line-height:1.5;color:var(--ink);transition:all .15s;font-family:inherit;background:transparent;border:none;width:100%;text-align:left}
+  .cfg-nav-item:hover{background:var(--primary-soft)}
+  .cfg-nav-item.on{background:var(--primary-soft);color:var(--primary-dark);font-weight:600}
+  .cfg-nav-item .ni-icon{font-size:15px;flex:none;line-height:1.4}
+  .cfg-nav-item .ni-text{flex:1;min-width:0}
+  .cfg-nav-item .ni-title{font-weight:600;font-size:13px}
+  .cfg-nav-item .ni-sub{font-size:11px;color:var(--muted);font-weight:400;margin-top:1px}
+  .cfg-section{scroll-margin-top:8px;margin-bottom:18px}
+  .cfg-section .cfg-title{margin-top:0}
+  @media (max-width:768px){.cfg-layout{grid-template-columns:1fr;gap:8px}.cfg-nav{flex-direction:row;overflow-x:auto;border-right:none;border-bottom:1px solid var(--line);padding-bottom:8px}.cfg-nav-item{flex:none;width:auto;min-width:120px}}
+  .font-scale-sm{font-size:14px}.font-scale-md{font-size:15px}.font-scale-lg{font-size:16px}
+  .cfg-radio{display:flex;gap:8px;flex-wrap:wrap}
+  .cfg-radio-item{display:flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--line);background:var(--card);border-radius:8px;cursor:pointer;font-size:12.5px;transition:all .15s}
+  .cfg-radio-item:hover{border-color:var(--primary);background:var(--primary-soft);color:var(--primary-dark)}
+  .cfg-radio-item input{margin:0;accent-color:var(--primary)}
+  .cfg-radio-item input:checked + span,.cfg-radio-item:has(input:checked){border-color:var(--primary);background:var(--primary-soft);color:var(--primary-dark);font-weight:600}
+
+  /* v1.5 UX：Works 卡 hover preview（任务 20） */
+  .work-popover{position:fixed;z-index:150;width:280px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-md);padding:14px;font-size:12.5px;opacity:0;pointer-events:none;transition:opacity .12s}
+  .work-popover.show{opacity:1;pointer-events:auto}
+  .work-popover .wp-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;line-height:1.4}
+  .work-popover .wp-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+  .work-popover .wp-meta .wp-tag{font-size:11px;padding:2px 7px;border-radius:4px;background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+  .work-popover .wp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0;padding:8px 0;border-top:1px dashed var(--line);border-bottom:1px dashed var(--line)}
+  .work-popover .wp-stats .wp-stat{text-align:center}
+  .work-popover .wp-stats .wp-num{font-weight:700;color:var(--primary-dark);font-size:14px;font-family:'Space Grotesk',sans-serif}
+  .work-popover .wp-stats .wp-lbl{font-size:10.5px;color:var(--muted);margin-top:1px}
+  .work-popover .wp-next{font-size:12px;color:var(--ink);line-height:1.5;background:var(--bg);border-radius:6px;padding:7px 9px;border:1px solid var(--line)}
+  .work-popover .wp-next b{color:var(--accent-deep)}
+
+  /* v1.5 UX：Toast action 按钮（任务 21） */
+  .toast-action{background:transparent;border:none;color:var(--primary);cursor:pointer;padding:4px 10px;margin-left:8px;font-weight:600;border-radius:4px;font-family:inherit;font-size:12.5px}
+  .toast-action:hover{background:var(--primary-soft);color:var(--primary-dark)}
+
+  /* v1.5 UX：状态栏路由下拉（任务 22） */
+  .sb-route-wrap{position:relative;display:inline-block}
+  .sb-route-btn{display:inline-flex;align-items:center;gap:4px;color:var(--ink);font-weight:600;cursor:pointer;background:transparent;border:none;font-family:inherit;font-size:11.5px;padding:0}
+  .sb-route-btn:hover{color:var(--primary-dark)}
+  .sb-route-btn .sb-arrow{font-size:8px;color:var(--muted);transition:transform .15s}
+  .sb-route-btn.open .sb-arrow{transform:rotate(180deg)}
+  .sb-route-menu{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-md);min-width:160px;padding:4px;display:none;margin-bottom:6px}
+  .sb-route-menu.show{display:block}
+  .sb-route-menu .sb-item{display:flex;gap:8px;align-items:center;padding:7px 12px;cursor:pointer;border-radius:6px;color:var(--ink);font-size:12px;border:none;background:transparent;width:100%;text-align:left;font-family:inherit}
+  .sb-route-menu .sb-item:hover{background:var(--primary-soft);color:var(--primary-dark)}
+  .sb-route-menu .sb-item.on{background:var(--primary-soft);color:var(--primary-dark);font-weight:600}
+
   .wq{display:inline-block;border-radius:5px;padding:1px 8px;font-size:11px;font-weight:600;margin-left:6px}
 
   .wcard .wm{display:flex;gap:14px;margin-top:9px}
@@ -1201,11 +1250,19 @@
       <span class="sb-dot" id="sbByokDot" aria-hidden="true"></span>
       <span id="sbByok">BYOK 检测中…</span>
     </div>
-    <div class="sb-mid" id="sbRoute">—</div>
+    <div class="sb-mid" id="sbRoute">
+      <span class="sb-route-wrap">
+        <button class="sb-route-btn" id="sbRouteBtn" onclick="toggleRouteMenu()" title="点击切换路由">— <span class="sb-arrow">▾</span></button>
+        <div class="sb-route-menu" id="sbRouteMenu" onclick="event.stopPropagation()"></div>
+      </span>
+    </div>
     <div class="sb-right">
       <button class="sb-link" onclick="openFaq()" title="查看快捷键 (按 ?)">? 快捷键</button>
     </div>
   </footer>
+
+  <!-- v1.5 UX：Works 卡 hover 预览（任务 20） -->
+  <div class="work-popover" id="workPopover" aria-hidden="true"></div>
 
 </div>
 
@@ -1233,57 +1290,92 @@
 
 <div class="modal-overlay" id="settingsModal">
 
-  <div class="modal">
+  <div class="modal" style="max-width:880px">
 
     <div class="modal-head"><h3>用户设置（模型 + 自动发布）</h3><button class="modal-close" onclick="closeSettings()" title="关闭">×</button></div>
 
     <div class="msub">你自备 API Key，本地接入任意 OpenAI 兼容端点。Key 只存本机，不上传任何服务器。</div>
 
-    <form onsubmit="saveCfg(event)">
+    <div class="cfg-layout">
 
-      <div class="field"><label>模型服务商</label><div class="field-model-trigger" id="cfgModelTrigger" onclick="openModelPicker()"><div class="fmt-info"><div class="fmt-name" id="cfgModelName">自定义模型</div><div class="fmt-brand" id="cfgModelBrand">OpenAI 兼容端点</div></div><span class="fmt-arrow">›</span></div></div>
+      <aside class="cfg-nav" id="cfgNav">
+        <button class="cfg-nav-item on" data-section="cfg-sec-model" onclick="cfgNavJump('cfg-sec-model')"><span class="ni-icon">🤖</span><span class="ni-text"><div class="ni-title">AI 模型</div><div class="ni-sub">Base URL · Key · 模型名</div></span></button>
+        <button class="cfg-nav-item" data-section="cfg-sec-github" onclick="cfgNavJump('cfg-sec-github')"><span class="ni-icon">🐙</span><span class="ni-text"><div class="ni-title">GitHub 发布</div><div class="ni-sub">PAT（可选）</div></span></button>
+        <button class="cfg-nav-item" data-section="cfg-sec-auto" onclick="cfgNavJump('cfg-sec-auto')"><span class="ni-icon">⚡</span><span class="ni-text"><div class="ni-title">自动发布</div><div class="ni-sub">启用与平台</div></span></button>
+        <button class="cfg-nav-item" data-section="cfg-sec-theme" onclick="cfgNavJump('cfg-sec-theme')"><span class="ni-icon">🎨</span><span class="ni-text"><div class="ni-title">主题与显示</div><div class="ni-sub">明/暗主题与字号</div></span></button>
+      </aside>
 
-      <div class="field"><label>Base URL（OpenAI 兼容端点）</label><input id="cfgBase" placeholder="https://api.deepseek.com/v1" autocomplete="off"/></div>
+      <form onsubmit="saveCfg(event)">
 
-      <div class="field"><label>API Key</label><input id="cfgKey" type="password" placeholder="sk-..." autocomplete="off"/></div>
+        <div class="cfg-section" data-section="cfg-sec-model">
 
-      <div class="field"><label>模型名</label><input id="cfgModel" placeholder="deepseek-chat" autocomplete="off"/></div>
+          <div class="cfg-title" style="font-weight:700;font-size:13.5px;margin:8px 0 4px">🤖 AI 模型</div>
 
-      <div class="cfg-sep"></div>
+          <div class="field"><label>模型服务商</label><div class="field-model-trigger" id="cfgModelTrigger" onclick="openModelPicker()"><div class="fmt-info"><div class="fmt-name" id="cfgModelName">自定义模型</div><div class="fmt-brand" id="cfgModelBrand">OpenAI 兼容端点</div></div><span class="fmt-arrow">›</span></div></div>
 
-      <div class="cfg-title">GitHub 发布（可选）</div>
+          <div class="field"><label>Base URL（OpenAI 兼容端点）</label><input id="cfgBase" placeholder="https://api.deepseek.com/v1" autocomplete="off"/></div>
 
-      <div class="msub">填入 GitHub Personal Access Token（需 <code>repo</code> 作用域）后，推广页可一键调用 L1 直发路径创建 Release。<b>PAT 只写入本机 OS 凭据管理器，不上传任何服务器。</b></div>
+          <div class="field"><label>API Key</label><input id="cfgKey" type="password" placeholder="sk-..." autocomplete="off"/></div>
 
-      <div class="field"><label>GitHub PAT</label><input id="cfgGithubPat" type="password" placeholder="ghp_..." autocomplete="off"/><div class="cfg-pat-hint" id="cfgGithubPatHint">未配置</div></div>
+          <div class="field"><label>模型名</label><input id="cfgModel" placeholder="deepseek-chat" autocomplete="off"/></div>
 
-      <div class="cfg-sep"></div>
+        </div>
 
-      <div class="cfg-title">自动发布</div>
+        <div class="cfg-section" data-section="cfg-sec-github">
 
-      <div class="msub">开启后，符合「平台属性 + 成片方向」的平台会标注 ⚡ 自动发布，发布队列里一键自动复制文案并打开平台，粘贴即发（桌面端不自动登录第三方账号）。</div>
+          <div class="cfg-title" style="font-weight:700;font-size:13.5px;margin:8px 0 4px">🐙 GitHub 发布（可选）</div>
 
-      <label class="cfg-switch"><input type="checkbox" id="cfgAutoPub"/> 启用自动发布</label>
+          <div class="msub">填入 GitHub Personal Access Token（需 <code>repo</code> 作用域）后，推广页可一键调用 L1 直发路径创建 Release。<b>PAT 只写入本机 OS 凭据管理器，不上传任何服务器。</b></div>
 
-      <div class="field"><label>自动发布的平台</label><div class="cfg-plat" id="cfgPlatList"></div></div>
+          <div class="field"><label>GitHub PAT</label><input id="cfgGithubPat" type="password" placeholder="ghp_..." autocomplete="off"/><div class="cfg-pat-hint" id="cfgGithubPatHint">未配置</div></div>
 
-      <div class="msub" style="margin-top:4px">方向匹配：竖屏成片 → 抖音/小红书/即刻；横屏成片 → GitHub/PH/V2EX/掘金/知乎/公众号；B站 不限制。</div>
+        </div>
 
-      <div class="cfg-status" id="cfgStatus"></div>
+        <div class="cfg-section" data-section="cfg-sec-auto">
 
-      <div class="modal-acts">
+          <div class="cfg-title" style="font-weight:700;font-size:13.5px;margin:8px 0 4px">⚡ 自动发布</div>
 
-        <button type="button" class="btn ghost sm" onclick="testCfg()">测试连接</button>
+          <div class="msub">开启后，符合「平台属性 + 成片方向」的平台会标注 ⚡ 自动发布，发布队列里一键自动复制文案并打开平台，粘贴即发（桌面端不自动登录第三方账号）。</div>
 
-        <button type="button" class="btn ghost sm" onclick="closeSettings()">取消</button>
+          <label class="cfg-switch"><input type="checkbox" id="cfgAutoPub"/> 启用自动发布</label>
 
-        <button type="submit" class="btn sm">保存</button>
+          <div class="field"><label>自动发布的平台</label><div class="cfg-plat" id="cfgPlatList"></div></div>
 
-      </div>
+          <div class="msub" style="margin-top:4px">方向匹配：竖屏成片 → 抖音/小红书/即刻；横屏成片 → GitHub/PH/V2EX/掘金/知乎/公众号；B站 不限制。</div>
 
-      <div class="tip">提示：本地 Ollama 可填 <b>http://127.0.0.1:11434/v1</b>，模型如 llama3。直接用浏览器打开本文件时为演示模式，不发起真实请求。</div>
+        </div>
 
-    </form>
+        <div class="cfg-section" data-section="cfg-sec-theme">
+
+          <div class="cfg-title" style="font-weight:700;font-size:13.5px;margin:8px 0 4px">🎨 主题与显示</div>
+
+          <div class="msub">主题仅在本机生效（localStorage），切换后刷新页面仍会保留。字号作用于整个 App 的主文字。</div>
+
+          <div class="field"><label>主题</label><div class="cfg-radio" id="cfgThemeRadios"><label class="cfg-radio-item"><input type="radio" name="cfgTheme" value="auto"/> 🖥 跟随系统</label><label class="cfg-radio-item"><input type="radio" name="cfgTheme" value="light"/> ☀️ 亮色</label><label class="cfg-radio-item"><input type="radio" name="cfgTheme" value="dark"/> 🌙 暗色</label></div></div>
+
+          <div class="field"><label>字号</label><div class="cfg-radio" id="cfgScaleRadios"><label class="cfg-radio-item"><input type="radio" name="cfgFontScale" value="sm"/> 小</label><label class="cfg-radio-item"><input type="radio" name="cfgFontScale" value="md"/> 默认</label><label class="cfg-radio-item"><input type="radio" name="cfgFontScale" value="lg"/> 大</label></div></div>
+
+          <div class="field"><label>预览</label><div id="cfgScalePreview" style="padding:10px 14px;border:1px dashed var(--line);border-radius:8px;background:var(--bg)"><b>主标题预览</b><br/>这是正文预览，切换字号选项后这里会实时变化。</div></div>
+
+        </div>
+
+        <div class="cfg-status" id="cfgStatus"></div>
+
+        <div class="modal-acts">
+
+          <button type="button" class="btn ghost sm" onclick="testCfg()">测试连接</button>
+
+          <button type="button" class="btn ghost sm" onclick="closeSettings()">取消</button>
+
+          <button type="submit" class="btn sm">保存</button>
+
+        </div>
+
+        <div class="tip">提示：本地 Ollama 可填 <b>http://127.0.0.1:11434/v1</b>，模型如 llama3。直接用浏览器打开本文件时为演示模式，不发起真实请求。</div>
+
+      </form>
+
+    </div>
 
   </div>
 
@@ -1978,9 +2070,14 @@
 
   var __toastT=null;
 
-  // v1.5 UX：Toast 队列（任务 14，保留原 API 兼容）
-    function toast(m,level,ms){
+  // v1.5 UX：Toast 队列（任务 14，保留原 API 兼容；任务 21 支持 action 按钮）
+    function toast(m,level,ms,opts){
       var stack = document.getElementById('toastStack');
+      // 兼容旧 2-参：toast(msg, opts)
+      if(level && typeof level==='object' && !ms){ opts=level; level=null; ms=null; }
+      if(opts && typeof opts==='object' && opts.label){
+        // 后面会处理
+      }
       if(!stack){
         // 回退：旧逻辑（单 toast）
         var el=document.getElementById('toastEl');
@@ -1992,12 +2089,27 @@
       }
       var el = document.createElement('div');
       el.className = 'toast' + (level ? (' '+level) : '');
-      el.textContent = m;
+      // 文本 + 可选 action 按钮
+      var span = document.createElement('span');
+      span.textContent = m;
+      el.appendChild(span);
+      if(opts && opts.label && typeof opts.onClick === 'function'){
+        var btn = document.createElement('button');
+        btn.className = 'toast-action';
+        btn.textContent = opts.label;
+        btn.onclick = function(){
+          try{ opts.onClick(); }catch(e){ console.warn('toast action failed', e); }
+          el.classList.remove('show');
+          el.classList.add('hide');
+          setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 200);
+        };
+        el.appendChild(btn);
+      }
       el.setAttribute('role','status');
       stack.appendChild(el);
       // 强制重抹后加 show 以触发过渡
       requestAnimationFrame(function(){el.classList.add('show');});
-      var ttl = ms || 3000;
+      var ttl = (opts && opts.label) ? (ms || 4500) : (ms || 3000);
       setTimeout(function(){
         el.classList.remove('show');
         el.classList.add('hide');
@@ -2053,13 +2165,167 @@
       }catch(err){ console.warn('kpiJump failed', err); }
     };
 
+    // v1.5 UX：设置页 side-nav 跳转（任务 19）
+    window.cfgNavJump = function(id){
+      try{
+        var sec = document.getElementById(id);
+        if(sec){ sec.scrollIntoView({behavior:'smooth', block:'start'}); }
+        // 立即高亮
+        document.querySelectorAll('#cfgNav .cfg-nav-item').forEach(function(el){
+          el.classList.toggle('on', el.getAttribute('data-section') === id);
+        });
+      }catch(err){ console.warn('cfgNavJump failed', err); }
+    };
+
+    // v1.5 UX：设置页 nav 滚动联动（IntersectionObserver）
+    (function(){
+      var nav = document.getElementById('cfgNav');
+      if(!nav || typeof IntersectionObserver === 'undefined') return;
+      var sections = document.querySelectorAll('#settingsModal .cfg-section');
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting && e.intersectionRatio > 0){
+            var id = e.target.getAttribute('data-section');
+            nav.querySelectorAll('.cfg-nav-item').forEach(function(el){
+              el.classList.toggle('on', el.getAttribute('data-section') === id);
+            });
+          }
+        });
+      }, {rootMargin:'-20% 0px -70% 0px', threshold:[0,0.25,0.5]});
+      sections.forEach(function(s){ io.observe(s); });
+    })();
+
+    // v1.5 UX：设置主题与字号（任务 19 之四）
+    function applyFontScale(scale){
+      var v = (scale==='sm') ? 14 : (scale==='lg') ? 16 : 15;
+      document.documentElement.style.setProperty('--rokit-fs', v + 'px');
+      try{ localStorage.setItem('rokit-font-scale', scale); }catch(_){}
+      var preview = document.getElementById('cfgScalePreview');
+      if(preview){ preview.className = 'font-scale-' + scale; }
+    }
+    window.setThemeRadio = function(val){
+      var inputs = document.querySelectorAll('input[name="cfgTheme"]');
+      inputs.forEach(function(i){ i.checked = (i.value === val); });
+    };
+    window.setScaleRadio = function(val){
+      var inputs = document.querySelectorAll('input[name="cfgFontScale"]');
+      inputs.forEach(function(i){ i.checked = (i.value === val); });
+    };
+    // 启动时还原字号偏好
+    (function(){
+      try{
+        var s = localStorage.getItem('rokit-font-scale') || 'md';
+        applyFontScale(s);
+      }catch(_){ applyFontScale('md'); }
+    })();
+
+    // v1.5 UX：Works 卡 hover preview（任务 20）
+    var _wpTimer = null, _wpHideTimer = null;
+    function showWorkPopover(work, anchor){
+      var box = document.getElementById('workPopover');
+      if(!box || !work || !anchor) return;
+      var platforms = (work.platforms||[]).map(function(p){ return '<span class="wp-tag">'+esc(p)+'</span>'; }).join('');
+      var tags = (work.type ? '<span class="wp-tag">'+esc(work.type)+'</span>' : '')
+               + (work.status ? '<span class="wp-tag" style="background:'+(work.color||'#888')+'20;color:'+(work.color||'#888')+'">'+esc(work.status)+'</span>' : '')
+               + (work.queue==='主推' ? '<span class="wp-tag" style="background:var(--primary);color:#fff">⭐ 主推</span>' : '');
+      box.innerHTML = '<div class="wp-title">'+esc(work.name||'未命名作品')+'</div>'
+                    + '<div class="wp-meta">'+(tags||'<span class="wp-tag">无标签</span>')+'</div>'
+                    + (platforms ? '<div class="wp-meta">'+platforms+'</div>' : '')
+                    + '<div class="wp-stats">'
+                    +   '<div class="wp-stat"><div class="wp-num">'+((work.star||0).toLocaleString())+'</div><div class="wp-lbl">Star</div></div>'
+                    +   '<div class="wp-stat"><div class="wp-num">'+((work.dl||0).toLocaleString())+'</div><div class="wp-lbl">下载</div></div>'
+                    +   '<div class="wp-stat"><div class="wp-num">'+(work.play||0)+'</div><div class="wp-lbl">播放</div></div>'
+                    + '</div>'
+                    + '<div class="wp-next">下一步：<b>'+esc(work.next||'登记推广')+'</b></div>';
+      // 定位
+      var r = anchor.getBoundingClientRect();
+      var pw = 280, ph = box.offsetHeight || 220;
+      var x = r.right + 8;
+      var y = r.top;
+      if(x + pw > window.innerWidth - 8){ x = r.left - pw - 8; }
+      if(y + ph > window.innerHeight - 8){ y = window.innerHeight - ph - 8; }
+      if(y < 8) y = 8;
+      box.style.left = x + 'px';
+      box.style.top = y + 'px';
+      box.classList.add('show');
+      box.setAttribute('aria-hidden','false');
+    }
+    function hideWorkPopover(){
+      var box = document.getElementById('workPopover');
+      if(!box) return;
+      box.classList.remove('show');
+      box.setAttribute('aria-hidden','true');
+    }
+    window.setupWorkHover = function(){
+      var grid = document.getElementById('worksGrid');
+      if(!grid || grid.__wpBound) return;
+      grid.__wpBound = true;
+      grid.addEventListener('mouseover', function(e){
+        var card = e.target.closest('.wcard');
+        if(!card || !card.dataset.workId) return;
+        clearTimeout(_wpHideTimer);
+        clearTimeout(_wpTimer);
+        var id = card.dataset.workId;
+        var work = (state.works||[]).find(function(w){ return w.id === id; });
+        if(!work) return;
+        _wpTimer = setTimeout(function(){ showWorkPopover(work, card); }, 220);
+      });
+      grid.addEventListener('mouseout', function(e){
+        var card = e.target.closest('.wcard');
+        if(!card) return;
+        clearTimeout(_wpTimer);
+        _wpHideTimer = setTimeout(hideWorkPopover, 100);
+      });
+    };
+
+    // v1.5 UX：状态栏路由下拉（任务 22）
+    window.toggleRouteMenu = function(forceState){
+      var menu = document.getElementById('sbRouteMenu');
+      var btn = document.getElementById('sbRouteBtn');
+      if(!menu || !btn) return;
+      var willOpen = (typeof forceState === 'boolean') ? forceState : !menu.classList.contains('show');
+      if(willOpen){
+        renderRouteMenu();
+        menu.classList.add('show');
+        btn.classList.add('open');
+      }else{
+        menu.classList.remove('show');
+        btn.classList.remove('open');
+      }
+    };
+    window.renderRouteMenu = function(){
+      var menu = document.getElementById('sbRouteMenu');
+      if(!menu) return;
+      var cur = (state && state.route) || 'flow';
+      var html = '';
+      ['flow','works','channels','dashboard','settings'].forEach(function(r){
+        html += '<button class="sb-item'+(r===cur?' on':'')+'" onclick="pickRoute(\''+r+'\')">'+esc(_ROUTE_LABEL[r]||r)+'</button>';
+      });
+      menu.innerHTML = html;
+    };
+    window.pickRoute = function(r){
+      go(r);
+      toggleRouteMenu(false);
+    };
+    document.addEventListener('click', function(e){
+      var menu = document.getElementById('sbRouteMenu');
+      var btn = document.getElementById('sbRouteBtn');
+      if(!menu || !menu.classList.contains('show')) return;
+      if(menu.contains(e.target) || (btn && btn.contains(e.target))) return;
+      toggleRouteMenu(false);
+    });
+
     // v1.5 UX：底部状态栏同步（任务 17）
     var _ROUTE_LABEL = {flow:'首秀向导',works:'我的作品',channels:'推广渠道',dashboard:'数据看板',settings:'设置'};
     window.updateStatusBar = function(){
       try{
         var rt = (state && state.route) || 'flow';
-        var el = document.getElementById('sbRoute');
-        if(el) el.textContent = _ROUTE_LABEL[rt] || rt;
+        var btn = document.getElementById('sbRouteBtn');
+        if(btn){
+          // 保留箭头 span，替换文字
+          var arrow = btn.querySelector('.sb-arrow');
+          btn.innerHTML = esc(_ROUTE_LABEL[rt] || rt) + ' <span class="sb-arrow">▾</span>';
+        }
         // BYOK 状态点
         var byok = state.byokOn;
         var dot = document.getElementById('sbByokDot');
@@ -2072,6 +2338,9 @@
           var isDark = document.documentElement.classList.contains('dark');
           tb.textContent = isDark ? '☀️' : '🌙';
         }
+        // 若下拉打开则重新渲染（高亮当前项）
+        var menu = document.getElementById('sbRouteMenu');
+        if(menu && menu.classList.contains('show')) renderRouteMenu();
       }catch(err){ console.warn('updateStatusBar failed', err); }
     };
 
@@ -4174,6 +4443,9 @@
 
     document.getElementById('queueBar').innerHTML=qh;
 
+    // v1.5 UX：Works 卡 hover 预览（任务 20）
+    if(typeof setupWorkHover==='function') setupWorkHover();
+
   }
 
   // v1.5 UX：3-dot menu 交互（任务 7 之三）
@@ -4337,6 +4609,8 @@
       danger: true
     }).then(function(ok){
       if(!ok)return;
+      // v1.5 UX：备份待撤销（任务 21）
+      var _backup = JSON.parse(JSON.stringify(w));
       state.works=state.works.filter(function(x){return x.id!==id;});
       if(state.curWork===id){
         state.curWork=state.works.length?state.works[0].id:null;
@@ -4348,7 +4622,16 @@
         if(state.curWork){pushAI('作品《'+w.name+'》已删除。');}
       }
       if(window.api){window.api.deleteWork(id).catch(function(){});}
-      toast('已删除《'+w.name+'》');
+      // v1.5 UX：toast 带撤销 action（任务 21）
+      toast('已删除《'+w.name+'》', 'warn', 4500, {
+        label: '撤销',
+        onClick: function(){
+          state.works.unshift(_backup);
+          if(window.api){window.api.saveWork(_backup).catch(function(){});}
+          renderWorks();
+          toast('已恢复《'+_backup.name+'》', 'ok', 1500);
+        }
+      });
       renderWorks();
       if(!state.curWork){go('works');}else{go('flow');}
     });
