@@ -71,7 +71,7 @@ async function getSecret(account) {
 
 async function deleteSecret(account) {
   if (keytar) {
-    try { await keytar.deletePassword(SERVICE, account); } catch (e) { /* 不存在则忽略 */ }
+    try { await keytar.deletePassword(SERVICE, account); } catch (_e) { /* 不存在则忽略 */ }
   }
   cache[account] = null;
   return true;
