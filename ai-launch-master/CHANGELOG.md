@@ -5,6 +5,28 @@
 
 ## [Unreleased]
 
+### Added (MVP 1.5 · 本机推广引擎全量上线)
+- **OS 凭据管理器接入敏感凭据**（secrets.js）：API Key / GitHub PAT 从 SQLite 明文迁出，写入 Windows DPAPI（macOS Keychain / Linux libsecret）。keytar 加载失败降级为进程内存单例 + 警告日志。首次启动自动迁移现有明文 Key，迁移成功即清空 SQLite 字段
+- **主推队列状态机**（queue.js）：launching → pending → operating → stable → archived 五状态 + queue_state (main/parked/queued)。定时 schedule(store) 根据状态名次 + priority DESC + launched_at ASC + 14 天稳定期过滤选主推；包底返回 least-bad 避免主推为空
+- **反馈采集**（feedback-collector.js）：GitHub Issues 公开 API + V2EX 主题 RSS。内置 `decodeHtml` / `stripHtml` / `parseRss` 极简解析；增量去重依赖 `store.upsertFeedback` 的 UNIQUE(source, external_id)；单源失败不拖垮主流程
+- **反馈分析**（feedback-analyzer.js）：纯规则可跑 —— 中文按字 / 英文按词 tokenize + 词典情感 + Jaccard 距离单链接聚类 + P0/P1/P2 优先级。可选 LLM 摘要（异常不阻断主流程）
+- **屏幕录制**（recorder.js）：WebM session 管理（createSession / appendChunk / stopSession / discardSession）。桌面端用 `desktopCapturer` + `MediaRecorder` 录屏，主进程仅负责顺序追加 buffer 与 ffmpeg 探测。临时文件落 `%APPDATA%/Rokit/recorder/`
+- **视频后处理**（video.js）：`ffmpeg-static` 转封装 / 转码 WebM → MP4（libx264 + aac + faststart） + 抽封面（`scale=1280:-2`） + 掐头去尾（`-ss/-t`）。单文件串行队列避免并发 ffmpeg 把 CPU 打满
+- **GitHub L1 直发**（publisher-extensions.js）：`POST /repos/{owner}/{repo}/releases` 创建 Release。PAT 仅从 OS 凭据管理器读取，明文不入 settings JSON；SDK 错误 → 友好中文提示
+- **IPC 全面升级**（main.js + preload.js）：新增 24 个 IPC 通道（secrets: 5 + queue: 1 + feedback: 5 + recorder: 6 + video: 4 + github: 3 + channels:health）；预加载脚本仅暴露最小表面，保持 `contextIsolation`
+- **数据看板 BYOK 升级**：顶部"未配置 API（点此填 Key）"按 OS 凭据管理器真实状态变色；设置弹窗新增 GitHub PAT 输入字段 + “已配置/未配置”状态提示（输入框始终留空防泄露）
+- **移除“1.5 规划中”提示卡**：v1.5 交付后移除 dashboard 顶部占位卡，提示改为常规文案
+- **单测覆盖**（tests/*.test.js）新增 6 个测试文件 · 130 用例：secrets (12) / queue (17) / feedback-analyzer (29) / feedback-collector (26) / recorder (12) / video (7)；另修复 llm.test.js 中“缺 api_key 仍发空 Bearer”的旧行为 → 改为主动抛中文提示错
+
+### Planned (MVP 2.0 · 后续推进)
+- 数据导出 / 导入
+- Remotion 服务端渲染拆条 / 成片
+- 13 平台官方统计 API 接入数据看板
+- i18n 多语言
+- macOS / Linux 打包
+
+## [Unreleased]
+
 ### Added
 - **推广渠道 BYOK 说明补强**（UX 改进，避免用户晕菜）：
   - 推广渠道 tab 顶部新增「本地优先 + BYOK」常驻说明卡
