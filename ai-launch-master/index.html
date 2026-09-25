@@ -728,6 +728,42 @@
   .sb-route-menu .sb-item{display:flex;gap:8px;align-items:center;padding:7px 12px;cursor:pointer;border-radius:6px;color:var(--ink);font-size:12px;border:none;background:transparent;width:100%;text-align:left;font-family:inherit}
   .sb-route-menu .sb-item:hover{background:var(--primary-soft);color:var(--primary-dark)}
   .sb-route-menu .sb-item.on{background:var(--primary-soft);color:var(--primary-dark);font-weight:600}
+  
+    /* v1.5 UX：聊天输入区 + / 命令面板（任务 23） */
+    .chat-input-wrap{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line);position:relative;background:var(--card)}
+    .chat-input-wrap input{flex:1;padding:8px 14px;border:1px solid var(--line);border-radius:18px;font-size:13px;font-family:inherit;background:var(--bg);color:var(--ink);outline:none;transition:all .15s}
+    .chat-input-wrap input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-ring)}
+    .chat-input-wrap .chat-send{padding:8px 18px;border-radius:18px;background:var(--primary);color:#fff;border:none;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600;transition:all .15s}
+    .chat-input-wrap .chat-send:hover{background:var(--primary-dark)}
+    .chat-input-wrap .chat-send:disabled{opacity:.5;cursor:not-allowed}
+    .slash-pop{position:absolute;bottom:calc(100% + 6px);left:14px;right:14px;max-height:240px;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-md);padding:4px;display:none;z-index:60}
+    .slash-pop.show{display:block}
+    .slash-pop-empty{padding:14px;text-align:center;color:var(--muted);font-size:12px}
+    .slash-item{display:flex;gap:12px;padding:8px 10px;border-radius:6px;cursor:pointer;align-items:center;font-size:12.5px}
+    .slash-item.on,.slash-item:hover{background:var(--primary-soft)}
+    .slash-item .sl-cmd{color:var(--primary-dark);font-weight:600;font-family:'Space Grotesk',monospace;min-width:96px;flex:none;font-size:12.5px}
+    .slash-item .sl-desc{color:var(--muted);font-size:12px;flex:1}
+  
+    /* v1.5 UX：推广渠道 drag-sort（任务 24） */
+    .ch-card.dragging{opacity:.4;transform:scale(0.98);transition:all .15s}
+    .ch-card.drop-target{border-color:var(--primary)!important;box-shadow:0 0 0 2px var(--primary-soft);transform:translateY(-1px)}
+    .ch-grab{position:absolute;top:8px;left:8px;width:18px;height:18px;display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:grab;opacity:0;transition:opacity .15s;font-size:14px;line-height:1}
+    .ch-grab:active{cursor:grabbing}
+    .ch-card:hover .ch-grab{opacity:.7}
+    .ch-card{position:relative;padding-left:26px}
+  
+    /* v1.5 UX：顶栏 SVG 图标（任务 25） */
+    .icon{width:14px;height:14px;vertical-align:-2px;display:inline-block;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .icon-lg{width:18px;height:18px;vertical-align:-3px}
+    .icon-stroke{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .gear-icon{font-size:0} /* 隐藏 emoji，让 SVG 占位 */
+  
+    /* v1.5 UX：暗色微调（任务 26） */
+    :root.dark .ch-card{border-color:color-mix(in srgb,var(--line) 80%,transparent)}
+    :root.dark .ch-card:hover{border-color:var(--primary);box-shadow:var(--shadow-md)}
+    :root.dark .modal-card{border-color:var(--line);box-shadow:var(--shadow-md)}
+    :root.dark .qcard.q-main.q-hero{background:linear-gradient(180deg,color-mix(in srgb,var(--primary) 18%,var(--card)) 0%,var(--card) 60%);position:relative}
+    :root.dark .qcard.q-main.q-hero::before{content:'';position:absolute;left:0;right:0;top:0;height:3px;background:var(--primary);border-radius:6px 6px 0 0}
 
   .wq{display:inline-block;border-radius:5px;padding:1px 8px;font-size:11px;font-weight:600;margin-left:6px}
 
@@ -1046,11 +1082,11 @@
 
       <span class="byok-dot" id="byokDot" aria-hidden="true"></span>
 
-      <button class="cmdk-btn" onclick="openCmdK()" title="命令面板 (Ctrl+K)" aria-label="打开命令面板"><span>🔍</span><span>搜索命令</span><span class="kbd">⌘K</span></button>
+      <button class="cmdk-btn" onclick="openCmdK()" title="命令面板 (Ctrl+K)" aria-label="打开命令面板"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>搜索命令</span><span class="kbd">⌘K</span></button>
 
-      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="切换暗色 / 亮色模式" aria-label="切换主题">🌙</button>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="切换暗色 / 亮色模式" aria-label="切换主题"><svg class="icon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
 
-      <button class="gear" id="gearBtn" onclick="openSettings()" title="设置" aria-label="打开设置">⚙</button>
+      <button class="gear" id="gearBtn" onclick="openSettings()" title="设置" aria-label="打开设置"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
 
     </div>
 
@@ -1085,6 +1121,13 @@
             <div class="onb-sub">填入你的作品名 → AI 自动诊断、推荐平台、一键发射</div>
           </div>
           <button class="btn accent lg" onclick="goNext(0)">开始首秀</button>
+        </div>
+
+        <!-- v1.5 UX：聊天输入区 + / 命令面板（任务 23） -->
+        <div class="chat-input-wrap" id="chatInputWrap">
+          <div class="slash-pop" id="slashPop"></div>
+          <input id="chatInput" type="text" placeholder="问 AI · 输入 / 看可用命令" autocomplete="off">
+          <button class="chat-send" onclick="sendChatMsg()" title="发送 (Enter)">发送</button>
         </div>
 
       </div>
@@ -1257,7 +1300,7 @@
       </span>
     </div>
     <div class="sb-right">
-      <button class="sb-link" onclick="openFaq()" title="查看快捷键 (按 ?)">? 快捷键</button>
+      <button class="sb-link" onclick="openFaq()" title="查看快捷键 (按 ?)"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg> 快捷键</button>
     </div>
   </footer>
 
@@ -2124,12 +2167,14 @@
       m.classList.toggle('show', !!on);
     };
   
-    // v1.5 UX：主题切换（任务 12）
+    // v1.5 UX：主题切换（任务 12 + 任务 25 SVG 图标）
+    var _SUN_SVG = '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>';
+    var _MOON_SVG = '<svg class="icon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
     function applyTheme(t){
       var dark = (t === 'dark');
       document.documentElement.classList.toggle('dark', dark);
       var btn = document.getElementById('themeToggle');
-      if(btn){ btn.textContent = dark ? '☀️' : '🌙'; btn.setAttribute('aria-pressed', dark?'true':'false'); }
+      if(btn){ btn.innerHTML = dark ? _SUN_SVG : _MOON_SVG; btn.setAttribute('aria-pressed', dark?'true':'false'); btn.setAttribute('aria-label', dark?'切到亮色':'切到暗色'); }
       try{ localStorage.setItem('rokit-theme', dark?'dark':'light'); }catch(_){}
     }
     window.toggleTheme = function(){
@@ -2143,7 +2188,7 @@
       try{ t = localStorage.getItem('rokit-theme') || 'light'; }catch(_){}
       if(t === 'dark'){ document.documentElement.classList.add('dark'); }
       var btn = document.getElementById('themeToggle');
-      if(btn){ btn.textContent = t==='dark' ? '☀️' : '🌙'; btn.setAttribute('aria-pressed', t==='dark'?'true':'false'); }
+      if(btn){ btn.innerHTML = t==='dark' ? _SUN_SVG : _MOON_SVG; btn.setAttribute('aria-pressed', t==='dark'?'true':'false'); }
     })();
 
     // v1.5 UX：KPI 卡点击跳转（任务 15）
@@ -2165,7 +2210,125 @@
       }catch(err){ console.warn('kpiJump failed', err); }
     };
 
-    // v1.5 UX：设置页 side-nav 跳转（任务 19）
+    // v1.5 UX：聊天输入区 + / 命令（任务 23）
+        var _SLASH_CMDS = [
+          {cmd:'/clear',  desc:'清空对话历史', run:function(){ state.messages = []; pushAI('对话已清空 ✨'); renderFlow(); }},
+          {cmd:'/copy',   desc:'复制最后一条 AI 回复到剪贴板', run:function(){
+            var last='';
+            for(var i=(state.messages||[]).length-1;i>=0;i--){ if(state.messages[i].role==='ai'){ last=state.messages[i].text; break; } }
+            if(!last){ toast('暂无 AI 回复','warn'); return; }
+            try{ navigator.clipboard.writeText(last.replace(/```[\s\S]*?```/g,'').replace(/[*_`#>\[\]]/g,'').replace(/\n+/g,' ').trim()).then(function(){ toast('已复制','ok',900); }); }
+            catch(e){ toast('复制失败：'+e.message,'error'); }
+          }},
+          {cmd:'/help',   desc:'打开 FAQ / 快捷键总览', run:function(){ openFaq(); }},
+          {cmd:'/theme',  desc:'切换明暗主题', run:function(){ toggleTheme(); }},
+          {cmd:'/theme dark',  desc:'切到暗色模式', run:function(){ applyTheme('dark'); }},
+          {cmd:'/theme light', desc:'切到亮色模式', run:function(){ applyTheme('light'); }},
+          {cmd:'/cmdk',   desc:'打开命令面板 (Ctrl+K)', run:function(){ openCmdK(); }},
+          {cmd:'/eval',   desc:'AI 评估主推作品', run:function(){ if(typeof runAutoEval==='function') runAutoEval(); else toast('runAutoEval 不可用','warn'); }}
+        ];
+        var _slashOn = -1, _slashItems = [];
+        function renderSlashPop(q){
+          var pop = document.getElementById('slashPop');
+          if(!pop) return;
+          q = (q||'').toLowerCase();
+          _slashItems = _SLASH_CMDS.filter(function(c){ return !q || c.cmd.toLowerCase().indexOf(q) >= 0; });
+          if(!_slashItems.length){ pop.innerHTML = '<div class="slash-pop-empty">没匹配 · 试试 /help /clear /theme</div>'; }
+          else {
+            var html = '';
+            _slashItems.forEach(function(it,i){
+              html += '<div class="slash-item'+(i===_slashOn?' on':'')+'" data-slash-i="'+i+'" onclick="runSlash('+i+')"><div class="sl-cmd">'+esc(it.cmd)+'</div><div class="sl-desc">'+esc(it.desc)+'</div></div>';
+            });
+            pop.innerHTML = html;
+          }
+          _slashOn = _slashItems.length ? 0 : -1;
+          pop.classList.add('show');
+        }
+        function hideSlashPop(){ var p=document.getElementById('slashPop'); if(p) p.classList.remove('show'); _slashOn=-1; _slashItems=[]; }
+        window.runSlash = function(i){
+          var it = _slashItems[i];
+          if(!it) return;
+          try{ it.run(); }catch(e){ console.warn('slash run failed', e); }
+          hideSlashPop();
+          var ci = document.getElementById('chatInput');
+          if(ci){ ci.value=''; ci.focus(); }
+        };
+        window.setupChatSlash = function(){
+          var ci = document.getElementById('chatInput');
+          if(!ci || ci.__slashBound) return;
+          ci.__slashBound = true;
+          ci.addEventListener('input', function(){
+            var v = ci.value;
+            if(v.indexOf('/') === 0){
+              renderSlashPop(v);
+            }else{
+              hideSlashPop();
+            }
+          });
+          ci.addEventListener('keydown', function(e){
+            var pop = document.getElementById('slashPop');
+            var isOpen = pop && pop.classList.contains('show');
+            if(e.key === 'Escape' && isOpen){ e.preventDefault(); hideSlashPop(); return; }
+            if(isOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')){
+              e.preventDefault();
+              if(!_slashItems.length) return;
+              var dir = (e.key === 'ArrowDown') ? 1 : -1;
+              _slashOn = (_slashOn + dir + _slashItems.length) % _slashItems.length;
+              var items = pop.querySelectorAll('.slash-item');
+              items.forEach(function(el,i){ el.classList.toggle('on', i===_slashOn); });
+              if(items[_slashOn]) items[_slashOn].scrollIntoView({block:'nearest'});
+              return;
+            }
+            if(isOpen && e.key === 'Enter'){
+              // 若是完整命令（无中间空格）或带 prefix 参数，执行
+              var fullMatch = _SLASH_CMDS.find(function(c){ return ci.value.toLowerCase().trim() === c.cmd.toLowerCase(); });
+              if(fullMatch){
+                e.preventDefault();
+                try{ fullMatch.run(); }catch(_){}
+                hideSlashPop(); ci.value=''; return;
+              }
+              if(_slashOn >= 0){
+                e.preventDefault();
+                runSlash(_slashOn);
+                return;
+              }
+            }
+            // 直接 Enter 发送（无 popover）
+            if(e.key === 'Enter' && (!isOpen || _slashOn < 0)){
+              e.preventDefault();
+              sendChatMsg();
+            }
+          });
+          // 点击外部关闭
+          document.addEventListener('click', function(e){
+            var pop = document.getElementById('slashPop');
+            var ci2 = document.getElementById('chatInput');
+            var wrap = document.getElementById('chatInputWrap');
+            if(!pop || !pop.classList.contains('show')) return;
+            if(wrap && wrap.contains(e.target)) return;
+            hideSlashPop();
+          });
+        };
+        window.sendChatMsg = function(){
+          var ci = document.getElementById('chatInput');
+          if(!ci) return;
+          var txt = (ci.value||'').trim();
+          if(!txt){ ci.focus(); return; }
+          // 命令已在 keydown 处理；这里仅当不在 popover 时纯文本发送
+          var pop = document.getElementById('slashPop');
+          if(pop && pop.classList.contains('show')) return;
+          pushUser(txt);
+          // 简易回复（v1.5 MVP：先 echo 让用户有反馈；后续接 AI 真回复）
+          setTimeout(function(){
+            pushAI('已收到你的消息 ✨ 当前 MVP 阶段，AI 自由对话将在后续接入。试试 / 看快捷命令 / 或回到首秀轨道继续推进。');
+            if(typeof renderFlow==='function') renderFlow();
+          }, 300);
+          ci.value='';
+          hideSlashPop();
+          ci.focus();
+        };
+    
+        // v1.5 UX：设置页 side-nav 跳转（任务 19）
     window.cfgNavJump = function(id){
       try{
         var sec = document.getElementById(id);
@@ -2772,6 +2935,9 @@
     // onboarding CTA：仅 step===0 显示；用户首次进入 step 1 后隐藏
     var cta=document.getElementById('onboardCta');
     if(cta) cta.style.display=(state.step===0)?'flex':'none';
+
+    // v1.5 UX：挂载聊天 / 命令（任务 23）
+    if(typeof setupChatSlash==='function') setupChatSlash();
 
   }
 
@@ -4203,6 +4369,8 @@
   // 列表渲染：从 state.channels 读
   function renderChannels(){
     var box=document.getElementById('channelsBox');if(!box)return;
+    // v1.5 UX：拖拽排序前先还原持久化顺序（任务 24）
+    applyChannelOrder();
     if(!state.channels.length){
       box.innerHTML='<div class="ch-empty">还没有任何推广渠道。点击右上角「+ 新增渠道」开始，或「同步内置」一键补齐 13 个内置平台。</div>';
       return;
@@ -4211,29 +4379,102 @@
     state.channels.forEach(function(c){
       var meta=CH_META[c.kind]||{name:c.kind,char:c.kind.charAt(0).toUpperCase(),color:'#0E7C7B',hint:''};
       var enabled=c.enabled===1||c.enabled===true;
-      html+='<div class="ch-card'+(enabled?'':' off')+'">'+
-        '<div class="ch-head">'+
-          '<div class="ch-dot" style="background:'+esc(meta.color)+'">'+esc(meta.char)+'</div>'+
-          '<div class="ch-name">'+esc(c.name)+'<small>'+esc(meta.name)+'</small></div>'+
-          '<div class="ch-actions">'+
-            '<button class="ch-toggle '+(enabled?'on':'off')+'" onclick="toggleChannel(\''+esc(c.id)+'\')" title="'+(enabled?'停用该渠道':'启用该渠道')+'" aria-label="'+(enabled?'停用该渠道':'启用该渠道')+'" aria-pressed="'+(enabled?'true':'false')+'">'+(enabled?'●':'○')+'</button>'+
-            '<button onclick="openChannelEditor(\''+esc(c.id)+'\')" title="编辑渠道" aria-label="编辑渠道">✎</button>'+
-            '<button class="ch-del" onclick="deleteChannel(\''+esc(c.id)+'\')" title="删除渠道" aria-label="删除渠道">×</button>'+
-          '</div>'+
-        '</div>'+
-        '<div class="ch-meta">'+
-          '<span class="chip kind">'+esc(c.kind)+'</span>'+
-          (c.tag?'<span class="chip">'+esc(c.tag)+'</span>':'')+
-          (c.api_base?'<span class="chip api">API ✓</span>':'')+
-          (c.api_key?'<span class="chip api">Key ✓</span>':'')+
-          (c.webhook?'<span class="chip api">Webhook ✓</span>':'')+
-          (!enabled?'<span class="chip off">已停用</span>':'')+
-        '</div>'+
-        (c.note?'<div class="ch-note">'+esc(c.note)+'</div>':'')+
-      '</div>';
+      html+='<div class="ch-card'+(enabled?'':' off')+'" draggable="true" data-channel-id="'+esc(c.id)+'">'
+        +'<span class="ch-grab" title="拖动重新排序" aria-label="拖拽柄">⋮⋮</span>'
+        +'<div class="ch-head">'
+          +'<div class="ch-dot" style="background:'+esc(meta.color)+'">'+esc(meta.char)+'</div>'
+          +'<div class="ch-name">'+esc(c.name)+'<small>'+esc(meta.name)+'</small></div>'
+          +'<div class="ch-actions">'
+            +'<button class="ch-toggle '+(enabled?'on':'off')+'" onclick="toggleChannel(\''+esc(c.id)+'\')" title="'+(enabled?'停用该渠道':'启用该渠道')+'" aria-label="'+(enabled?'停用该渠道':'启用该渠道')+'" aria-pressed="'+(enabled?'true':'false')+'">'+(enabled?'●':'○')+'</button>'
+            +'<button onclick="openChannelEditor(\''+esc(c.id)+'\')" title="编辑渠道" aria-label="编辑渠道">✎</button>'
+            +'<button class="ch-del" onclick="deleteChannel(\''+esc(c.id)+'\')" title="删除渠道" aria-label="删除渠道">×</button>'
+          +'</div>'
+        +'</div>'
+        +'<div class="ch-meta">'
+          +'<span class="chip kind">'+esc(c.kind)+'</span>'
+          +(c.tag?'<span class="chip">'+esc(c.tag)+'</span>':'')
+          +(c.api_base?'<span class="chip api">API ✓</span>':'')
+          +(c.api_key?'<span class="chip api">Key ✓</span>':'')
+          +(c.webhook?'<span class="chip api">Webhook ✓</span>':'')
+          +(!enabled?'<span class="chip off">已停用</span>':'')
+        +'</div>'
+        +(c.note?'<div class="ch-note">'+esc(c.note)+'</div>':'')
+      +'</div>';
     });
     box.innerHTML=html;
+    // v1.5 UX：绑定 drag-sort（任务 24）
+    if(typeof setupChannelDrag==='function') setupChannelDrag();
   }
+
+  // v1.5 UX：渠道拖拽排序（任务 24）
+  function loadChannelOrder(){
+    try{ return JSON.parse(localStorage.getItem('rokit-channel-order')||'[]'); }catch(_){ return []; }
+  }
+  function saveChannelOrder(){
+    try{ localStorage.setItem('rokit-channel-order', JSON.stringify(state.channels.map(function(c){return c.id;}))); }catch(_){}
+  }
+  function applyChannelOrder(){
+    var order = loadChannelOrder();
+    if(!order.length) return;
+    var ids = {};
+    state.channels.forEach(function(c){ ids[c.id]=c; });
+    var used = {};
+    var sorted = [];
+    order.forEach(function(id){ if(ids[id] && !used[id]){ sorted.push(ids[id]); used[id]=true; } });
+    // 未在 order 中的追加到末尾
+    state.channels.forEach(function(c){ if(!used[c.id]) sorted.push(c); });
+    state.channels = sorted;
+  }
+  window.setupChannelDrag = function(){
+    var box = document.getElementById('channelsBox');
+    if(!box || box.__dragBound) return;
+    box.__dragBound = true;
+    var dragId = null;
+    box.addEventListener('dragstart', function(e){
+      var card = e.target.closest('.ch-card');
+      if(!card || !card.dataset.channelId) return;
+      dragId = card.dataset.channelId;
+      card.classList.add('dragging');
+      try{ e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain', dragId); }catch(_){}
+    });
+    box.addEventListener('dragover', function(e){
+      var card = e.target.closest('.ch-card');
+      if(!card || !card.dataset.channelId) return;
+      e.preventDefault();
+      try{ e.dataTransfer.dropEffect='move'; }catch(_){}
+      box.querySelectorAll('.ch-card.drop-target').forEach(function(el){ el.classList.remove('drop-target'); });
+      card.classList.add('drop-target');
+    });
+    box.addEventListener('dragleave', function(e){
+      var card = e.target.closest('.ch-card');
+      if(card) card.classList.remove('drop-target');
+    });
+    box.addEventListener('drop', function(e){
+      e.preventDefault();
+      var targetCard = e.target.closest('.ch-card');
+      if(!targetCard || !dragId) return;
+      var targetId = targetCard.dataset.channelId;
+      if(targetId === dragId) return;
+      // 重新排序 state.channels
+      var fromIdx = -1, toIdx = -1;
+      for(var i=0;i<state.channels.length;i++){
+        if(state.channels[i].id===dragId) fromIdx = i;
+        if(state.channels[i].id===targetId) toIdx = i;
+      }
+      if(fromIdx<0 || toIdx<0) return;
+      var item = state.channels.splice(fromIdx, 1)[0];
+      state.channels.splice(toIdx, 0, item);
+      saveChannelOrder();
+      renderChannels();
+      toast('已调整顺序','ok',1000);
+      dragId = null;
+    });
+    box.addEventListener('dragend', function(){
+      box.querySelectorAll('.ch-card.dragging').forEach(function(el){ el.classList.remove('dragging'); });
+      box.querySelectorAll('.ch-card.drop-target').forEach(function(el){ el.classList.remove('drop-target'); });
+      dragId = null;
+    });
+  };
 
   // 渠道切换启用/停用
   window.toggleChannel=function(id){
