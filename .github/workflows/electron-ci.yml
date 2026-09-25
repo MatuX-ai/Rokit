@@ -41,18 +41,9 @@ jobs:
         run: npm ci
 
       - name: Lint (ESLint flat config)
+        # 已包含 no-alert 检查，AST 级别不会误判 fixture 字符串中的 alert(1)
         run: npm run lint
-
-      - name: Verify no debug residue
-        run: |
-          COUNT=$(grep -rE '\b(alert|confirm|prompt)\s*\(' electron tests --include='*.js' | wc -l)
-          if [ "$COUNT" -ne "0" ]; then
-            echo "::error::Found $COUNT debug residue in electron/ or tests/"
-            grep -rE '\b(alert|confirm|prompt)\s*\(' electron tests --include='*.js'
-            exit 1
-          fi
-          echo "No debug residue"
-
+      
       - name: Unit tests (vitest)
         run: npm test
 

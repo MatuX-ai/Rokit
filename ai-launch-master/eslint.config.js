@@ -37,7 +37,11 @@ module.exports = [
           caughtErrorsIgnorePattern: '^_' // catch (_e) 视为有意忽略
         }
       ],
-      'no-empty': ['error', { allowEmptyCatch: true }]
+      'no-empty': ['error', { allowEmptyCatch: true }],
+      // 禁止 alert/confirm/prompt 调试残留（AST 级别检查，不会误判字符串字面量）
+      // 之前的 grep 方案在 tests/publishers.test.js 的 XSS fixture（'<script>alert(1)</script>'）上误报
+      'no-alert': 'error',
+      'no-console': ['warn', { allow: ['warn', 'error'] }]
     }
   },
   // vitest 测试代码
