@@ -29,7 +29,7 @@
 
     --ink:#1A2226;--muted:#5A6B72;--bg:#F4F7F6;--card:#FFFFFF;--line:#E3EBEA;
 
-    --accent:#F59E0B;--accent-soft:#FDF0DA;--success:#2E8B33;--success-soft:#EAF5EA;--danger:#C0392B;
+    --accent:#F59E0B;--accent-soft:#FDF0DA;--accent-deep:#7C5A0B;--success:#2E8B33;--success-soft:#EAF5EA;--danger:#C0392B;
 
     --focus-ring:0 0 0 3px var(--primary-ring);
 
@@ -54,7 +54,7 @@
     --card:#182024;
     --line:#2A363A;
 
-    --accent:#FBBF24;--accent-soft:rgba(251,191,36,.18);
+    --accent:#FBBF24;--accent-soft:rgba(251,191,36,.18);--accent-deep:#FBBF24;
     --success:#34D399;--success-soft:rgba(52,211,153,.18);
     --danger:#F87171;
 
@@ -118,9 +118,9 @@
 
   .rail .seg.done .bar{background:var(--success)}
 
-  .chat{background:#F5F7F7;border:1px solid #D5DEE0;border-radius:16px;overflow:hidden}
+  .chat{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
 
-  .chat-head{padding:12px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#F8FBFA,#EFF6F5)}
+  .chat-head{padding:12px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--card),color-mix(in srgb,var(--primary) 4%,var(--card)))}
 
   .chat-head .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;flex:none}
 
@@ -134,7 +134,7 @@
 
   /* 首启动 onboarding CTA：固定在聊天框底部 */
   .onboard-cta{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 18px;border-top:1px dashed var(--line);background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 8%,transparent),color-mix(in srgb,var(--accent) 18%,transparent))}
-  .onboard-cta .onb-title{font-size:14px;font-weight:700;color:#7C5A0B;margin-bottom:2px}
+  .onboard-cta .onb-title{font-size:14px;font-weight:700;color:var(--accent-deep);margin-bottom:2px}
   .onboard-cta .onb-sub{font-size:12px;color:var(--ink);opacity:.85}
   .onboard-cta .btn.lg{padding:10px 22px;font-size:14px}
   @media (max-width:640px){.onboard-cta{flex-direction:column;align-items:stretch;text-align:center}}
@@ -451,11 +451,11 @@
 
   /* 看板 1.5 占位提示卡：与导航 data-coming 同一色系，避免重复设计 */
   .dash-coming{display:flex;gap:12px;align-items:flex-start;background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px dashed color-mix(in srgb,var(--accent) 55%,transparent);border-radius:12px;padding:12px 14px}
-  .dash-coming .dc-icon{font-size:18px;line-height:1.2;flex:none;color:#7C5A0B}
+  .dash-coming .dc-icon{font-size:18px;line-height:1.2;flex:none;color:var(--accent-deep)}
   .dash-coming .dc-body{flex:1;min-width:0}
-  .dash-coming .dc-title{font-size:13.5px;font-weight:700;color:#7C5A0B;margin-bottom:2px}
+  .dash-coming .dc-title{font-size:13.5px;font-weight:700;color:var(--accent-deep);margin-bottom:2px}
   .dash-coming .dc-sub{font-size:12.5px;color:var(--ink);line-height:1.6}
-  .dash-coming .dc-sub b{color:#7C5A0B}
+  .dash-coming .dc-sub b{color:var(--accent-deep)}
   /* 一旦发生真实发布（pubLog 非空），弱化此提示，避免占位文字喧宾夺主 */
   .dash-coming.is-live{background:color-mix(in srgb,var(--primary) 6%,transparent);border-color:color-mix(in srgb,var(--primary) 25%,transparent)}
   .dash-coming.is-live .dc-icon,.dash-coming.is-live .dc-title,.dash-coming.is-live .dc-sub b{color:var(--primary-dark)}
@@ -650,6 +650,35 @@
   .busy-mask.show{display:flex}
   .busy-spinner{width:36px;height:36px;border:3px solid var(--line);border-top-color:var(--primary);border-radius:50%;animation:busySpin .9s linear infinite}
   @keyframes busySpin{to{transform:rotate(360deg)}}
+
+  /* v1.5 UX：命令面板 Cmd+K（任务 16） */
+  .cmdk-btn{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:8px;font-size:11.5px;font-family:inherit;cursor:pointer;transition:all .15s}
+  .cmdk-btn:hover{background:var(--primary-soft);border-color:var(--primary);color:var(--primary-dark)}
+  .cmdk-btn .kbd{font-size:10px;padding:1px 5px}
+  .cmdk-mask{position:fixed;inset:0;background:var(--overlay);display:none;align-items:flex-start;justify-content:center;z-index:250;padding:12vh 16px 0}
+  .cmdk-mask.show{display:flex}
+  .cmdk{width:min(560px,100%);background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.25);overflow:hidden;display:flex;flex-direction:column;max-height:60vh}
+  .cmdk-input{width:100%;padding:14px 18px;border:none;border-bottom:1px solid var(--line);font-size:14px;font-family:inherit;color:var(--ink);background:transparent;outline:none}
+  .cmdk-input::placeholder{color:var(--muted)}
+  .cmdk-list{overflow:auto;padding:6px 0;flex:1}
+  .cmdk-group{padding:8px 18px 4px;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+  .cmdk-item{display:flex;align-items:center;gap:10px;padding:9px 18px;cursor:pointer;font-size:13px;color:var(--ink);transition:background .1s}
+  .cmdk-item.on,.cmdk-item:hover{background:var(--primary-soft)}
+  .cmdk-item .ci-icon{width:24px;height:24px;flex:none;border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted)}
+  .cmdk-item .ci-text{flex:1;min-width:0}
+  .cmdk-item .ci-title{font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cmdk-item .ci-sub{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cmdk-item .ci-tag{font-size:10px;color:var(--muted);padding:2px 6px;border:1px solid var(--line);border-radius:4px}
+  .cmdk-empty{padding:24px;text-align:center;color:var(--muted);font-size:13px}
+
+  /* v1.5 UX：底部状态栏（任务 17） */
+  .statusbar{height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-top:1px solid var(--line);background:var(--card);color:var(--muted);font-size:11.5px;flex:none}
+  .statusbar .sb-left,.statusbar .sb-mid,.statusbar .sb-right{display:flex;align-items:center;gap:8px}
+  .statusbar .sb-mid{flex:1;justify-content:center;font-weight:500;color:var(--ink)}
+  .statusbar .sb-link{color:var(--muted);cursor:pointer;text-decoration:none;font-family:inherit;font-size:11.5px;background:transparent;border:none;padding:0;display:inline-flex;align-items:center;gap:4px}
+  .statusbar .sb-link:hover{color:var(--primary-dark)}
+  .statusbar .sb-dot{width:6px;height:6px;border-radius:50%;background:var(--success);display:inline-block}
+  .statusbar .sb-dot.off{background:var(--danger)}
 
   .wq{display:inline-block;border-radius:5px;padding:1px 8px;font-size:11px;font-weight:600;margin-left:6px}
 
@@ -968,6 +997,8 @@
 
       <span class="byok-dot" id="byokDot" aria-hidden="true"></span>
 
+      <button class="cmdk-btn" onclick="openCmdK()" title="命令面板 (Ctrl+K)" aria-label="打开命令面板"><span>🔍</span><span>搜索命令</span><span class="kbd">⌘K</span></button>
+
       <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="切换暗色 / 亮色模式" aria-label="切换主题">🌙</button>
 
       <button class="gear" id="gearBtn" onclick="openSettings()" title="设置" aria-label="打开设置">⚙</button>
@@ -1152,6 +1183,29 @@
 
   <!-- v1.5 UX：全局繁忙遮罩（任务 13） -->
   <div class="busy-mask" id="busyMask"><div class="busy-spinner" aria-label="加载中"></div></div>
+
+  <!-- v1.5 UX：命令面板 Cmd+K（任务 16） -->
+  <div class="cmdk-mask" id="cmdkMask" onclick="if(event.target===this)closeCmdK()">
+    <div class="cmdk" role="dialog" aria-label="命令面板">
+      <input class="cmdk-input" id="cmdkInput" type="text" placeholder="输入命令、路由、作品名…" autocomplete="off" spellcheck="false">
+      <div class="cmdk-list" id="cmdkList"></div>
+    </div>
+  </div>
+
+  <!-- v1.5 UX：底部状态栏（任务 17） -->
+  <footer class="statusbar" id="statusBar">
+    <div class="sb-left">
+      <span>🚀 Rokit</span>
+      <span id="sbVer">v0.1.3</span>
+      <span>·</span>
+      <span class="sb-dot" id="sbByokDot" aria-hidden="true"></span>
+      <span id="sbByok">BYOK 检测中…</span>
+    </div>
+    <div class="sb-mid" id="sbRoute">—</div>
+    <div class="sb-right">
+      <button class="sb-link" onclick="openFaq()" title="查看快捷键 (按 ?)">? 快捷键</button>
+    </div>
+  </footer>
 
 </div>
 
@@ -1356,6 +1410,7 @@
       <div class="kbd-row"><div class="kbd-keys"><span class="kbd">Esc</span></div><div class="kbd-desc">关闭弹窗 / 取消</div></div>
       <div class="kbd-row"><div class="kbd-keys"><span class="kbd">Tab</span></div><div class="kbd-desc">键盘焦点遍历</div></div>
       <div class="kbd-row"><div class="kbd-keys"><span class="kbd">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">↵</span></div><div class="kbd-desc">提交表单 / 保存文稿（表单与文本域内）</div></div>
+      <div class="kbd-row"><div class="kbd-keys"><span class="kbd">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">K</span></div><div class="kbd-desc">唤起命令面板（跳转 / 动作 / 作品）</div></div>
 
     </div>
 
@@ -1998,6 +2053,170 @@
       }catch(err){ console.warn('kpiJump failed', err); }
     };
 
+    // v1.5 UX：底部状态栏同步（任务 17）
+    var _ROUTE_LABEL = {flow:'首秀向导',works:'我的作品',channels:'推广渠道',dashboard:'数据看板',settings:'设置'};
+    window.updateStatusBar = function(){
+      try{
+        var rt = (state && state.route) || 'flow';
+        var el = document.getElementById('sbRoute');
+        if(el) el.textContent = _ROUTE_LABEL[rt] || rt;
+        // BYOK 状态点
+        var byok = state.byokOn;
+        var dot = document.getElementById('sbByokDot');
+        var lab = document.getElementById('sbByok');
+        if(dot) dot.classList.toggle('off', !byok);
+        if(lab) lab.textContent = byok ? 'BYOK 已配置' : 'BYOK 未配置 · 点 ⚙ 填入';
+        // 主题按钮文字
+        var tb = document.getElementById('themeToggle');
+        if(tb){
+          var isDark = document.documentElement.classList.contains('dark');
+          tb.textContent = isDark ? '☀️' : '🌙';
+        }
+      }catch(err){ console.warn('updateStatusBar failed', err); }
+    };
+
+    // v1.5 UX：命令面板 Cmd+K（任务 16）
+    var _cmdkItems = [];
+    var _cmdkOn = -1;
+    function buildCmdKCommands(){
+      var cmds = [];
+      // 路由
+      var routes = [
+        {id:'r-flow', title:'首秀向导', sub:'go 首秀发射', icon:'🎬', kw:'flow 首秀 生成 助手', run:function(){ go('flow'); }},
+        {id:'r-works', title:'我的作品', sub:'go 查看登记作品', icon:'🗂️', kw:'works 作品 列表 我的', run:function(){ go('works'); }},
+        {id:'r-channels', title:'推广渠道', sub:'go 管理渠道', icon:'📡', kw:'channels 渠道 推广 发布', run:function(){ go('channels'); }},
+        {id:'r-dashboard', title:'数据看板', sub:'go 查看数据', icon:'📊', kw:'dashboard 看板 数据 统计', run:function(){ go('dashboard'); }},
+        {id:'r-settings', title:'设置', sub:'go 偏好、API Key、模型', icon:'⚙️', kw:'settings 设置 偏好 preferences api key 模型', run:function(){ go('settings'); }}
+      ];
+      cmds = cmds.concat(routes.map(function(c){ return Object.assign({}, c, {group:'路由'}); }));
+
+      // 动作
+      cmds.push({id:'a-faq', title:'打开 FAQ / 快捷键', sub:'查看完整快捷键列表', icon:'❓', kw:'faq help 帮助 快捷键', group:'动作', run:function(){ openFaq(); }});
+      cmds.push({id:'a-theme', title:'切换暗色 / 亮色', sub:'Ctrl+Shift+L 等价', icon:'🌓', kw:'theme dark light 主题 暗色 亮色 夜', group:'动作', run:function(){ toggleTheme(); }});
+      cmds.push({id:'a-eval', title:'AI 评估主推作品', sub:'立即让 AI 重新评估', icon:'🪄', kw:'evaluate ai 评估 主推 选', group:'动作', run:function(){ if(typeof runAutoEval==='function') runAutoEval(); else toast('runAutoEval 不可用','warn'); }});
+      cmds.push({id:'a-testconn', title:'测试 API 连接', sub:'在设置里点 ⚙ → 测试', icon:'🔌', kw:'test connection 连接 ping', group:'动作', run:function(){ go('settings'); toast('点「测试连接」按钮即可','ok',1800); }});
+      cmds.push({id:'a-newwork', title:'新建作品', sub:'在「我的作品」页 +', icon:'➕', kw:'new work 新建 作品 add', group:'动作', run:function(){ go('works'); toast('点右上角 + 即可新建','ok',1800); }});
+      cmds.push({id:'a-shortcuts', title:'查看全部快捷键', sub:'? 键也能打开', icon:'⌨️', kw:'shortcuts 快捷键 全部 keymap', group:'动作', run:function(){ openFaq(); }});
+
+      // 作品（动态）
+      try{
+        var real = (state.works||[]).filter(function(w){ return w && w.id && !w.sample; });
+        real.forEach(function(w){
+          cmds.push({
+            id:'w-'+w.id,
+            title: w.title || ('作品 #'+w.id),
+            sub: (w.platforms||[]).join(' · ') || '未指定渠道',
+            icon:'🎬',
+            kw:'work 作品 '+(w.title||'')+' '+(w.id||''),
+            group:'作品',
+            run:function(){
+              go('works');
+              setTimeout(function(){
+                var el = document.querySelector('[data-work-id="'+w.id+'"]');
+                if(el){ el.scrollIntoView({behavior:'smooth', block:'center'}); el.classList.add('flash'); setTimeout(function(){el.classList.remove('flash');},1500); }
+              }, 250);
+            }
+          });
+        });
+      }catch(_){}
+
+      return cmds;
+    }
+    function renderCmdK(filter){
+      var list = document.getElementById('cmdkList');
+      if(!list) return;
+      var all = buildCmdKCommands();
+      var q = (filter||'').trim().toLowerCase();
+      var items;
+      if(!q){ items = all.slice(0, 12); }
+      else {
+        items = all.filter(function(c){
+          var hay = ((c.title||'')+' '+(c.sub||'')+' '+(c.kw||'')).toLowerCase();
+          return hay.indexOf(q) >= 0;
+        });
+      }
+      // 分组
+      var groups = {};
+      var order = [];
+      items.forEach(function(it){
+        var g = it.group || '其他';
+        if(!groups[g]){ groups[g]=[]; order.push(g); }
+        groups[g].push(it);
+      });
+      var html = '';
+      order.forEach(function(g){
+        html += '<div class="cmdk-group">'+esc(g)+'</div>';
+        groups[g].forEach(function(it){
+          html += '<div class="cmdk-item" data-cmd-id="'+esc(it.id)+'" onclick="runCmdK(\''+esc(it.id).replace(/'/g,"\\'")+'\')">'
+                + '<div class="ci-icon">'+esc(it.icon||'·')+'</div>'
+                + '<div class="ci-text"><div class="ci-title">'+esc(it.title)+'</div><div class="ci-sub">'+esc(it.sub||'')+'</div></div>'
+                + '<div class="ci-tag">'+esc(it.group)+'</div>'
+                + '</div>';
+        });
+      });
+      if(!items.length){
+        html = '<div class="cmdk-empty">没找到匹配命令 · 试试「渠道」「设置」「暗色」</div>';
+      }
+      list.innerHTML = html;
+      _cmdkItems = items;
+      _cmdkOn = items.length ? 0 : -1;
+      highlightCmdK();
+    }
+    function highlightCmdK(){
+      var list = document.getElementById('cmdkList');
+      if(!list) return;
+      var els = list.querySelectorAll('.cmdk-item');
+      els.forEach(function(el,i){
+        el.classList.toggle('on', i===_cmdkOn);
+      });
+      var on = els[_cmdkOn];
+      if(on) on.scrollIntoView({block:'nearest'});
+    }
+    window.openCmdK = function(){
+      var mask = document.getElementById('cmdkMask');
+      var input = document.getElementById('cmdkInput');
+      if(!mask || !input) return;
+      mask.classList.add('show');
+      input.value = '';
+      renderCmdK('');
+      setTimeout(function(){ input.focus(); }, 30);
+    };
+    window.closeCmdK = function(){
+      var mask = document.getElementById('cmdkMask');
+      if(mask) mask.classList.remove('show');
+    };
+    window.runCmdK = function(id){
+      var cmds = buildCmdKCommands();
+      for(var i=0;i<cmds.length;i++){ if(cmds[i].id===id){ cmds[i].run(); break; } }
+      closeCmdK();
+    };
+    // 输入过滤 + 键盘
+    (function(){
+      var input = document.getElementById('cmdkInput');
+      if(!input) return;
+      input.addEventListener('input', function(){ _cmdkOn = 0; renderCmdK(input.value); });
+      input.addEventListener('keydown', function(e){
+        if(e.key === 'Escape'){ e.preventDefault(); closeCmdK(); return; }
+        if(e.key === 'ArrowDown'){ e.preventDefault(); if(_cmdkItems.length){ _cmdkOn = (_cmdkOn+1)%_cmdkItems.length; highlightCmdK(); } return; }
+        if(e.key === 'ArrowUp'){ e.preventDefault(); if(_cmdkItems.length){ _cmdkOn = (_cmdkOn-1+_cmdkItems.length)%_cmdkItems.length; highlightCmdK(); } return; }
+        if(e.key === 'Enter'){
+          e.preventDefault();
+          if(_cmdkOn>=0 && _cmdkItems[_cmdkOn]){ runCmdK(_cmdkItems[_cmdkOn].id); }
+          return;
+        }
+      });
+    })();
+    // 全局 Ctrl/Cmd+K
+    document.addEventListener('keydown', function(e){
+      if((e.ctrlKey||e.metaKey) && (e.key==='k' || e.key==='K')){
+        e.preventDefault();
+        var mask = document.getElementById('cmdkMask');
+        if(mask && mask.classList.contains('show')) closeCmdK();
+        else openCmdK();
+        return;
+      }
+    });
+
 
   /* ===== v1.5 UX：统一 modal 控制器（Esc / 遮罩 / 焦点陷阱） ===== */
   var __modalPrevFocus=null;
@@ -2097,6 +2316,9 @@
     if(r==='works'){renderWorks();}
 
     if(r==='channels'){renderChannels();}
+
+    // v1.5 UX：同步底部状态栏（任务 17）
+    if(typeof updateStatusBar==='function') updateStatusBar();
 
     window.scrollTo(0,0);
 
