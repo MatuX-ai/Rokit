@@ -18,7 +18,7 @@ function ok(cond, msg) {
   const dbPath = path.join(tmpDir, 'audit.db');
   const { Store, CURRENT_VERSION } = require(path.join(ROOT, 'electron', 'store.js'));
 
-  ok(CURRENT_VERSION === 2, 'CURRENT_VERSION === 2');
+  ok(CURRENT_VERSION === 3, 'CURRENT_VERSION === 3');
 
   const s = new Store(dbPath);
   ok(s.mode === 'sqlite' || s.mode === 'json', 'Store 实例化成功');
@@ -66,7 +66,7 @@ function ok(cond, msg) {
   ok(s.mode === 'sqlite', 'sqlite 模式可用');
   // 迁移幂等性：将 store 实例引用置 null 后再实例化（避免文件锁）
   // 这里只验证当前进程内 migrate 不报错
-  ok(s.version === 2, '迁移完成后 version === 2');
+  ok(s.version === 3, '迁移完成后 version === 3');
 
   // 清理前记录总数（better-sqlite3 不存在 close，直接走 OS 释放）
   for (const ext of ['', '-wal', '-shm']) {
