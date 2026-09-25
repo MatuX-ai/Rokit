@@ -55,7 +55,8 @@ if (download) {
   // 不应再有 "已订阅"、"✓ 提交成功" 这类自我陶醉文案
   ok(!/已订阅|订阅成功|提交成功|subscribe.*success/i.test(download), 'Download.astro 无假"订阅成功"文案');
   // 应有 GitHub Watch 引导
-  ok(/github\.com\/ProClips\/Rokit/.test(download), 'Download.astro 引导到 GitHub 仓库');
+  // v0.1.3 起指向真实仓库 MatuX-ai/Rokit（原占位 ProClips/Rokit 已在 v0.1.3 文档中标记为已替换）
+  ok(/github\.com\/MatuX-ai\/Rokit/.test(download), 'Download.astro 引导到 GitHub 仓库');
   ok(/Watch/i.test(download) || /Star/i.test(download), 'Download.astro 含 Star/Watch 字样');
 }
 
