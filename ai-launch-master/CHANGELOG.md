@@ -59,6 +59,17 @@
 ### Tests
 - 单测用例数：50 → **135**（6 个测试文件全部通过，`npm run lint` 0 error）
 
+### Web 站（2026-09-25 部署期补充）
+**部署状态**：v0.1.3 首站已上 Vercel（[rokit.vercel.app](https://rokit.vercel.app)）。
+
+**主动保留的占位项（v0.1.4 计划替换）**：
+- 仓库 URL `github.com/ProClips/Rokit` —— 暂作为项目占位。未变更为真实仓库以便保留路径可追溯；v0.1.4 上线时同步 `Nav.astro` / `Hero.astro` / `Download.astro` / `Footer.astro` / `Layout.astro` 中的 11 处链接
+- 应用截图 `public/screenshots/wflow.svg` + `dashboard.svg` —— v0.1.3 采用 SVG 加 “占位示意 · PLACEHOLDER” 鲜明水印，加底部说明 “v0.1.3 占位示意图（非真实截图）· 计划 v0.1.4 替换”；避免上线后被误以为真实截图
+- `public/sitemap.xml` `lastmod=2026-09-25`（同步部署日）
+- **Astro 5.x critical XSS/SSRF 漏洞**：当前已知 9 条 critical（GHSA-j687-52p2-xcff 等），静态产物不可远程利用，已接受风险豁免上线，纳入 v0.1.4 升级 Astro 7.x backlog
+
+**严格与桌面端版本对齐**：web `Nav.astro` / `Hero.astro` / `Download.astro` 中 `version='0.1.3'` 与本仓 `package.json` 一致，JSON-LD `softwareVersion` 同步。
+
 ## [0.1.2] - 2026-09-07
 
 设置弹窗 z-index 冲突修复 + 安装包重打。

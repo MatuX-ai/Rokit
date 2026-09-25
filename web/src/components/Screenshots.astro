@@ -1,12 +1,13 @@
 ---
 /**
  * 应用截图区
- * - 真实截图占位，等待 v0.1.1 截图就位
- * - 现阶段用 2 张占位卡片 + 文字说明
+ * - v0.1.3 部署期：两张 SVG 占位示意图（已加醒目水印）
+ * - v0.1.4 计划：从 ai-launch-master 桌面应用实拍后替换为 PNG
+ * - 全部图均带可访问性 alt 与可见“占位”水印，避免上线后被误以为真实截图
  */
 const screenshots = [
-  { file: '/screenshots/wflow.svg', alt: '首秀向导主界面（占位）', title: '首秀向导', desc: 'AI 一路引导你从登记到发射，13 个平台文案自动生成' },
-  { file: '/screenshots/dashboard.svg', alt: '数据看板主界面（占位）', title: '数据看板', desc: '本次会话发布次数 / 渠道分布 / 里程碑报喜' },
+  { file: '/screenshots/wflow.svg', alt: '首秀向导占位示意图（v0.1.3 非真实截图）', title: '首秀向导（占位）', desc: 'AI 一路引导你从登记到发射，13 个平台文案自动生成' },
+  { file: '/screenshots/dashboard.svg', alt: '数据看板占位示意图（v0.1.3 非真实截图）', title: '数据看板（占位）', desc: '本次会话发布次数 / 渠道分布 / 里程碑报喜' },
 ];
 ---
 
@@ -38,7 +39,7 @@ const screenshots = [
         <line x1="12" y1="8" x2="12" y2="12"/>
         <line x1="12" y1="16" x2="12.01" y2="16"/>
       </svg>
-      截图采用 Rokit v0.1.1 真实界面；当前为占位图，v0.1.2 正式打包时替换为 PNG
+      ⛔ v0.1.3 两张截图均为占位示意图（非真实截图）· 计划 v0.1.4 替换为 ai-launch-master 桌面应用实拍 PNG
     </p>
   </div>
 </section>

@@ -1,0 +1,67 @@
+name: electron-ci
+
+on:
+  push:
+    branches: [main, feature/**]
+    paths:
+      - 'ai-launch-master/**'
+      - '.github/workflows/electron-ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'ai-launch-master/**'
+      - '.github/workflows/electron-ci.yml'
+
+concurrency:
+  group: electron-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Lint + Test + Audit (Electron v0.1.3)
+    runs-on: windows-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ai-launch-master
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: ai-launch-master/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint (ESLint flat config)
+        run: npm run lint
+
+      - name: Verify no debug residue
+        run: |
+          COUNT=$(grep -rE '\b(alert|confirm|prompt)\s*\(' electron tests --include='*.js' | wc -l)
+          if [ "$COUNT" -ne "0" ]; then
+            echo "::error::Found $COUNT debug residue in electron/ or tests/"
+            grep -rE '\b(alert|confirm|prompt)\s*\(' electron tests --include='*.js'
+            exit 1
+          fi
+          echo "No debug residue"
+
+      - name: Unit tests (vitest)
+        run: npm test
+
+      - name: Audit (consistency + UX)
+        run: npm run audit
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### CI Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Node: 22" >> $GITHUB_STEP_SUMMARY
+          echo "- Lint: ESLint flat config" >> $GITHUB_STEP_SUMMARY
+          echo "- Tests: vitest" >> $GITHUB_STEP_SUMMARY
+          echo "- Audit: tests/audit.js + tests/audit-ux.js" >> $GITHUB_STEP_SUMMARY

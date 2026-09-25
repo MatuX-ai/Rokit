@@ -36,3 +36,7 @@ Thumbs.db
 # 本地环境配置（API Key 等）
 .env
 .env.local
+
+# Vercel 部署本地临时脚本与日志（不入仓；部署后可手刪）
+.vercel-tmp/
+.vercel
