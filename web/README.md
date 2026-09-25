@@ -84,15 +84,18 @@ web/
 
 ## 占位待替换项
 
-| 项 | 当前占位 | 替换位置 |
-|---|---|---|
-| GitHub 仓库 URL | `https://github.com/ProClips/Rokit` | `Nav.astro`、`Hero.astro`、`Footer.astro`、`Layout.astro` |
-| 下载链接 | 同上 `/releases/latest` | `Nav.astro`、`Hero.astro`、`Download.astro` |
-| 自定义域 | `https://rokit.vercel.app` | `astro.config.mjs`、`Layout.astro` |
-| 应用截图 | 灰色骨架 | `Screenshots.astro` |
-| OG 分享卡 | 缺失 | `public/og-image.png` |
+**v0.1.3 部署期状态**：本节是在 v0.1.3 首站上线时记录的 “主动保留的占位项”。至 2026-09-25 晚间，这些项已有部分被补完：
 
-全局搜索 `https://github.com/ProClips/Rokit` 即可定位所有需要替换的占位 URL。
+| 项 | 原始占位 | 当前状态 | 替换位置 | 补完时间 |
+|---|---|---|---|---|
+| GitHub 仓库 URL | `https://github.com/ProClips/Rokit` | ✅ **已替换为** `https://github.com/MatuX-ai/Rokit`（8 处） | `Nav.astro`、`Hero.astro`、`Download.astro`、`Footer.astro` | commit `03ce211` + tag `v0.1.3` |
+| 下载链接 / Release | `/releases/latest`（指向上述占位仓库） | ✅ **已切到** `MatuX-ai/Rokit/releases/download/v0.1.3/Rokit-0.1.3-{x64,portable}.exe`，含真实 SHA256 | `Download.astro` | gh release `v0.1.3` |
+| 自定义域 | `https://rokit.vercel.app` | ✅ 已生效 | `astro.config.mjs`、`Layout.astro` | v0.1.3 首站 |
+| 应用截图 | 灰色骨架 SVG + `PLACEHOLDER` 水印 | ⏸ 待 v0.1.4 替换为真实截图 | `Screenshots.astro` | — |
+| OG 分享卡 | 缺失（占位 png） | ⏸ 待 v0.1.4 生成 1280×640 PNG | `public/og-image.png` | — |
+| Astro 5.x 漏洞 | 9 条 critical（XSS/SSRF） | ⏸ 静态产物不可远程利用，已接受豁免上线 | — | v0.1.4 升 Astro 7.x |
+
+全局搜索 `https://github.com/MatuX-ai/Rokit` 即可验证当前所有链接已统一指向真实仓库。
 
 ## 技术栈
 

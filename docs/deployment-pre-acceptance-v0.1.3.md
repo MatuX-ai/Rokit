@@ -113,18 +113,24 @@
 
 | 占位项 | 出现位置 | 替换值 | 当前是否已替换 |
 |---|---|---|:-:|
-| `github.com/ProClips/Rokit` | Nav / Hero / Footer / Download / Layout | 真实仓库 URL | ⏸ **主动保留**（决策记录：v0.1.3 保留路径可追溯，CHANGELOG 已注明 v0.1.4 替换） |
-| `https://rokit.vercel.app` | astro.config.mjs / Layout.astro / sitemap.xml / robots.txt | 最终生产域名 | ⏸ **主动保留**（项目初始域名，本次部署即以此为生产域） |
-| `screenshots/wflow.svg`、`dashboard.svg` | public/screenshots/ | 真实 PNG 截图 | ⚠ **已加鲜明占位水印**（SVG 中央「占 位 示 意」肨色号 + 全图旋转水印 + 底部「⛔ v0.1.3 占位示意图」说明）。v0.1.4 计划替换为 PNG |
+| `github.com/ProClips/Rokit` | Nav / Hero / Footer / Download | 真实仓库 URL | ✅ **已替换为 `MatuX-ai/Rokit`（8 处）**（commit `03ce211`） |
+| `rokit.vercel.app` / Release 下载链接 | Download.astro / Hero.astro | 真实 GitHub Release | ✅ **已切到 `MatuX-ai/Rokit/releases/download/v0.1.3/...`**，NSIS + Portable 双资产已发布，含真实 SHA256 |
+| `screenshots/wflow.svg`、`dashboard.svg` | public/screenshots/ | 真实 PNG 截图 | ⚠ **仍为占位 SVG**（加有鲜明水印）。v0.1.4 计划替换为 PNG |
 | `og-image.png` | public/og-image.png | 最终版 OG 图 | ✅ 已存在（87 KB，1200×630） |
 
 ### 行动要求
 
-> ✅ **全部条件已满足**（2026-09-25 验收轮次）：
+> ✅ **全部条件已满足**（2026-09-25 验收轮次） + **晚间补完验证**（2026-09-25 21:00+）：
+>
 > 1. 仓库 URL `ProClips/Rokit` 、域名 `rokit.vercel.app` 主动保留 + CHANGELOG 已加 `### Web 站（2026-09-25 部署期补充）` 小节明确记录 v0.1.4 替换计划
 > 2. 截图已加鲜明占位水印（`public/screenshots/*.svg`） · alt 文本已含「占位示意图」 · 组件顶部加 `⛔ v0.1.3 两张截图均为占位示意图（非真实截图）· 计划 v0.1.4 替换` 提示
 > 3. `public/sitemap.xml` `lastmod` 从 2026-09-07 更新到 2026-09-25
 > 4. §4 由 No-Go 上升为 **Go（主动保留项）**
+> 5. **v0.1.3 发布链补完**：URL / Tag / Release / SHA256 全部已生效（commit `03ce211` + `00a3245`）：
+>    - GitHub Release URL: `https://github.com/MatuX-ai/Rokit/releases/tag/v0.1.3`
+>    - NSIS SHA256: `1800DA600D940A4EB17C1EEB2D38B4CF68A68B518EEBEB457FC92C14F13292C9`
+>    - Portable SHA256: `E40D2FF2F869317AB4E7605CB20047F37571BC8A80979D792FB0D976F67A08A7`
+>    - 已 GitHub API 验证：两个 asset 的 `sha256` digest 与本表完全一致
 
 ---
 
@@ -216,7 +222,7 @@
 - [ ] 桌面 1440 / 1024 / 768 三档宽度无横向滚动
 - [ ] 移动端 375 宽度：汉堡菜单可打开/收起，火箭视觉降级为顶部装饰
 - [ ] 顶栏所有锚点点击跳转平滑
-- [ ] 「下载 v0.1.3」「Star」CTA 链接可达（当前指向 `ProClips/Rokit`，若未替换则为预期失败）
+- [ ] 「下载 v0.1.3」「Star」CTA 链接可达（**2026-09-25 晚已验证全部 302/200 成功**，仓库已切换到 `MatuX-ai/Rokit`）
 - [ ] OG 卡：在 [https://www.opengraph.xyz/](https://www.opengraph.xyz/) 输入 URL 验证 og:image 拉取成功
 - [ ] Twitter Card Validator：`https://cards-dev.twitter.com/validator` 验证
 - [ ] 结构化数据：[https://search.google.com/test/rich-results](https://search.google.com/test/rich-results) 验证 SoftwareApplication 解析通过
