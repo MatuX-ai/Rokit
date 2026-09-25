@@ -18,6 +18,17 @@
 - **移除“1.5 规划中”提示卡**：v1.5 交付后移除 dashboard 顶部占位卡，提示改为常规文案
 - **单测覆盖**（tests/*.test.js）新增 6 个测试文件 · 130 用例：secrets (12) / queue (17) / feedback-analyzer (29) / feedback-collector (26) / recorder (12) / video (7)；另修复 llm.test.js 中“缺 api_key 仍发空 Bearer”的旧行为 → 改为主动抛中文提示错
 
+### Fixed (首秀向导文案 / 渲染管线加固)
+- **首条欢迎语泄漏 HTML 字面字符**：原写法 `pushAI('你好<br>把作品交给我——<b>文案</b>')` 会过 `miniMd()` 转义，变成 `&lt;br&gt;&lt;b&gt;...` 显示给用户。改为 markdown 写法（`\n` 转 `<br>`，`**文本**` 转 `<b>`），并加注释提醒“不能直接写 HTML 标签”
+- **渲染管线分化：原生 HTML 通道 `pushAIHtml`**：新增 `pushAIHtml(t)` 入栈函数，会给消息加 `html:true` 标记。`renderFlow` 按 `m.html` 分叉：标记为 `true` 的原 HTML 跳过 `miniMd` 转义。动态数据由调用方自己 `esc()` 负责转义
+- **“发射成功”卡片**改用 `pushAIHtml`：依赖原生 HTML 结构（`.launch-wrap` 居中布局 + `.launch-rocket` 脉冲动画 + 嵌入 button）。原写法会被 miniMd 转义为字面源码
+- **同类 bug 全面修复**（均同样原因：HTML 标签经 miniMd 转义后丢失）：
+  - L3902：确认作品类型后的“打字机三点动画” `<span class="typing">` —— 改 `pushAIHtml`
+  - L5119：切换作品时重放的“打字机三点动画” —— 消息对象加 `html:true`
+  - L3844：填入 GitHub 链接后的“抓取结果卡片” `<div class="grab-card">` —— 改 `pushAIHtml`
+- **XSS 修复**：两处 AI 消息拼接用户可控的 `w.name` 作品名时未 `esc()`，恶意作品名（如含 `<script>`）可注入 HTML —— L5100、L5190 两处补 `esc(w.name)`
+- **单测覆盖**新增 `tests/render-flow.test.js` · 28 用例：`miniMd` 转义 / markdown 转换（11）、`pushAI` / `pushAIHtml` 入栈语义（3）、`render` 分叉渲染（6）、回归保护（5：欢迎语修复前后、发射成功、打字机、抓取卡片）、`esc` 基础（3）。测试直接从 `index.html` 提取函数体，零新依赖（不引 happy-dom / jsdom）
+
 ### Planned (MVP 2.0 · 后续推进)
 - 数据导出 / 导入
 - Remotion 服务端渲染拆条 / 成片
