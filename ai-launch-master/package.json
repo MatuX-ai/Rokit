@@ -23,6 +23,11 @@
   },
   "author": "ProClips+",
   "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "ffmpeg-static": "^5.2.0",
+    "keytar": "^7.9.0"
+  },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "electron": "^36.9.5",
@@ -50,10 +55,17 @@
       "!**/.preview/**",
       "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
       "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!**/node_modules/keytar/{build,src}",
+      "!**/node_modules/ffmpeg-static/{install.js,types}",
+      "!**/node_modules/.bin",
       "!**/*.{md,markdown}",
       "!**/*.{map,ts}"
     ],
     "asar": true,
+    "asarUnpack": [
+      "node_modules/keytar/**/*",
+      "node_modules/ffmpeg-static/**/*"
+    ],
     "win": {
       "icon": "build/icon.ico",
       "target": [
