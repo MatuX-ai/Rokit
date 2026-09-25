@@ -1,7 +1,17 @@
 // Rokit · BYOK LLM 接入层（OpenAI 兼容 Chat Completions）
 // 支持 DeepSeek / OpenAI / 通义 / 本地 Ollama / LM Studio 等任意兼容端点
+//
+// v1.5 起：API Key 不再依赖 settings.api_key（明文），改为由 secrets.getApiKey()
+// 从 OS 凭据管理器（Windows = DPAPI 加密）读取。settings 仅保留 base_url / model。
 
 const DEFAULT_TIMEOUT_MS = 30000;
+
+let secretsModule = null;
+try {
+  secretsModule = require('./secrets');
+} catch (_e) {
+  // secrets 模块加载失败：仅作降级提示，chatComplete 仍按无 Key 处理
+}
 
 // 带超时的 fetch 工具
 async function fetchWithTimeout(url, opt, ms) {
@@ -15,12 +25,24 @@ async function fetchWithTimeout(url, opt, ms) {
 }
 
 async function chatComplete(settings, req) {
-  const base = String(settings.base_url || '').replace(/\/+$/, '');
-  const model = settings.model || 'deepseek-chat';
+  const base = String((settings && settings.base_url) || '').replace(/\/+$/, '');
+  const model = (settings && settings.model) || 'deepseek-chat';
   const url = base ? base + '/chat/completions' : 'https://api.deepseek.com/v1/chat/completions';
-  const timeout = typeof settings.timeout === 'number' && settings.timeout > 0
+  const timeout = typeof settings === 'object' && settings && typeof settings.timeout === 'number' && settings.timeout > 0
     ? settings.timeout
     : DEFAULT_TIMEOUT_MS;
+
+  // v1.5：API Key 从 secrets（OS 凭据管理器）读取；settings.api_key 已废弃但保留兼容。
+  let apiKey = '';
+  if (secretsModule && typeof secretsModule.getApiKey === 'function') {
+    try {
+      apiKey = (await secretsModule.getApiKey()) || '';
+    } catch (_e) {
+      // 凭据读取失败不抛，降级到 settings.api_key（仅限显式传入，UI 通常为空）
+    }
+  }
+  if (!apiKey && settings && settings.api_key) apiKey = settings.api_key;
+  if (!apiKey) throw new Error('未配置 API Key，请在右上角设置中填写（v1.5 起 Key 仅存于本机 OS 凭据管理器）');
 
   let res;
   try {
@@ -28,7 +50,7 @@ async function chatComplete(settings, req) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + (settings.api_key || '')
+        'Authorization': 'Bearer ' + apiKey
       },
       body: JSON.stringify({
         model,

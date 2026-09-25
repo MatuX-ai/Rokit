@@ -39,7 +39,7 @@ describe('llm.chatComplete · URL 拼接', () => {
     expect(fetchMock.mock.calls[0][0]).toBe('https://api.deepseek.com/v1/chat/completions');
   });
 
-  it('缺 api_key 时仍能发起请求（主进程层负责拦截）', async () => {
+  it('缺 api_key 时应主动抛错（v1.5：避免发送空 Bearer 后被 401 迷惑）', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ choices: [{ message: { content: 'ok' } }] })
@@ -47,12 +47,11 @@ describe('llm.chatComplete · URL 拼接', () => {
     globalThis.fetch = fetchMock;
 
     const { chatComplete } = require('../electron/llm');
-    await chatComplete(
+    await expect(chatComplete(
       { base_url: 'https://api.deepseek.com/v1', api_key: '', model: 'm' },
       { messages: [{ role: 'user', content: 'hi' }] }
-    );
-    const headers = fetchMock.mock.calls[0][1].headers;
-    expect(headers.Authorization).toBe('Bearer ');
+    )).rejects.toThrow(/未配置 API Key/);
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });
 

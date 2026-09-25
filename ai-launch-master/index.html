@@ -238,6 +238,10 @@
 
   .cfg-plat-item{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12.5px;cursor:pointer;background:#fff}
 
+  /* v1.5: GitHub PAT 输入框下方状态提示 */
+  .cfg-pat-hint{font-size:11.5px;color:var(--muted);margin-top:4px;padding-left:2px}
+  .cfg-pat-hint.ok{color:var(--success);font-weight:600}
+
   .rocket-bar{margin:12px 0;padding:12px 14px;border:1px solid #BFE0DC;border-radius:12px;background:#EFF9F7}
 
   .rocket-sub{font-size:12px;color:var(--muted);margin-top:6px}
@@ -754,7 +758,7 @@
 
     </div>
 
-    <div class="navtab"><button id="tabFlow" class="on" onclick="go('flow')">首秀向导</button><button id="tabDash" data-coming="1.5" data-coming-label="MVP 1.5" onclick="go('dashboard')">数据看板<span class="coming-badge">1.5</span></button><button id="tabChannels" onclick="go('channels')">推广渠道</button><button id="tabWorks" onclick="go('works')">我的作品</button></div>
+    <div class="navtab"><button id="tabFlow" class="on" onclick="go('flow')">首秀向导</button><button id="tabDash" onclick="go('dashboard')">数据看板</button><button id="tabChannels" onclick="go('channels')">推广渠道</button><button id="tabWorks" onclick="go('works')">我的作品</button></div>
 
     <div style="display:flex;align-items:center;gap:8px">
 
@@ -806,14 +810,7 @@
     <section data-route="dashboard" style="display:none">
 
       <div class="dash">
-        <!-- v1 看板为占位：默认初始数据真实为 0；当前页同步提示规划中 -->
-        <div class="dash-coming" id="dashComingNotice">
-          <div class="dc-icon">⚙</div>
-          <div class="dc-body">
-            <div class="dc-title">数据看板 · MVP 1.5 规划中</div>
-            <div class="dc-sub">下方 4 个 KPI、渠道发布次数、里程碑报喜、发布回填均来源于本机的真实推广动作；完成首次发布后会自动回填。<b>外部曝光、Star、下载量等需接入统计服务</b>（MVP 1.5 上线）。</div>
-          </div>
-        </div>
+        <!-- v1.5 上线：4 个 KPI / 渠道发布次数 / 里程碑报喜 / 发布回填均来自本机真实推广动作；外部统计仍是占位 -->
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
           <div style="font-size:11px;color:var(--muted);letter-spacing:.4px">看板 · 真实数据</div>
           <span id="dashSourceTag" style="background:rgba(14,124,123,.12);color:var(--primary);padding:2px 8px;border-radius:10px;font-size:10.5px;font-weight:600">本地回填 · 未接统计服务</span>
@@ -970,6 +967,14 @@
       <div class="field"><label>API Key</label><input id="cfgKey" type="password" placeholder="sk-..." autocomplete="off"/></div>
 
       <div class="field"><label>模型名</label><input id="cfgModel" placeholder="deepseek-chat" autocomplete="off"/></div>
+
+      <div class="cfg-sep"></div>
+
+      <div class="cfg-title">GitHub 发布（可选）</div>
+
+      <div class="msub">填入 GitHub Personal Access Token（需 <code>repo</code> 作用域）后，推广页可一键调用 L1 直发路径创建 Release。<b>PAT 只写入本机 OS 凭据管理器，不上传任何服务器。</b></div>
+
+      <div class="field"><label>GitHub PAT</label><input id="cfgGithubPat" type="password" placeholder="ghp_..." autocomplete="off"/><div class="cfg-pat-hint" id="cfgGithubPatHint">未配置</div></div>
 
       <div class="cfg-sep"></div>
 
@@ -1322,22 +1327,36 @@
 
   function hasApi(){return !!(state.settings&&state.settings.api_key);}
 
+  // v1.5：按 OS 凭据管理器真实状态更新顶部 byok-chip，未配置 Key 时明确提示
   function noteModel(){
-
     var el=document.getElementById('byokChip');if(!el)return;
-
-    el.textContent=hasApi()?'● '+(state.settings.model||'模型'):'● 未配置 API';
-
-    el.className='byok-chip'+(hasApi()?' ok':'');
-
+    if(window.api && typeof window.api.secretsStatus==='function'){
+      window.api.secretsStatus().then(function(st){
+        if(!el)return;
+        var hasKey = !!(st && st.hasApiKey) || hasApi();
+        var hasPat = !!(st && st.hasGithubPat);
+        var label = hasKey ? ('● '+(state.settings.model||'模型')+(hasPat?' + GitHub':'')) : '● 未配置 API（点此填 Key）';
+        el.textContent = label;
+        el.className='byok-chip'+(hasKey?' ok':'');
+      }).catch(function(){});
+    }else{
+      el.textContent=hasApi()?'● '+(state.settings.model||'模型'):'● 未配置 API';
+      el.className='byok-chip'+(hasApi()?' ok':'');
+    }
   }
 
+  // v1.5：api_key 写入 OS 凭据管理器（不再依赖明文）
   function persistSettings(){
-
-    if(window.api){window.api.saveSettings(state.settings).catch(function(){});}
-
-    else{try{localStorage.setItem('alm_settings',JSON.stringify(state.settings));}catch(e){}}
-
+    var key=(state.settings && state.settings.api_key)||'';
+    if(window.api){
+      window.api.saveSettings(state.settings).catch(function(){});
+      if(typeof window.api.secretsSetApiKey==='function'){
+        if(key){window.api.secretsSetApiKey(key).catch(function(){});}
+        else if(typeof window.api.secretsClearApiKey==='function'){
+          window.api.secretsClearApiKey().catch(function(){});
+        }
+      }
+    }else{try{localStorage.setItem('alm_settings',JSON.stringify(state.settings));}catch(e){}}
   }
 
   // 根据当前 base_url 匹配出默认 provider（用户也可在弹窗里手动选择自定义）
@@ -1395,6 +1414,19 @@
     document.getElementById('cfgKey').value=state.settings.api_key||'';
 
     document.getElementById('cfgModel').value=state.settings.model||'';
+
+    // v1.5：GitHub PAT 仅写 OS 凭据管理器，输入框始终留空（防泄露）；下方追加状态提示
+    var patEl=document.getElementById('cfgGithubPat');if(patEl)patEl.value='';
+    var patHint=document.getElementById('cfgGithubPatHint');
+    if(patHint){
+      patHint.textContent='未配置';patHint.className='cfg-pat-hint';
+      if(window.api && typeof window.api.secretsStatus==='function'){
+        window.api.secretsStatus().then(function(st){
+          if(!patHint)return;
+          if(st && st.hasGithubPat){patHint.textContent='● 已配置（输入新值将覆盖，留空则清除）';patHint.className='cfg-pat-hint ok';}
+        }).catch(function(){});
+      }
+    }
 
     document.getElementById('cfgStatus').innerHTML='';
 
@@ -1499,6 +1531,18 @@
     document.querySelectorAll('#cfgPlatList input[data-pid]').forEach(function(inp){ap.platforms[inp.getAttribute('data-pid')]=inp.checked;});
 
     state.settings={provider:state.settings.provider||matchProviderId(),base_url:document.getElementById('cfgBase').value.trim()||'https://api.deepseek.com/v1',api_key:document.getElementById('cfgKey').value.trim(),model:document.getElementById('cfgModel').value.trim()||'deepseek-chat',autoPub:ap};
+
+    // v1.5：GitHub PAT 单独走 OS 凭据管理器（不入 settings JSON）
+    if(window.api){
+      var patInput=document.getElementById('cfgGithubPat');
+      var pat=patInput?(patInput.value||'').trim():'';
+      if(typeof window.api.secretsSetGithubPat==='function'){
+        if(pat){window.api.secretsSetGithubPat(pat).catch(function(){});}
+        else if(typeof window.api.secretsClearGithubPat==='function'){
+          window.api.secretsClearGithubPat().catch(function(){});
+        }
+      }
+    }
 
     persistSettings();noteModel();closeSettings();
 
@@ -2983,12 +3027,7 @@
     state.kpis.pub = (state.pubLog || []).length;
     state.kpis.channelsEnabled = Object.keys(state.platforms || {}).filter(function(k){return state.platforms[k];}).length;
 
-    // 顶部"1.5 规划中"提示卡：发生真实发布后弱化变 .is-live
-    var dc = document.getElementById('dashComingNotice');
-    if (dc) {
-      if (state.kpis.pub > 0) dc.classList.add('is-live'); else dc.classList.remove('is-live');
-    }
-
+    // v1.5：顶部"规划中"提示卡已下线，仅保留 KPI / 回填逻辑
     var elKpiPub = document.getElementById('kpiPub');
     if (elKpiPub) elKpiPub.textContent = state.kpis.pub;
     var elKpiCh = document.getElementById('kpiChannels');
