@@ -3011,6 +3011,11 @@
 
   function pushAI(t){state.messages.push({role:'ai',text:t});}
 
+  // v1.5 UX：原生 HTML 通道（补丁）
+  // 某些 AI 消息依赖原生 HTML 结构（圆形脉冲图标、嵌入按钮等），不能走 miniMd 转义。
+  // html:true 的消息在 renderFlow 里跳过 miniMd；动态数据由调用方自己 esc() 负责转义。
+  function pushAIHtml(t){state.messages.push({role:'ai',text:t,html:true});}
+
   function pushUser(t){state.messages.push({role:'user',text:t});}
 
   // v1.5 UX：聊天思考状态骨架（任务 13）
@@ -3153,7 +3158,11 @@
 
     var body=document.getElementById('chatBody'),html='';
 
-    state.messages.forEach(function(m){html+=(m.role==='ai')?msgAI(miniMd(m.text)):msgUser(miniMd(m.text));});
+    state.messages.forEach(function(m){
+      // v1.5 UX：html:true 的消息是 pushAIHtml 推送的原 HTML，直接渲染、跳过 miniMd 转义。
+      var rendered = m.html ? m.text : miniMd(m.text);
+      html += (m.role==='ai') ? msgAI(rendered) : msgUser(rendered);
+    });
 
     html+='<div class="ctrl" id="ctrlBox"></div>';
 
@@ -3832,7 +3841,9 @@
 
       html+='</div>';
 
-      pushAI(html);
+      // 「抓取卡片」依赖原生 HTML 结构（<div class="grab-card">），不走 miniMd。
+      // 动态数据（meta.title / description / stars / topics）在 html 拼接处已 esc。
+      pushAIHtml(html);
 
       renderFlow();
 
@@ -3890,7 +3901,8 @@
 
     pushUser(state.project.type);
 
-    pushAI('正在为《'+esc(state.project.name||'你的作品')+'》生成诊断……<span class="typing"><i></i><i></i><i></i></span>');
+    // 「打字机三点」依赖原生 HTML 结构（<span class="typing"><i>），不走 miniMd。
+    pushAIHtml('正在为《'+esc(state.project.name||'你的作品')+'》生成诊断……<span class="typing"><i></i><i></i><i></i></span>');
 
     state.step=4;renderRail();
 
@@ -4311,7 +4323,9 @@
 
     var list=doneIds.map(function(id){return esc(pf(id).name);}).join('、');
 
-    state.messages.push({role:'ai',text:'<div class="launch-wrap"><div class="launch-rocket"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l2.2 5.3L20 10l-5.8 1.7L12 17l-2.2-5.3L4 10l5.8-1.7L12 3z" fill="#fff"/><circle cx="19" cy="18" r="2.4" fill="#FDE68A"/></svg></div><div style="font-size:16px;font-weight:700">发射成功</div><div style="font-size:13px;color:#5A6B72;margin-top:4px">《'+esc(state.project.name||'你的作品')+'》已发布到 '+doneIds.length+' 个平台：'+list+'。数据已回填看板，AI 大师会持续采集反馈。</div><div style="margin-top:12px"><button class="btn" onclick="go(\'dashboard\')">查看数据看板</button></div></div>'});
+    // 「发射成功」依赖原生 HTML 结构（圆形脉冲图标 + 居中布局 + 嵌入按钮），不走 miniMd。
+    // 动态数据已由 esc() 转义，原生标签直接渲染。
+    pushAIHtml('<div class="launch-wrap"><div class="launch-rocket"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l2.2 5.3L20 10l-5.8 1.7L12 17l-2.2-5.3L4 10l5.8-1.7L12 3z" fill="#fff"/><circle cx="19" cy="18" r="2.4" fill="#FDE68A"/></svg></div><div style="font-size:16px;font-weight:700">发射成功</div><div style="font-size:13px;color:#5A6B72;margin-top:4px">《'+esc(state.project.name||'你的作品')+'》已发布到 '+doneIds.length+' 个平台：'+list+'。数据已回填看板，AI 大师会持续采集反馈。</div><div style="margin-top:12px"><button class="btn" onclick="go(\'dashboard\')">查看数据看板</button></div></div>');
 
     state.step=13;renderRail();renderFlow();
 
@@ -5085,7 +5099,8 @@
 
     var n=(w.name||'').trim(),it=(w.intro||'').trim(),tp=(w.type||'').trim();
 
-    var msgs=[{role:'ai',text:'好，切换到《'+w.name+'》'+(w.status==='待启动'?'。它还没开始推广，我们从零做起。':'，我们接着上次的进度继续。')}];
+    // XSS 防御：w.name 来自用户输入，必须 esc（作品名里含特殊字符会破环渲染 / 注入 HTML）。
+    var msgs=[{role:'ai',text:'好，切换到《'+esc(w.name)+'》'+(w.status==='待启动'?'。它还没开始推广，我们从零做起。':'，我们接着上次的进度继续。')}];
 
     var step=0;
 
@@ -5105,7 +5120,8 @@
 
           msgs.push({role:'user',text:tp});
 
-          msgs.push({role:'ai',text:'正在为《'+esc(n)+'》生成诊断……<span class="typing"><i></i><i></i><i></i></span>'});
+          // 「打字机三点」依赖原生 HTML 结构，加 html:true 跳过 miniMd 转义。
+          msgs.push({role:'ai',html:true,text:'正在为《'+esc(n)+'》生成诊断……<span class="typing"><i></i><i></i><i></i></span>'});
 
           step=4;
 
@@ -5176,7 +5192,8 @@
         state.step=0;
         state.rec={running:false,blob:null,url:null,dur:0,stepIdx:0};
         state.shots=null;state.copies={};state.plan=defaultPlan();
-        if(state.curWork){pushAI('作品《'+w.name+'》已删除。');}
+        // XSS 防御：w.name 来自用户输入，必须 esc。
+        if(state.curWork){pushAI('作品《'+esc(w.name)+'》已删除。');}
       }
       if(window.api){window.api.deleteWork(id).catch(function(){});}
       // v1.5 UX：toast 带撤销 action（任务 21）
@@ -5471,7 +5488,9 @@
   /* ===== 初始化 ===== */
 
   // 首条欢迎语（v0.1.1）：说人话 + 指出下一步入口
-  pushAI('你好，我是 Rokit。<br>把作品交给我——<b>文案、配音、填表发布、反馈采集</b>，我帮你接管。<br><br>下面我已经摆了 4 个示例作品供你参考。<b>点下方任意一张卡片里的「以此为模板」按钮</b>，或点 “+ 登记新作品” 开始你的第一个首秀。');
+  // 注意：miniMd 会先做 HTML 转义，所以这里必须用 markdown（\n / **）写法，
+  // 不能直接写 <br> / <b> 等 HTML 标签——否则会被原样显示成字面字符。
+  pushAI('你好，我是 Rokit。\n把作品交给我——**文案、配音、填表发布、反馈采集**，我帮你接管。\n\n下面我已经摆了 4 个示例作品供你参考。**点下方任意一张卡片里的「以此为模板」按钮**，或点 “+ 登记新作品” 开始你的第一个首秀。');
 
   loadStored().then(seedWorks).then(loadPubs).then(loadChannels).then(function(){
 
