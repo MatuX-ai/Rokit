@@ -1,4 +1,10 @@
-// Rokit · Electron 主进程
+// Rokit · Electron 主进程（v1.5）
+// v1.5 增量：
+//   - 凭据：secrets（keytar）+ 明文 API Key 一次性迁移
+//   - 主推队列：queue.schedule() 启动时跑一次
+//   - 反馈：collectForWork + analyzeForWork
+//   - 录制 / 视频：recorder + video IPC
+//   - 推广渠道扩展：checkHealth + GitHub L1 直发
 const { app, BrowserWindow, ipcMain, shell, Menu, session } = require('electron');
 const path = require('path');
 const fs = require('fs');
@@ -6,6 +12,15 @@ const { Store } = require('./store');
 const { chatComplete } = require('./llm');
 const { adapters } = require('./publishers');
 const logger = require('./logger');
+
+// v1.5 新增模块
+const secrets = require('./secrets');
+const queue = require('./queue');
+const collector = require('./feedback-collector');
+const analyzer = require('./feedback-analyzer');
+const recorder = require('./recorder');
+const video = require('./video');
+const pubex = require('./publisher-extensions');
 
 // 尽早安装全局异常兜底（在 app.whenReady 之前也要能捕获）
 logger.installGlobalHandlers({ stage: 'pre-app-ready' });
@@ -100,12 +115,151 @@ ipcMain.handle('channels:test', async (_e, payload) => {
   }
 });
 
+// v1.5：渠道健康度批量探测（涵盖内置平台 + 自定义 webhook）
+ipcMain.handle('channels:health', async (_e, channels) => {
+  try { return await pubex.checkAllHealth(channels || store.listChannels()); }
+  catch (e) { return { _error: String((e && e.message) || e) }; }
+});
+
 ipcMain.handle('llm:generate', async (_e, req) => {
+  // v1.5：不再依赖 settings.api_key；llm.chatComplete 内部已统一走 secrets
   const settings = store.getSettings();
-  if (!settings.api_key) throw new Error('未配置 API Key，请先在右上角设置中填写');
   return chatComplete(settings, req);
 });
 
+// ============================================================
+// v1.5 新增 IPC：secrets / queue / feedback / recorder / video / github-release
+// ============================================================
+
+// ---------- 凭据 ----------
+ipcMain.handle('secrets:set-api-key', async (_e, value) => {
+  if (!value) return { ok: false, error: 'empty-key' };
+  const persisted = await secrets.setApiKey(String(value));
+  // 清掉 SQLite 明文（写入凭据管理器后就不再需要）
+  if (store && typeof store.clearPlaintextApiKey === 'function') {
+    try { store.clearPlaintextApiKey(); } catch (_e) {}
+  }
+  return { ok: true, persisted: !!persisted };
+});
+
+ipcMain.handle('secrets:clear-api-key', async () => {
+  await secrets.clearApiKey();
+  return { ok: true };
+});
+
+ipcMain.handle('secrets:status', async () => {
+  const hasNative = secrets.hasNative();
+  const apiKey = await secrets.getApiKey();
+  const githubPat = await secrets.getGithubPat();
+  return {
+    hasNative: hasNative,
+    hasApiKey: !!apiKey,
+    hasGithubPat: !!githubPat,
+    keytarError: secrets._keytarError ? String(secrets._keytarError().message || secrets._keytarError() || '') : ''
+  };
+});
+
+ipcMain.handle('secrets:set-github-pat', async (_e, value) => {
+  if (!value) return { ok: false, error: 'empty-pat' };
+  const persisted = await secrets.setGithubPat(String(value));
+  return { ok: true, persisted: !!persisted };
+});
+
+ipcMain.handle('secrets:clear-github-pat', async () => {
+  await secrets.clearGithubPat();
+  return { ok: true };
+});
+
+ipcMain.handle('secrets:migrate-plaintext', async () => {
+  return secrets.migratePlaintextApiKey(store);
+});
+
+// ---------- 主推队列 ----------
+ipcMain.handle('queue:schedule', async () => {
+  try { return await queue.schedule(store); }
+  catch (e) { return { error: String((e && e.message) || e) }; }
+});
+
+// ---------- 反馈：采集 + 分析 ----------
+ipcMain.handle('feedback:collect', async (_e, payload) => {
+  if (!payload || !payload.work) return { ok: false, error: 'no-work' };
+  try {
+    const r = await collector.collectForWork(payload.work, payload.opts || {});
+    if (r.items && r.items.length && store && typeof store.upsertFeedback === 'function') {
+      const n = store.upsertFeedback(r.items);
+      return { ok: true, inserted: n, notes: r.notes || {} };
+    }
+    return { ok: true, inserted: 0, notes: r.notes || {} };
+  } catch (e) {
+    return { ok: false, error: String((e && e.message) || e) };
+  }
+});
+
+ipcMain.handle('feedback:analyze', async (_e, payload) => {
+  if (!payload || !payload.workId) return { ok: false, error: 'no-work-id' };
+  try {
+    const r = await analyzer.analyzeForWork(store, payload.workId, {
+      llm: function (req) { return chatComplete(store.getSettings(), req); },
+      maxItems: payload.maxItems || 100,
+      clusterThreshold: payload.clusterThreshold
+    });
+    return { ok: true, clusters: r.clusters.length, updated: r.updated };
+  } catch (e) {
+    return { ok: false, error: String((e && e.message) || e) };
+  }
+});
+
+ipcMain.handle('feedback:list', (_e, payload) => {
+  if (!store || typeof store.listFeedback !== 'function') return [];
+  return store.listFeedback(payload && payload.workId);
+});
+
+ipcMain.handle('feedback:list-clusters', (_e, payload) => {
+  if (!store || typeof store.listFeedbackClusters !== 'function') return [];
+  return store.listFeedbackClusters(payload && payload.workId);
+});
+
+ipcMain.handle('feedback:summarize', (_e, payload) => {
+  return analyzer.summarizeForIpc(store, payload && payload.workId);
+});
+
+// ---------- 录制 ----------
+recorder.attachIpc(ipcMain);
+
+// ---------- 视频处理 ----------
+video.attachIpc(ipcMain);
+
+// ---------- GitHub L1 直发 ----------
+ipcMain.handle('github:create-release', async (_e, opts) => {
+  if (!opts) return { ok: false, error: 'no-opts' };
+  const token = await secrets.getGithubPat();
+  if (!token) return { ok: false, error: 'missing-github-pat' };
+  try {
+    return await pubex.githubCreateRelease(token, opts);
+  } catch (e) {
+    return { ok: false, error: String((e && e.message) || e) };
+  }
+});
+
+ipcMain.handle('github:probe', async () => {
+  // 仅验证凭据是否有效（用 /user 端点）
+  const token = await secrets.getGithubPat();
+  if (!token) return { ok: false, error: 'missing-github-pat' };
+  try {
+    const res = await fetchWithTimeout('https://api.github.com/user', {
+      headers: {
+        'Authorization': 'token ' + token,
+        'Accept': 'application/vnd.github+json',
+        'User-Agent': 'Rokit-L1/1.5'
+      }
+    }, 9000);
+    if (!res.ok) return { ok: false, status: res.status, error: res.status === 401 ? 'PAT 失效或权限不足' : ('HTTP ' + res.status) };
+    const j = await res.json().catch(function () { return null; });
+    return { ok: true, login: j && j.login, avatar: j && j.avatar_url };
+  } catch (e) {
+    return { ok: false, error: String((e && e.message) || e) };
+  }
+});
 
 // ---------- 作品信息抓取（GitHub 仓库 / 普通网址） ----------
 function decodeHtml(v) {
@@ -240,6 +394,21 @@ app.whenReady().then(() => {
   try { logger.init(app.getPath('userData')); logger.info('app ready', { version: app.getVersion() }); } catch (_e) {}
   store = new Store(path.join(app.getPath('userData'), 'ai-launch-master.db'));
   createWindow();
+
+  // v1.5：应用启动后自动跑一次主推队列选择
+  try {
+    queue.schedule(store).then(function (r) {
+      if (r && r.main) logger.info('[queue] main selected', { main: r.main, demoted: r.demoted, promoted: r.promoted });
+    }).catch(function (e) { logger.warn('[queue] schedule failed', { error: String((e && e.message) || e) }); });
+  } catch (_e) {}
+
+  // v1.5：检测到 SQLite 里仍有明文 API Key 时，自动后台迁移（不阻塞 UI）
+  try {
+    secrets.migratePlaintextApiKey(store).then(function (m) {
+      if (m && m.migrated) logger.info('[secrets] plaintext migration', m);
+    }).catch(function (e) { logger.warn('[secrets] migration failed', { error: String((e && e.message) || e) }); });
+  } catch (_e) {}
+
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
