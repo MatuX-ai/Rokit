@@ -13,14 +13,27 @@
 - **`window:maximize-changed` 与 `windowIsMaximized` 双轨同步竞态**（[electron/main.js](electron/main.js)）：`push()` 加 `lastIsMax` 去重；删除冗余的 `did-finish-load` 推送（渲染端已在初始化时主动查询过），避免 aria-label / icon 闪烁
 
 ### Changed (桌面端品牌资产与营销站对齐)
-- **顶栏 logo 换成极简火箭 SVG**（[index.html](index.html)）：与 `web/public/favicon.svg` 统一品牌调色板（`#94D4D0→#0E7C7B` 主体 / `#0a0e14+#4DD0E1` 舷窗 / `#F472B6→#8B5CF6` 尾焰 / `#1F9C9A` 翼）
+- **顶栏 logo 换成极简火箭 SVG**（[index.html](index.html)）：与 `web/public/favicon.svg` 统一品牌调色板（`#94D4D0→#0E7C7B` 主体 / `#0a0e14+#4DD0E1` 舱窗 / `#F472B6→#8B5CF6` 尾焰 / `#1F9C9A` 翼）
 - **`assets/logo.svg` 作为统一品牌源**：从 `web/public/favicon.svg` 复制，同一资产被顶栏 logo / ICO 生成脚本共同引用，避免 3 处独立实现发散
 - **`assets/icon.png` + `icon-light.png` 重新生成**（[scripts/IconRenderer.cs](scripts/IconRenderer.cs)）：1024×1024 双版本（深色 / 亮色背景），与 favicon 矢量风格一致；`build/icon.ico` 同步重新生成（多尺寸收敛）
-- **PowerShell 脚本参数化**（[scripts/render-icon.ps1](scripts/render-icon.ps1)）：新增 `-CscPath` / `-Root` 参数；csc.exe 路径从硬编码改成 `-CscPath` → `%WINDIR%\Framework64\v4.0.30319` → `%ProgramFiles%\dotnet\sdk\*\Roslyn\bincore` 三级自动 fallback；编译 `/ 使用 $LASTEXITCODE` 判断（不再依赖 Test-Path），失败明确退出码 + 中文提示
+- **PowerShell 脚本参数化**（[scripts/render-icon.ps1](scripts/render-icon.ps1)）：新增 `-CscPath` / `-Root` 参数；csc.exe 路径从硬编码改成 `-CscPath` → `%WINDIR%\Framework64\v4.0.30319` → `%ProgramFiles%\dotnet\sdk\*\Roslyn\bincore` 三级自动 fallback；编译 / 使用 $LASTEXITCODE` 判断（不再依赖 Test-Path），失败明确退出码 + 中文提示
 - **WPF 资源释放修正**（[scripts/IconRenderer.cs](scripts/IconRenderer.cs)）：`RenderTargetBitmap` / `PngBitmapEncoder` / `BitmapFrame` 不实现 IDisposable（原评审基于错误假设），改用 `Render + Freeze()` 加快 GC finalizer 回收；`FileStream` 仍 `using` 包裹。`System.Windows.Shapes.Path` 与 `System.IO.Path` 的歧义以 `using Path = System.Windows.Shapes.Path;` 别名彻底解决
 
 ### Added (无障碍)
 - **`.wc-btn:focus-visible` 焦点环**（[index.html](index.html)）：全局 `:focus-visible{outline:none}` 会抹掉窗口控制按钮焦点环，改为 `.wc-btn:focus-visible{outline:2px solid var(--primary);outline-offset:-2px}`；`.wc-close` 额外覆盖 `outline-color:var(--danger)`。键盘用户 Tab 聚焦后可见反馈，符合 WCAG 2.4.7
+
+### Web 站（2026-09-26 增量 · 跟随本版本发版）
+- **版本号全站对齐 v0.1.5**：`web/package.json` version / description 同步；`Nav.astro` / `Hero.astro` / `Download.astro` `const version` 与 `Layout.astro` JSON-LD `softwareVersion` 统一为 `0.1.5`，CI 校验范围从仅 Nav.astro 扩展至全量（避免某一处漂移被漏检）
+- **GitHub L1 直发正式上线**：v0.1.4 起 GitHub Release API 直发能力已上线；`Platforms.astro` 中 GitHub 标记为 L1（仅 GitHub，在 audit-ux.js 白名单内），其余 12 平台仍强制 L2（浏览器自动填表）。同步更新 `audit-ux.js` §3：原“全部平台禁用 L1”改为“仅 GitHub 可标 L1（白名单机制）”，避免 v0.1.4 能力上线后被误判
+- **其他平台 ETA 修正**：`Download.astro` 中 `macOS / Linux` 从过期的 “MVP 1.5 · 约 2 个月” 改为 “MVP 2.0 · 预计 2026 Q4”；`Faq.astro` 同步；从 RoadMap 已有的 MVP 2.0 路线保持一致
+- **JSON-LD / OG / Hero 版本号一致**：Download.astro 下载按钮链接与 JSON-LD `softwareVersion` 同步为 `v0.1.5`；`generate-og.mjs` 参数化版本号（默认读 `ai-launch-master/package.json`），避免未来发版 OG 图需手工改
+- **Sitemap lastmod 同步**：`public/sitemap.xml` lastmod 从 2026-09-25 更新到 2026-09-26，与部署日一致；CI `web-ci.yml` 仍保留 180 天陈旧警告机制
+- **Footer 年份合并**：构建年与起始年相同时不再输出 “2026–2026” 冗余连字符，仅当年起始才输出
+- **v0.1.5 GitHub Release SHA256 溯源**（同步随本次发版合并·本表为官方源）：
+  - NSIS:    `FD6F07195940B92C31734022B68C61F2BB72638B2D0BBB13B8DD480402C18C6C`
+  - Portable: `00CEB007C168647D3AA4FFAB876450E668B8246C5D9FD03677C5976934228B48`
+  - 描述说明：`Download.astro` 中 SHA256 为本次重打后复检值；用户可 `Get-FileHash .\Rokit-0.1.5-{x64,portable}.exe -Algorithm SHA256` 校验；与 GitHub Release `v0.1.5` asset `digest` 完全一致（产线下于 2026-09-26 21:30 拉取 GitHub Releases API 交叉验证）
+- **营销站点 web/README.md “占位待替换项”表改写为 v0.1.6 backlog**：原 v0.1.3 部署期占位记录中“应用截图 / OG 图”已于 v0.1.4 补完，“Astro 5.x 漏洞”仍在 v0.1.5 风险豁免状态（未升级 Astro 7.x）；表重命名并仅保留 v0.1.6 backlog，避免误导后续维护者
 
 ## [0.1.4] - 2026-09-25
 
