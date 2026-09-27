@@ -10,8 +10,11 @@
  *   调换顺序会导致汉堡菜单打不开 / 收不回。
  */
 const githubUrl = 'https://github.com/MatuX-ai/Rokit';
-const releaseUrl = 'https://github.com/MatuX-ai/Rokit/releases/latest';
 const version = '0.1.5'; // 与 ai-launch-master/package.json 同步
+// 与 [Download.astro](Download.astro) / [Hero.astro](Hero.astro) 一致使用具体版本直链，
+// 不走 /releases/latest 重定向（避免 GitHub alias 变动导致 404）。
+const nsisName = `Rokit-${version}-x64.exe`;
+const releaseUrl = `https://github.com/MatuX-ai/Rokit/releases/download/v${version}/${nsisName}`;
 ---
 
 <header class="nav">

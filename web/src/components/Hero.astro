@@ -7,8 +7,11 @@
 import rocketSvg from '../assets/rocket.svg?raw';
 
 const githubUrl = 'https://github.com/MatuX-ai/Rokit';
-const releaseUrl = 'https://github.com/MatuX-ai/Rokit/releases/latest';
 const version = '0.1.5'; // 与 ai-launch-master/package.json 同步
+// 与 [Download.astro](Download.astro) 统一使用具体版本直链（而非 /releases/latest 重定向），
+// 以便版本锁定 + 直链 SEO；SHA256 源同处。
+const nsisName = `Rokit-${version}-x64.exe`;
+const releaseUrl = `https://github.com/MatuX-ai/Rokit/releases/download/v${version}/${nsisName}`;
 ---
 
 <section class="hero" id="top">

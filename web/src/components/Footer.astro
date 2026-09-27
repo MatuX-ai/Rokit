@@ -3,6 +3,7 @@
  * 页脚：协议 + GitHub + 文档 + 隐私
  */
 const year = new Date().getFullYear();
+const startYear = 2026;
 const githubUrl = 'https://github.com/MatuX-ai/Rokit';
 const repoDocs = {
   prd: `${githubUrl}/blob/main/docs/Rokit-产品方案.html`,
@@ -10,6 +11,8 @@ const repoDocs = {
   contributing: `${githubUrl}/blob/main/CONTRIBUTING.md`,
   changelog: `${githubUrl}/blob/main/ai-launch-master/CHANGELOG.md`,
 };
+// 仅当年份跨年时才输出连字符区间，避免“2026–2026”这类冗余样式
+const yearSpan = year > startYear ? `–${year}` : '';
 ---
 
 <footer class="footer">
@@ -41,7 +44,7 @@ const repoDocs = {
     <div class="footer-meta">
       <span>MIT License</span>
       <span class="dot">·</span>
-      <span>Copyright &copy; 2026–{year} ProClips+</span>
+      <span>Copyright &copy; 2026{yearSpan} ProClips+</span>
     </div>
   </div>
 </footer>

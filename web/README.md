@@ -1,6 +1,6 @@
 # Rokit · 首站
 
-Rokit v0.1.0 首发推广静态站。Astro 5.x 静态输出，零运行时 JS。
+Rokit v0.1.5 首发推广静态站。Astro 5.x 静态输出，零运行时 JS。
 
 ## 本地预览
 
@@ -38,7 +38,7 @@ web/
 │   │   ├── Flow.astro             ← 3 步流程
 │   │   ├── Platforms.astro        ← 13 平台网格
 │   │   ├── Roadmap.astro          ← 1.0 / 1.5 / 2.0 路线图
-│   │   ├── Screenshots.astro      ← 应用截图占位
+│   │   ├── Screenshots.astro      ← 应用截图（v0.1.4 起为真实 PNG）
 │   │   ├── Download.astro         ← 下载 CTA + 系统要求
 │   │   └── Footer.astro           ← 页脚
 │   ├── styles/global.css          ← 全局样式（颜色变量 + reset + 字体栈）
@@ -70,30 +70,34 @@ web/
 - 修改全局 SEO meta：[src/layouts/Layout.astro](src/layouts/Layout.astro)
 
 ### 替换截图占位
-当前 `Screenshots.astro` 是骨架占位。替换流程：
+当前 `Screenshots.astro` 已在 v0.1.4 切为真实 PNG（桌面端 v0.1.4 GitHub Release 同款构建实拍）。若需要重新生成：
 1. 启动桌面应用 [ai-launch-master/](../ai-launch-master/)，用截图工具截取主界面
-2. 把截图放到 `public/` 目录（如 `public/screenshots/main.png`）
-3. 编辑 `src/components/Screenshots.astro`，把 `.shot-frame` 内骨架替换为：
-   ```astro
-   <img src="/screenshots/main.png" alt="Rokit 主界面" />
-   ```
+2. 把截图放到 `public/screenshots/`（当前为 `wflow.png` 与 `dashboard.png`）
+3. `Screenshots.astro` 中的 `screenshots` 数组定义文件路径与 alt 文本。CI 会在构建后检查 `dist/screenshots/*.png` 是否存在（[.github/workflows/web-ci.yml](../.github/workflows/web-ci.yml)）
 
 ### 替换 OG 分享卡
-部署后将 `og-image.png`（1280×640）放到 `public/`，覆盖占位文件。
-当前 meta 已声明 `og:image=${siteUrl}/og-image.png`。
+v0.1.4 起 `og-image.png`（1200×630）已由 [scripts/generate-og.mjs](scripts/generate-og.mjs) 生成。
+脚本默认从 [../ai-launch-master/package.json](../ai-launch-master/package.json) 读版本号；如需手工覆盖：
 
-## 占位待替换项
+```bash
+node scripts/generate-og.mjs --version=0.1.5
+# 或
+ROKIT_VERSION=0.1.5 node scripts/generate-og.mjs
+```
+当前 meta 已声明 `og:image=${siteUrl}/og-image.png`，缓存刷新可能需要 Vercel Edge 几十分钟。
 
-**v0.1.3 部署期状态**：本节是在 v0.1.3 首站上线时记录的 “主动保留的占位项”。至 2026-09-25 晚间，这些项已有部分被补完：
+## v0.1.6 backlog（下一版本计划）
 
-| 项 | 原始占位 | 当前状态 | 替换位置 | 补完时间 |
+本节仅保留**未完成项**。v0.1.3 部署期占位（应用截图 / OG 图 / 仓库 URL / Release 资产）已于 v0.1.4–v0.1.5 全部补完，详见 [../ai-launch-master/CHANGELOG.md](../ai-launch-master/CHANGELOG.md)。
+
+| 项 | 现状 | 预期完成 | 替换位置 | 备注 |
 |---|---|---|---|---|
-| GitHub 仓库 URL | `https://github.com/ProClips/Rokit` | ✅ **已替换为** `https://github.com/MatuX-ai/Rokit`（8 处） | `Nav.astro`、`Hero.astro`、`Download.astro`、`Footer.astro` | commit `03ce211` + tag `v0.1.3` |
-| 下载链接 / Release | `/releases/latest`（指向上述占位仓库） | ✅ **已切到** `MatuX-ai/Rokit/releases/download/v0.1.3/Rokit-0.1.3-{x64,portable}.exe`，含真实 SHA256 | `Download.astro` | gh release `v0.1.3` |
-| 自定义域 | `https://rokit.vercel.app` | ✅ 已生效 | `astro.config.mjs`、`Layout.astro` | v0.1.3 首站 |
-| 应用截图 | 灰色骨架 SVG + `PLACEHOLDER` 水印 | ⏸ 待 v0.1.4 替换为真实截图 | `Screenshots.astro` | — |
-| OG 分享卡 | 缺失（占位 png） | ⏸ 待 v0.1.4 生成 1280×640 PNG | `public/og-image.png` | — |
-| Astro 5.x 漏洞 | 9 条 critical（XSS/SSRF） | ⏸ 静态产物不可远程利用，已接受豁免上线 | — | v0.1.4 升 Astro 7.x |
+| Astro 5.x critical XSS/SSRF（GHSA-j687-52p2-xcff 等） | ⏸ 风险豁免生效中（静态产物不可远程利用） | v0.1.6 | `web/package.json` | 计划升至 Astro 7.x，需回归 test 验证 |
+| macOS / Linux 版发布 | ⏸ MVP 2.0 路线（[Roadmap.astro](src/components/Roadmap.astro)） | MVP 2.0 / 预计 2026 Q4 后 | 桌面端 `electron-builder.yml` | 与营销站文案已对齐（[Download.astro](src/components/Download.astro)、[Faq.astro](src/components/Faq.astro)） |
+| `web/CHANGELOG.md` 独立变更记录 | ⏸ 跟随主仓 CHANGELOG | v0.1.6 | 新建 `web/CHANGELOG.md` | 营销站变更与桌面端发版频次不同，建议拆开 |
+| Lighthouse 自动化跑分 | ⏸ 部署后手动跑 | v0.1.6 | `.github/workflows/web-ci.yml` | 现仅"待人工执行" checklist |
+| `dist/screenshots/*.png` 资源占位校验 | ⏸ CI 未覆盖 | v0.1.6 | `web-ci.yml` | 加 `test -f dist/screenshots/{wflow,dashboard}.png` |
+| 其他平台 L1 直发 | ⏸ 路线图（MVP 2.0） | MVP 2.0 | `Platforms.astro` + audit-ux.js 白名单 | 届时扩展 `L1_WHITELIST` |
 
 全局搜索 `https://github.com/MatuX-ai/Rokit` 即可验证当前所有链接已统一指向真实仓库。
 
