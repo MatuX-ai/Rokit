@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build & verify (Astro v0.1.3)
+    name: Build & verify (Astro v0.1.5)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -51,13 +51,33 @@ jobs:
 
       - name: Verify version sync (web vs ai-launch-master)
         run: |
-          WEB_VER=$(grep -oE "const version = '0\.[0-9]+\.[0-9]+'" web/src/components/Nav.astro | head -1 | grep -oE '0\.[0-9]+\.[0-9]+')
+          # 权威源：桌面端 package.json
           PKG_VER=$(node -p "require('./ai-launch-master/package.json').version")
-          if [ "$WEB_VER" != "$PKG_VER" ]; then
-            echo "::error::Version mismatch: web=$WEB_VER package=$PKG_VER"
+
+          # 1) web/package.json 的 version 字段需与 PKG_VER 一致
+          WEB_PKG_VER=$(node -p "require('./web/package.json').version")
+          if [ "$WEB_PKG_VER" != "$PKG_VER" ]; then
+            echo "::error::web/package.json version mismatch: web=$WEB_PKG_VER package=$PKG_VER"
             exit 1
           fi
-          echo "✓ Version sync: $WEB_VER"
+
+          # 2) 所有 const version = 'x.y.z' 必须等于 PKG_VER
+          STALE=$(grep -rE "const version = ['\"][0-9]+\.[0-9]+\.[0-9]+['\"]" web/src --include='*.astro' \
+            | grep -v "const version = ['\"]${PKG_VER}['\"]" || true)
+          if [ -n "$STALE" ]; then
+            echo "::error::const version 字面量与 PKG_VER ($PKG_VER) 不一致："
+            echo "$STALE"
+            exit 1
+          fi
+
+          # 3) JSON-LD softwareVersion 需与 PKG_VER 一致
+          LD_VER=$(grep -oE "softwareVersion: ['\"][0-9]+\.[0-9]+\.[0-9]+['\"]" web/src/layouts/Layout.astro | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          if [ "$LD_VER" != "$PKG_VER" ]; then
+            echo "::error::Layout.astro JSON-LD softwareVersion mismatch: got=$LD_VER expected=$PKG_VER"
+            exit 1
+          fi
+
+          echo "✓ Version sync: web/package.json=$WEB_PKG_VER, src/components=*, JSON-LD=$LD_VER (all match PKG_VER=$PKG_VER)"
 
       - name: Build (astro check + astro build)
         working-directory: web
@@ -70,6 +90,9 @@ jobs:
           test -f dist/og-image.png || { echo "::error::dist/og-image.png missing"; exit 1; }
           test -f dist/robots.txt || { echo "::error::dist/robots.txt missing"; exit 1; }
           test -f dist/sitemap.xml || { echo "::error::dist/sitemap.xml missing"; exit 1; }
+          # 桌面端实拍截图必须随 dist 复制出来（防某天仓库不慎删除）
+          test -f dist/screenshots/wflow.png || { echo "::error::dist/screenshots/wflow.png missing"; exit 1; }
+          test -f dist/screenshots/dashboard.png || { echo "::error::dist/screenshots/dashboard.png missing"; exit 1; }
           # 检查关键 section ID 与锚点一一对应
           for ID in pain features flow platforms shots faq download; do
             grep -q "id=\"$ID\"" dist/index.html || { echo "::error::section id=\"$ID\" missing"; exit 1; }
