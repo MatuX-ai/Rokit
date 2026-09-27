@@ -20,6 +20,9 @@ release/
 # 测试覆盖产物
 coverage/
 
+# 截屏验证产物（PowerShell + PrintWindow 调试脚本生成）
+scripts/shot-*.png
+
 # 历史快照与预览（不应进入主仓库）
 _backup/
 .preview/
