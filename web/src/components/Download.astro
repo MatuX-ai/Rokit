@@ -8,15 +8,15 @@
  * v0.1.3 起：按钮直接指向 GitHub Release 上的具体文件名，并提供 SHA256 校验值。
  */
 const githubUrl = 'https://github.com/MatuX-ai/Rokit';
-const version = '0.1.4'; // 与 ai-launch-master/package.json 同步
+const version = '0.1.5'; // 与 ai-launch-master/package.json 同步
 
 const nsisName = `Rokit-${version}-x64.exe`;
 const portableName = `Rokit-${version}-portable.exe`;
 const nsisUrl = `https://github.com/MatuX-ai/Rokit/releases/download/v${version}/${nsisName}`;
 const portableUrl = `https://github.com/MatuX-ai/Rokit/releases/download/v${version}/${portableName}`;
-// SHA256 通过 Get-FileHash -Algorithm SHA256 生成（部署日 2026-09-25 重打后重新计算）。
-const nsisSha256 = 'F2B66B5427691D4897AD8941C3A12F9285D039E8D7EF8A72F1FC9647744A1ECA';
-const portableSha256 = '054F52D6EDB823365E50B80D73B901DF9C9AC7E3F6454581923B89F2A7BD02AB';
+// SHA256 通过 Get-FileHash -Algorithm SHA256 生成（部署日 2026-09-26 重打后重新计算）。
+const nsisSha256 = 'FD6F07195940B92C31734022B68C61F2BB72638B2D0BBB13B8DD480402C18C6C';
+const portableSha256 = '00CEB007C168647D3AA4FFAB876450E668B8246C5D9FD03677C5976934228B48';
 
 const otherPlatforms = [
   { name: 'macOS', status: '开发中', eta: 'MVP 1.5 · 约 2 个月', icon: '🍎' },
