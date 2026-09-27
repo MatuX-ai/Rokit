@@ -2,6 +2,16 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
+  // 窗口控制（v1.5 自定义无边框顶栏）
+  windowMinimize: () => ipcRenderer.invoke('window:minimize'),
+  windowMaximizeToggle: () => ipcRenderer.invoke('window:maximize-toggle'),
+  windowClose: () => ipcRenderer.invoke('window:close'),
+  windowIsMaximized: () => ipcRenderer.invoke('window:is-maximized'),
+  onWindowMaximizeChanged: (cb) => {
+    const listener = function (_e, isMax) { try { cb(!!isMax); } catch (_e) {} };
+    ipcRenderer.on('window:maximize-changed', listener);
+    return function () { ipcRenderer.removeListener('window:maximize-changed', listener); };
+  },
   // 设置（BYOK）
   getSettings: () => ipcRenderer.invoke('settings:get'),
   saveSettings: (s) => ipcRenderer.invoke('settings:save', s),

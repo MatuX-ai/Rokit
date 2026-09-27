@@ -3,6 +3,25 @@
 本项目所有显著变更记录于此。格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [0.1.5] - 2026-09-26
+
+无边框顶栏窗口控制 IPC 加固 + 桌面端品牌资产与营销站对齐。
+
+### Fixed (窗口控制 IPC 加固)
+- **macOS `activate` 路径漏挂 `attachWindowControls`**（[electron/main.js](electron/main.js)）：原本仅在 `app.whenReady` 里调用一次，macOS Dock 点击重开新窗口后控制 IPC 仍是旧闭包，新窗口的 min/max/close 全部失效。改为在 `createWindow()` 内部挂载，保证任何路径创建窗口都能拿到当前 win 的 handler
+- **`ipcMain.handle` 重复注册会推 `second handler`**（[electron/main.js](electron/main.js)）：入口 `ipcMain.removeHandler(ch)` 幂等保护，窗口 `closed` 时反注册所有控制 channel 名，避免僵尸闭包占用 channel；HMR / 单测 / 多窗口场景不再会拖溃进程
+- **`window:maximize-changed` 与 `windowIsMaximized` 双轨同步竞态**（[electron/main.js](electron/main.js)）：`push()` 加 `lastIsMax` 去重；删除冗余的 `did-finish-load` 推送（渲染端已在初始化时主动查询过），避免 aria-label / icon 闪烁
+
+### Changed (桌面端品牌资产与营销站对齐)
+- **顶栏 logo 换成极简火箭 SVG**（[index.html](index.html)）：与 `web/public/favicon.svg` 统一品牌调色板（`#94D4D0→#0E7C7B` 主体 / `#0a0e14+#4DD0E1` 舷窗 / `#F472B6→#8B5CF6` 尾焰 / `#1F9C9A` 翼）
+- **`assets/logo.svg` 作为统一品牌源**：从 `web/public/favicon.svg` 复制，同一资产被顶栏 logo / ICO 生成脚本共同引用，避免 3 处独立实现发散
+- **`assets/icon.png` + `icon-light.png` 重新生成**（[scripts/IconRenderer.cs](scripts/IconRenderer.cs)）：1024×1024 双版本（深色 / 亮色背景），与 favicon 矢量风格一致；`build/icon.ico` 同步重新生成（多尺寸收敛）
+- **PowerShell 脚本参数化**（[scripts/render-icon.ps1](scripts/render-icon.ps1)）：新增 `-CscPath` / `-Root` 参数；csc.exe 路径从硬编码改成 `-CscPath` → `%WINDIR%\Framework64\v4.0.30319` → `%ProgramFiles%\dotnet\sdk\*\Roslyn\bincore` 三级自动 fallback；编译 `/ 使用 $LASTEXITCODE` 判断（不再依赖 Test-Path），失败明确退出码 + 中文提示
+- **WPF 资源释放修正**（[scripts/IconRenderer.cs](scripts/IconRenderer.cs)）：`RenderTargetBitmap` / `PngBitmapEncoder` / `BitmapFrame` 不实现 IDisposable（原评审基于错误假设），改用 `Render + Freeze()` 加快 GC finalizer 回收；`FileStream` 仍 `using` 包裹。`System.Windows.Shapes.Path` 与 `System.IO.Path` 的歧义以 `using Path = System.Windows.Shapes.Path;` 别名彻底解决
+
+### Added (无障碍)
+- **`.wc-btn:focus-visible` 焦点环**（[index.html](index.html)）：全局 `:focus-visible{outline:none}` 会抹掉窗口控制按钮焦点环，改为 `.wc-btn:focus-visible{outline:2px solid var(--primary);outline-offset:-2px}`；`.wc-close` 额外覆盖 `outline-color:var(--danger)`。键盘用户 Tab 聚焦后可见反馈，符合 WCAG 2.4.7
+
 ## [0.1.4] - 2026-09-25
 
 MVP 1.5 全量上线 + 首秀向导文案 / 渲染管线加固。

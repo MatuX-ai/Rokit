@@ -1077,12 +1077,35 @@
   .ch-card .ch-actions button[disabled]{opacity:.4;cursor:not-allowed}
 
   /* v1.5 UX：topbar grid + 入口精简（任务 4） */
-  .topbar{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;margin-bottom:16px;min-height:50px}
+  .topbar{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:12px;margin-bottom:16px;min-height:50px}
   .topbar .navtab{justify-self:center}
   .topbar-right{display:flex;align-items:center;gap:8px;justify-self:end}
   .byok-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(245,158,11,.18);display:none;flex:none;cursor:help}
   .byok-dot.show{display:block}
   .byok-dot.ok{background:var(--success);box-shadow:0 0 0 3px rgba(46,139,51,.18)}
+
+  /* v1.5：自定义无边框顶栏（frame:false）—— Windows 11 风格控制按钮 · 置于顶栏最右 */
+  .topbar{-webkit-app-region:drag}
+  /* 子区域里的交互控件需明确退出拖动区，否则点击会被吞 */
+  .topbar button,.topbar .wc-ctrls,.topbar .wc-ctrls *,
+  .topbar .navtab,.topbar .navtab *,.topbar .topbar-right,.topbar .topbar-right *,
+  .topbar .brand{-webkit-app-region:no-drag}
+  .wc-ctrls{display:flex;align-items:center;gap:0;flex:none;margin-left:6px;padding-left:6px;border-left:1px solid var(--line)}
+  .wc-btn{appearance:none;-webkit-appearance:none;background:transparent;border:none;padding:0;margin:0;width:34px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:6px;color:var(--muted);transition:background .12s,color .12s;font-family:inherit;flex:none}
+  .wc-btn:hover{background:color-mix(in srgb,var(--ink) 8%,transparent);color:var(--ink)}
+  .wc-btn:active{background:color-mix(in srgb,var(--ink) 14%,transparent)}
+  .wc-btn .wc-ico{width:11px;height:11px;display:block}
+  .wc-btn .wc-ico path,.wc-btn .wc-ico line,.wc-btn .wc-ico polyline,.wc-btn .wc-ico rect{stroke:currentColor;stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .wc-close:hover{background:var(--danger);color:#fff}
+  .wc-close:hover .wc-ico path{stroke:#fff}
+  /* 暗色主题下按钮 hover 颜色更深一点 */
+  :root.dark .wc-btn:hover{background:color-mix(in srgb,#fff 12%,transparent);color:var(--ink)}
+  :root.dark .wc-btn:active{background:color-mix(in srgb,#fff 20%,transparent)}
+  /* 暗色下分隔线颜色稍亮一点 */
+  :root.dark .wc-ctrls{border-left-color:color-mix(in srgb,#fff 8%,transparent)}
+    /* 焦点环：WCAG 2.4.7（全局 :focus-visible 已抹掉 outline，这里为窗口控制补上） */
+  .wc-btn:focus-visible{outline:2px solid var(--primary);outline-offset:-2px}
+    .wc-close:focus-visible{outline-color:var(--danger)}
 
   /* v1.5 UX：全局键盘焦点环（WCAG 2.4.7，任务 5 之一） */
   :focus-visible{outline:none}
@@ -1133,11 +1156,11 @@
 
 <div class="shell">
 
-  <div class="topbar">
+  <div class="topbar" id="titleBar">
 
     <div class="brand">
 
-      <div class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l2.2 5.3L20 10l-5.8 1.7L12 17l-2.2-5.3L4 10l5.8-1.7L12 3z" fill="#fff"/><circle cx="19" cy="18" r="2.4" fill="#FDE68A"/></svg></div>
+      <div class="mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 1.5 C 15 5, 16.5 8.5, 16.5 13 L 16.5 18.5 L 7.5 18.5 L 7.5 13 C 7.5 8.5, 9 5, 12 1.5 Z" fill="#FFFFFF"/><path d="M7.5 14 L 3.5 18.5 L 7.5 18.5 Z" fill="#FFFFFF" opacity="0.85"/><path d="M16.5 14 L 20.5 18.5 L 16.5 18.5 Z" fill="#FFFFFF" opacity="0.85"/><circle cx="12" cy="9" r="2.4" fill="#0a0e14"/><circle cx="12" cy="9" r="1.3" fill="#4DD0E1"/><path d="M10.5 18.5 L 11 22.5 L 12 20.5 L 13 22.5 L 13.5 18.5 Z" fill="#F472B6"/></svg></div>
 
       <div class="name">Rokit<small>作品首秀发射台 · 开源桌面端 · BYOK</small></div>
 
@@ -1155,6 +1178,20 @@
 
       <button class="gear" id="gearBtn" onclick="openSettings()" title="设置" aria-label="打开设置"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
 
+    </div>
+
+    <!-- v1.5：无边框顶栏 · 窗口控制按钮（min / max / close）置于顶栏最右 -->
+    <div class="wc-ctrls" id="wcCtrls" aria-label="窗口控制">
+      <button class="wc-btn wc-min" id="wcMin" type="button" title="最小化" aria-label="最小化窗口">
+        <svg class="wc-ico" viewBox="0 0 12 12" aria-hidden="true"><line x1="2" y1="6.5" x2="10" y2="6.5"/></svg>
+      </button>
+      <button class="wc-btn wc-max" id="wcMax" type="button" title="最大化" aria-label="最大化窗口" data-state="restore">
+        <svg class="wc-ico wc-ico-max" viewBox="0 0 12 12" aria-hidden="true"><rect x="2.5" y="2.5" width="7" height="7" rx="1"/></svg>
+        <svg class="wc-ico wc-ico-restore" viewBox="0 0 12 12" aria-hidden="true" style="display:none"><rect x="3" y="3" width="6" height="6" rx="1"/><path d="M5 1.5h5.5V7"/></svg>
+      </button>
+      <button class="wc-btn wc-close" id="wcClose" type="button" title="关闭" aria-label="关闭窗口">
+        <svg class="wc-ico" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6"/></svg>
+      </button>
     </div>
 
   </div>
@@ -5491,6 +5528,56 @@
   // 注意：miniMd 会先做 HTML 转义，所以这里必须用 markdown（\n / **）写法，
   // 不能直接写 <br> / <b> 等 HTML 标签——否则会被原样显示成字面字符。
   pushAI('你好，我是 Rokit。\n把作品交给我——**文案、配音、填表发布、反馈采集**，我帮你接管。\n\n下面我已经摆了 4 个示例作品供你参考。**点下方任意一张卡片里的「以此为模板」按钮**，或点 “+ 登记新作品” 开始你的第一个首秀。');
+
+  // v1.5：无边框顶栏 · 窗口控制（frame:false 需要 IPC 桥）
+  function initWindowControls(){
+    var ctrls = document.getElementById('wcCtrls');
+    if(!ctrls) return;
+    var api = window.api;
+    // 浏览器环境 / 未预加载：隐藏控件区，保持原顶栏观感
+    if(!api || typeof api.windowMinimize !== 'function'){ ctrls.style.display='none'; return; }
+    if(initWindowControls._done) return;
+    initWindowControls._done = true;
+    var minBtn = document.getElementById('wcMin');
+    var maxBtn = document.getElementById('wcMax');
+    var closeBtn = document.getElementById('wcClose');
+    var titleBar = document.getElementById('titleBar');
+    var maxIco = maxBtn && maxBtn.querySelector('.wc-ico-max');
+    var restoreIco = maxBtn && maxBtn.querySelector('.wc-ico-restore');
+    function setMax(isMax){
+      try { document.body.classList.toggle('is-maximized', !!isMax); } catch(_){}
+      if(maxBtn){
+        maxBtn.setAttribute('aria-label', isMax ? '还原窗口' : '最大化窗口');
+        maxBtn.title = isMax ? '还原' : '最大化';
+      }
+      if(maxIco && restoreIco){
+        maxIco.style.display = isMax ? 'none' : '';
+        restoreIco.style.display = isMax ? '' : 'none';
+      }
+    }
+    function safeInvoke(fn){ try { fn(); } catch(_){} }
+    minBtn && minBtn.addEventListener('click', function(){ safeInvoke(function(){ api.windowMinimize(); }); });
+    maxBtn && maxBtn.addEventListener('click', function(){ safeInvoke(function(){ api.windowMaximizeToggle(); }); });
+    closeBtn && closeBtn.addEventListener('click', function(){ safeInvoke(function(){ api.windowClose(); }); });
+    // 双击顶栏空白处切换最大化（macOS 习惯；Windows 原生无此语义，但作为快捷路径保留）
+    if(titleBar){
+      titleBar.addEventListener('dblclick', function(e){
+        if(e.target.closest('.wc-ctrls, .navtab, .topbar-right, button')) return;
+        safeInvoke(function(){ api.windowMaximizeToggle(); });
+      });
+    }
+    // 初始状态同步（Promise.resolve 兼容同步返回值）
+    try {
+      var p = api.windowIsMaximized();
+      if(p && typeof p.then === 'function'){ p.then(setMax, function(){}); }
+      else { setMax(!!p); }
+    } catch(_){}
+    // 订阅状态变化（主进程在 maximize / unmaximize 时推送）
+    if(typeof api.onWindowMaximizeChanged === 'function'){
+      try { api.onWindowMaximizeChanged(setMax); } catch(_){}
+    }
+  }
+  initWindowControls();
 
   loadStored().then(seedWorks).then(loadPubs).then(loadChannels).then(function(){
 

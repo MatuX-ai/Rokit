@@ -54,6 +54,9 @@ function createWindow() {
     minWidth: 780,
     minHeight: 600,
     title: 'Rokit',
+    // v1.5：自定义无边框顶栏（macOS 仍保留 traffic-light 阴影，Windows 完整接管）
+    frame: false,
+    titleBarStyle: 'hidden',
     backgroundColor: '#F4F7F6',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -63,7 +66,57 @@ function createWindow() {
     }
   });
   win.loadFile(path.join(__dirname, '..', 'index.html'));
+  // v1.5：无边框顶栏需要窗口控制 IPC——必须在 createWindow 内部挂载，
+  // 否则 macOS activate 重开新窗口时 control handler 仍是旧窗口闭包，新窗口的
+  // min/max/close 全部失效。
+  attachWindowControls(win);
   return win;
+}
+
+// ---------- v1.5：自定义顶栏窗口控制（无边框 frame:false） ----------
+// 全部共享的 IPC channel 名集中定义，避免 register/cleanup 时遗漏
+const WIN_CTRL_CHANNELS = ['window:minimize', 'window:maximize-toggle', 'window:close', 'window:is-maximized'];
+
+function attachWindowControls(win) {
+  if (!win || win.isDestroyed()) return;
+
+  // 幂等保护：先反注册避免重复调用（macOS activate / HMR / 单测）报
+  // "Attempted to register a second handler for ..." 后直接挂进程
+  for (const ch of WIN_CTRL_CHANNELS) {
+    try { ipcMain.removeHandler(ch); } catch (_e) {}
+  }
+
+  ipcMain.handle('window:minimize', () => { try { win.minimize(); } catch (_e) {} });
+  ipcMain.handle('window:maximize-toggle', () => {
+    try {
+      if (win.isMaximized()) win.unmaximize();
+      else win.maximize();
+      return win.isMaximized();
+    } catch (_e) { return false; }
+  });
+  ipcMain.handle('window:close', () => { try { win.close(); } catch (_e) {} });
+  ipcMain.handle('window:is-maximized', () => {
+    try { return !!win.isMaximized(); } catch (_e) { return false; }
+  });
+
+  // 去重推送：避免与渲染进程主动 windowIsMaximized() 查询双轨同步
+  // 造成的 aria-label / icon 闪烁
+  let lastIsMax = null;
+  const push = (isMax) => {
+    if (win.isDestroyed()) return;
+    if (lastIsMax === isMax) return;
+    lastIsMax = isMax;
+    win.webContents.send('window:maximize-changed', isMax);
+  };
+  win.on('maximize', () => push(true));
+  win.on('unmaximize', () => push(false));
+
+  // 窗口关闭时反注册 handler，释放闭包对 win 的引用，避免 channel 名被僵尸 handler 占用
+  win.on('closed', () => {
+    for (const ch of WIN_CTRL_CHANNELS) {
+      try { ipcMain.removeHandler(ch); } catch (_e) {}
+    }
+  });
 }
 
 // ---------- IPC ----------
@@ -394,6 +447,7 @@ app.whenReady().then(() => {
   try { logger.init(app.getPath('userData')); logger.info('app ready', { version: app.getVersion() }); } catch (_e) {}
   store = new Store(path.join(app.getPath('userData'), 'ai-launch-master.db'));
   createWindow();
+  // attachWindowControls 已在 createWindow() 内部挂载（避免 macOS activate 新窗口漏挂）
 
   // v1.5：应用启动后自动跑一次主推队列选择
   try {
