@@ -65,42 +65,42 @@ if (faq) {
 }
 
 // ============================================================
-// 2. Features.astro 的"数据看板"badge 不能是"已上线"
+// 2. Features.astro · 数据看板 badge 与现实对齐
 // ============================================================
 console.log('\n[2] Features.astro · 数据看板 badge 与现实对齐');
 const features = readOrFail(path.join(WEB_ROOT, 'src', 'components', 'Features.astro'));
 if (features) {
-  // 找出"数据看板"相关 feature 块（badge 在数据看板那个 feature 内）
-  // 用最简策略：含"数据看板"那一行 30 行内不应出现 badge: '已上线'
+  // v0.1.4 (2026-09-25) 起数据看板已正式上线（KPI / 时段筛选 / 里程碑 / 发布回填均已交付），
+  // 因此"数据看板"项 badge 必须是"已上线"；若误标为"MVP 1.5 / 规划中"则视为 v0.1.1 误标记回归。
   const dashIdx = features.indexOf('数据看板');
   if (dashIdx < 0) {
     ok(false, 'Features.astro 找不到"数据看板"');
   } else {
     const block = features.substr(dashIdx, 600);
     if (/badge\s*:\s*['"]已上线['"]/.test(block)) {
-      ok(false, '数据看板 badge 不能是"已上线"（应为 MVP 1.5 或类似占位标识）');
+      ok(true, '数据看板 badge 为"已上线"（v0.1.4 起已交付）');
+    } else if (/badge\s*:\s*['"](MVP\s*1\.5|规划中|敬请期待)['"]/.test(block)) {
+      ok(false, '数据看板 badge 不能是"MVP 1.5 / 规划中"（v0.1.4 已交付，应为"已上线"）');
     } else {
-      ok(true, '数据看板 badge 非"已上线"');
-    }
-    if (/MVP\s*1\.5|规划中|敬请期待/.test(block)) {
-      ok(true, '数据看板 badge 标明规划阶段（MVP 1.5 / 规划中）');
-    } else {
-      ok(false, '数据看板 badge 应标明规划阶段（如 MVP 1.5）');
+      ok(false, '数据看板 badge 取值不明确，请检查 Features.astro');
     }
   }
 }
 
 // ============================================================
-// 3. Platforms.astro 不能把任何平台标成 L1（API 直发）
+// 3. Platforms.astro：仅 GitHub 可标 L1（Release API 已对接），其他 12 平台仍强制 L2
 // ============================================================
-console.log('\n[3] Platforms.astro · 不再标 L1（API 直发尚未实现）');
+console.log('\n[3] Platforms.astro · GitHub L1 已对接放行，其余 12 平台仍禁止 L1');
 const platforms = readOrFail(path.join(WEB_ROOT, 'src', 'components', 'Platforms.astro'));
 if (platforms) {
-  // L1 直发在 v0.1.1 之前误导，现在一律 L2。
+  // v0.1.4 起 GitHub Release API 直发已上线（见 CHANGELOG），允许标 L1；
+  // 其他 12 平台当前仍为 L2（浏览器自动填表），未来 MVP 2.0 才允许标 L1。
   // 注意：Legend 说明、说明性句子、CSS 类名（.plat-l1 / .plat-lvl 等）都允许存在。
   // 只拦截"实际给某个平台打 L1"的赋值（data level: 'L1' / "L1"）。
   const l1Assignments = [];
-  // 匹配 platforms 数组中的数据条目 level 字段
+  // v0.1.5 当前白名单：仅 GitHub
+  const L1_WHITELIST = new Set(['GitHub']);
+
   const dataLines = platforms.split('\n').filter(function (line) {
     // 排除 Astro 模板里的 CSS / 注释 / 渲染段（<style> / <!-- / .plat-xxx）
     return !/^\s*\/\//.test(line)
@@ -115,13 +115,18 @@ if (platforms) {
     // 仅当明确把 L1 赋给某个 level 字段才算
     // 例：level: 'L1' 或 level:"L1"
     if (/level\s*:\s*['"]L1['"]/.test(line)) {
-      l1Assignments.push((i + 1) + ': ' + line.trim());
+      // 同一行的前一个 `{ name: 'X',` 块中提取 name
+      const nameMatch = line.match(/name\s*:\s*['"]([^'"]+)['"]/);
+      const platformName = nameMatch ? nameMatch[1] : null;
+      if (!platformName || !L1_WHITELIST.has(platformName)) {
+        l1Assignments.push((i + 1) + ': ' + line.trim());
+      }
     }
   });
   if (l1Assignments.length === 0) {
-    ok(true, 'Platforms.astro 没有把任何平台标记为 L1（API 直发）');
+    ok(true, 'Platforms.astro 没有把白名单外的平台标记为 L1（API 直发）');
   } else {
-    ok(false, 'Platforms.astro 仍有平台被赋值为 L1（API 直发）：\n  ' + l1Assignments.join('\n  '));
+    ok(false, 'Platforms.astro 仍有非白名单平台被赋值为 L1（API 直发）：\n  ' + l1Assignments.join('\n  '));
   }
 
   // Legend 应包含 L2 = 自动填表 + L1 规划中的说明
